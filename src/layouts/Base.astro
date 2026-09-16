@@ -1,0 +1,96 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  robots?: string;
+  jsonLd?: unknown | unknown[];
+  breadcrumbItems?: Array<{ name: string; url: string }>;
+  gaId?: string;
+}
+
+const { title, description, canonical, robots = "index,follow", jsonLd, breadcrumbItems, gaId } = Astro.props;
+
+const siteUrl = "https://riggingcalculators.com";
+const fullCanonical = canonical ? `${siteUrl}${canonical}` : undefined;
+
+// Build JSON-LD array
+const schemas: unknown[] = [];
+if (breadcrumbItems && breadcrumbItems.length > 0) {
+  schemas.push({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": breadcrumbItems.map((item, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "name": item.name,
+      "item": `${siteUrl}${item.url}`
+    }))
+  });
+}
+if (jsonLd) {
+  if (Array.isArray(jsonLd)) {
+    schemas.push(...jsonLd);
+  } else {
+    schemas.push(jsonLd);
+  }
+}
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="robots" content={robots} />
+  {fullCanonical && <link rel="canonical" href={fullCanonical} />}
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={fullCanonical || siteUrl} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:site_name" content="Rigging Calculators" />
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <!-- Theme init -->
+  <script is:inline>
+    (function() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+    })();
+  </script>
+  
+  <!-- GA4 -->
+  {gaId && (
+    <>
+      <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+      <script is:inline define:vars={{ gaId }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', gaId);
+      </script>
+    </>
+  )}
+  
+  <!-- JSON-LD -->
+  {schemas.length > 0 && (
+    <script type="application/ld+json" set:html={JSON.stringify(schemas)} />
+  )}
+</head>
+<body class="min-h-screen flex flex-col">
+  <slot />
+</body>
+</html>

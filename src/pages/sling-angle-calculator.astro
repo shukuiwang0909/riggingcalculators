@@ -1,0 +1,737 @@
+---
+import Base from '../layouts/Base.astro';
+
+const siteUrl = 'https://riggingcalculators.com';
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Sling Angle Calculator",
+    "url": `${siteUrl}/sling-angle-calculator`,
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any (web browser)",
+    "description": "Free sling angle calculator. Calculate tension in multi-leg slings at any angle. ASME B30.9 compliant. Get load per leg, horizontal force & recommended sling size.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "Rigging Calculators",
+      "url": siteUrl
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the sling tension factor?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The sling tension factor is 1/sin(angle), where the angle is measured from horizontal. At 90° (vertical) the factor is 1.0, at 60° it is 1.155, at 45° it is 1.414, and at 30° it is 2.0. The tension factor multiplies the share of load on each leg to give the actual tension in that leg."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does sling tension increase at lower angles?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As a sling leg moves away from vertical, only a portion of its tension acts vertically to support the load. The rest acts horizontally, squeezing the load. To provide the same vertical support, the total tension in the leg must increase. At 30° from horizontal, each leg carries twice the vertical share of the load."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the minimum safe sling angle?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ASME B30.9 recommends sling angles never be less than 30° from horizontal. Below 30°, tension rises above 2× the vertical share and horizontal forces become excessive. If your rigging forces a shallower angle, use a spreader beam or lifting beam."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I measure the sling angle?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Measure the angle between the sling leg and the horizontal plane at the load connection point. A digital angle finder on the sling, an inclinometer app, or a protractor against the horizontal works. Never estimate by eye — a few degrees error at shallow angles makes a large tension difference."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is load distributed in a multi-leg sling?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For a symmetric rig with equal leg lengths attached to a common master link, the load is assumed evenly shared: total load ÷ number of legs, multiplied by the tension factor 1/sin(angle). ASME B30.9 requires that unequal leg lengths or asymmetric attachments be evaluated by a qualified person."
+        }
+      }
+    ]
+  }
+];
+
+const breadcrumbItems = [
+  { name: "Home", url: "/" },
+  { name: "Sling Angle Calculator", url: "/sling-angle-calculator" }
+];
+
+// Chain sling WLL table (Grade 8 / 80, single leg vertical WLL, tonnes)
+const CHAIN_WLL = [
+  { dia: '6mm', wll: 1.12 },
+  { dia: '8mm', wll: 2.0 },
+  { dia: '10mm', wll: 3.15 },
+  { dia: '13mm', wll: 5.3 },
+  { dia: '16mm', wll: 8.0 },
+  { dia: '18mm', wll: 11.2 },
+  { dia: '20mm', wll: 15.0 },
+  { dia: '23mm', wll: 21.2 },
+  { dia: '26mm', wll: 31.5 },
+];
+
+const tensionFactors = [
+  { angle: '90°', factor: '1.0', note: 'Vertical — no increase' },
+  { angle: '60°', factor: '0.866', note: 'Standard 2-leg rigging' },
+  { angle: '45°', factor: '0.707', note: 'Tension rises ~41%' },
+  { angle: '30°', factor: '0.5', note: 'ASME minimum — tension ×2' },
+];
+---
+
+<Base 
+  title="Sling Angle Calculator — Multi-Leg Sling Tension | riggingcalculators.com"
+  description="Free sling angle calculator. Calculate tension in multi-leg slings at any angle. ASME B30.9 compliant. Get load per leg, horizontal force & recommended sling size."
+  canonical="/sling-angle-calculator"
+  jsonLd={jsonLd}
+  breadcrumbItems={breadcrumbItems}
+  gaId="G-XXXXXXX"
+>
+
+<!-- Header -->
+<header class="sticky top-0 z-50 glass-card border-b border-ink-600/30">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <a href="/" class="flex items-center gap-2">
+        <span class="text-2xl">⚓</span>
+        <span class="font-bold text-xl text-white">Rigging<span class="text-amber-400">Calculators</span></span>
+      </a>
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="/#tools" class="text-gray-400 hover:text-amber-400 transition">Tools</a>
+        <a href="/#charts" class="text-gray-400 hover:text-amber-400 transition">Spec Charts</a>
+        <a href="/#faq" class="text-gray-400 hover:text-amber-400 transition">FAQ</a>
+      </nav>
+      <button class="accent-btn text-sm px-4 py-2" onclick="document.getElementById('calculator').scrollIntoView({behavior:'smooth'})">
+        Calculate Now
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Breadcrumb -->
+<nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6" aria-label="Breadcrumb">
+  <ol class="flex items-center gap-2 text-sm text-gray-500">
+    <li><a href="/" class="hover:text-amber-400 transition">Home</a></li>
+    <li aria-hidden="true">›</li>
+    <li class="text-gray-300">Sling Angle Calculator</li>
+  </ol>
+</nav>
+
+<!-- Hero + Calculator -->
+<section class="relative py-12 lg:py-16 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-ink-900 via-ink-950 to-ink-900"></div>
+  
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 items-start">
+      <!-- Left: Copy -->
+      <div>
+        <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-full px-4 py-1.5 mb-6">
+          <span class="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
+          <span class="text-amber-400 text-sm font-medium">ASME B30.9 Compliant</span>
+        </div>
+        
+        <h1 class="text-4xl sm:text-5xl font-bold text-white leading-tight mb-6">
+          Sling Angle Calculator<br/>
+          <span class="text-amber-400">Multi-Leg Sling Tension</span>
+        </h1>
+        
+        <p class="text-xl text-gray-400 mb-8 leading-relaxed">
+          Enter total load, number of legs, and sling angle. Get load per leg, tension factor, horizontal & vertical force, and a recommended chain sling size — instantly.
+        </p>
+        
+        <div class="mt-8 glass-card p-6">
+          <h2 class="text-lg font-bold text-white mb-4">Tension Factor Table</h2>
+          <p class="text-sm text-gray-500 mb-4">
+            Percentage of a sling leg's <em>vertical</em> capacity usable at each angle (ASME B30.9). Tension multiplier = 1 ÷ factor.
+          </p>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-left text-gray-500 border-b border-ink-600/30">
+                  <th class="py-2 pr-4 font-medium">Angle from Horizontal</th>
+                  <th class="py-2 pr-4 font-medium">Capacity Factor</th>
+                  <th class="py-2 font-medium">Tension Multiplier</th>
+                </tr>
+              </thead>
+              <tbody class="text-gray-300">
+                {tensionFactors.map((row) => (
+                  <tr class="border-b border-ink-600/10">
+                    <td class="py-2.5 pr-4 font-mono font-bold text-amber-400">{row.angle}</td>
+                    <td class="py-2.5 pr-4 font-mono">{row.factor}</td>
+                    <td class="py-2.5">× {(1 / parseFloat(row.factor)).toFixed(3)} <span class="text-gray-600">— {row.note}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right: Calculator -->
+      <div id="calculator" class="glass-card p-6 lg:p-8">
+        <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+          <span class="text-amber-400">📐</span> Sling Angle Calculator
+        </h2>
+        
+        <form id="sling-form" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-2">Total Load (tonnes)</label>
+            <input 
+              type="number" 
+              id="load-input" 
+              class="field" 
+              placeholder="e.g. 10"
+              min="0.1" 
+              max="200" 
+              step="0.1"
+              required
+            />
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-400 mb-2">Number of Legs</label>
+              <select id="legs-input" class="field">
+                <option value="1">1 leg (vertical)</option>
+                <option value="2" selected>2 legs</option>
+                <option value="3">3 legs</option>
+                <option value="4">4 legs</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-400 mb-2">Angle from Horizontal</label>
+              <select id="angle-input" class="field">
+                <option value="90">90° (vertical)</option>
+                <option value="60" selected>60°</option>
+                <option value="45">45°</option>
+                <option value="30">30°</option>
+              </select>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-2">Sling Type</label>
+            <select id="sling-type-input" class="field">
+              <option value="chain" selected>Chain Sling</option>
+              <option value="web">Web Sling</option>
+              <option value="wire-rope">Wire Rope Sling</option>
+            </select>
+          </div>
+          
+          <button type="submit" class="accent-btn w-full">
+            Calculate Sling Tension
+          </button>
+        </form>
+        
+        <!-- Result -->
+        <div id="sling-result" class="hidden mt-6 result-panel">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-amber-400">Sling Tension Result</h3>
+            <span id="result-badge" class="bg-amber-500/20 text-amber-400 px-3 py-1 rounded-full text-sm font-mono"></span>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="text-gray-500">Load per leg:</span>
+              <span id="result-leg-load" class="text-white font-mono font-bold ml-2"></span>
+            </div>
+            <div>
+              <span class="text-gray-500">Tension per leg:</span>
+              <span id="result-tension" class="text-amber-400 font-mono font-bold ml-2"></span>
+            </div>
+            <div>
+              <span class="text-gray-500">Tension factor:</span>
+              <span id="result-factor" class="text-white font-mono ml-2"></span>
+            </div>
+            <div>
+              <span class="text-gray-500">Vertical force / leg:</span>
+              <span id="result-vertical" class="text-white font-mono ml-2"></span>
+            </div>
+            <div class="col-span-2">
+              <span class="text-gray-500">Horizontal force / leg (squeeze):</span>
+              <span id="result-horizontal" class="text-white font-mono font-bold ml-2"></span>
+            </div>
+            <div class="col-span-2">
+              <span class="text-gray-500">Recommended chain sling:</span>
+              <span id="result-chain" class="text-amber-400 font-mono font-bold ml-2"></span>
+            </div>
+          </div>
+          
+          <div id="result-warning" class="hidden mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-400">
+          </div>
+          <div id="result-note" class="hidden mt-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-sm text-yellow-400">
+          </div>
+          
+          <div class="mt-6 flex gap-3">
+            <button class="accent-btn text-sm px-4 py-2" onclick="document.getElementById('rfq-modal').classList.remove('hidden')">
+              Get a Quote
+            </button>
+            <button class="accent-btn-secondary text-sm px-4 py-2" onclick="document.getElementById('sling-result').classList.add('hidden')">
+              Recalculate
+            </button>
+          </div>
+        </div>
+        
+        <p class="disclaimer">
+          Based on ASME B30.9. Assumes symmetric rigging with equal leg lengths. Not a substitute for qualified rigger judgment. Always verify with manufacturer data.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ASME B30.9 + How to Measure -->
+<section class="py-20 bg-ink-900/50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-12">
+      <div class="glass-card p-8">
+        <h2 class="text-2xl font-bold text-white mb-4">ASME B30.9 Sling Angle Requirements</h2>
+        <div class="space-y-4 text-gray-400 leading-relaxed text-sm">
+          <p>
+            <strong class="text-white">ASME B30.9</strong> (Slings) governs the design, selection, and use of slings in lifting operations. Key angle-related provisions:
+          </p>
+          <ul class="list-disc list-inside space-y-2">
+            <li>Sling angles are measured from the <strong class="text-white">horizontal</strong> at the point of attachment to the load.</li>
+            <li>Rated loads for sling legs are reduced by the factor <strong class="text-white">sin(angle)</strong> as the angle decreases — the basis of the capacity factors in the table above.</li>
+            <li>Sling angles should <strong class="text-white">never be less than 30°</strong> from horizontal unless the rigging has been specifically designed for it.</li>
+            <li>Legs of a multi-leg sling must be long enough (and attachment points positioned) so the load is balanced and each leg carries only its share.</li>
+            <li>When legs are of unequal length or the center of gravity is off-center, a <strong class="text-white">qualified person</strong> must determine the load distribution — even-load sharing cannot be assumed.</li>
+          </ul>
+          <p>
+            This calculator assumes symmetric rigging, equal leg lengths, and a centered load. Deduct fittings (hooks, master links) from rated capacity when they load the sling at an angle.
+          </p>
+        </div>
+      </div>
+      
+      <div class="glass-card p-8">
+        <h2 class="text-2xl font-bold text-white mb-4">How to Measure Sling Angle</h2>
+        <ol class="space-y-4 text-gray-400 text-sm leading-relaxed">
+          <li class="flex gap-3">
+            <span class="flex-shrink-0 w-6 h-6 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center font-bold text-xs">1</span>
+            <span><strong class="text-white">Identify the reference plane.</strong> The angle is measured between the sling leg and a horizontal line at the load attachment point — not from the vertical, and not from the crane hook.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="flex-shrink-0 w-6 h-6 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center font-bold text-xs">2</span>
+            <span><strong class="text-white">Use a digital angle finder.</strong> Place it against the sling leg. Most smartphones have a built-in level/inclinometer app that works for field checks.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="flex-shrink-0 w-6 h-6 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center font-bold text-xs">3</span>
+            <span><strong class="text-white">Measure under tension.</strong> Measure the angle with the sling snug but unloaded if possible — the angle changes slightly as the load is lifted and legs stretch.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="flex-shrink-0 w-6 h-6 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center font-bold text-xs">4</span>
+            <span><strong class="text-white">Measure each leg.</strong> In a multi-leg rig, legs can sit at different angles if attachment points are at different heights. Use the <em>shallowest</em> angle for sizing.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="flex-shrink-0 w-6 h-6 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center font-bold text-xs">5</span>
+            <span><strong class="text-white">Don't estimate by eye.</strong> A rig that looks like 45° is often closer to 30° — which nearly doubles the tension in every leg.</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Chain Sling WLL Table -->
+<section class="py-20">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-white mb-4">Chain Sling WLL Chart</h2>
+      <p class="text-gray-400 max-w-2xl mx-auto">
+        Single-leg vertical Working Load Limits for Grade 80 alloy chain slings. Select the smallest chain whose WLL meets or exceeds the calculated tension per leg.
+      </p>
+    </div>
+    
+    <div class="glass-card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left text-gray-400 bg-ink-900/60 border-b border-ink-600/30">
+              <th class="py-3 px-6 font-medium">Chain Diameter</th>
+              <th class="py-3 px-6 font-medium">WLL (vertical, tonnes)</th>
+              <th class="py-3 px-6 font-medium">60° angle (×0.866)</th>
+              <th class="py-3 px-6 font-medium">45° angle (×0.707)</th>
+              <th class="py-3 px-6 font-medium">30° angle (×0.5)</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-300">
+            {CHAIN_WLL.map((row) => (
+              <tr class="border-b border-ink-600/10 hover:bg-ink-900/40 transition">
+                <td class="py-3 px-6 font-mono font-bold text-amber-400">{row.dia}</td>
+                <td class="py-3 px-6 font-mono">{row.wll.toFixed(2)} t</td>
+                <td class="py-3 px-6 font-mono">{(row.wll * 0.866).toFixed(2)} t</td>
+                <td class="py-3 px-6 font-mono">{(row.wll * 0.707).toFixed(2)} t</td>
+                <td class="py-3 px-6 font-mono">{(row.wll * 0.5).toFixed(2)} t</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-gray-600 px-6 py-4">
+        Grade 80 (T) alloy chain per EN 818-2 / ASME B30.9. Values are single-leg WLL — apply the appropriate angle factor and divide by legs for multi-leg slings, or use the calculator above.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="py-20 bg-ink-900/50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-white mb-4">Sling Angle FAQ</h2>
+      <p class="text-gray-400">Answers based on ASME B30.9 and standard rigging practice.</p>
+    </div>
+    
+    <div class="space-y-4">
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">What is the sling tension factor?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          The tension factor is 1/sin(angle), where the angle is measured from horizontal. At 90° (vertical) the factor is 1.0; at 60° it is 1.155; at 45° it is 1.414; at 30° it is 2.0. Multiplying the vertical load share per leg by this factor gives the actual tension in the leg.
+        </p>
+      </details>
+      
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">Why does sling tension increase at lower angles?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          Only the vertical component of sling tension (T × sin θ) supports the load; the horizontal component squeezes the load. As the angle drops, the vertical component shrinks, so the total tension must grow to hold the same weight. At 30° from horizontal, each leg carries twice its vertical share — and the horizontal squeeze becomes large enough to crush or deform the load.
+        </p>
+      </details>
+      
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">What is the minimum safe sling angle?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          ASME B30.9 recommends sling angles never fall below 30° from horizontal. Below that, tension exceeds twice the vertical share and horizontal forces risk damaging the load or connections. If your hook height forces a shallow angle, use a <strong class="text-white">spreader beam</strong> or lifting beam to bring the legs back toward vertical.
+        </p>
+      </details>
+      
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">How do I measure the sling angle?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          Measure between the sling leg and a horizontal line at the load attachment point, using a digital angle finder, an inclinometer app, or a protractor. Measure every leg in a multi-leg rig and use the shallowest angle for sizing. Never estimate by eye — small angle errors cause large tension errors.
+        </p>
+      </details>
+      
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">Is load always shared equally between sling legs?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          Only when legs are the same length, attach at the same height, and the load's center of gravity is centered under the hook. Unequal lengths or an off-center CG put more load on some legs — this calculator's even-share assumption no longer applies, and a qualified person must evaluate the rig per ASME B30.9.
+        </p>
+      </details>
+      
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">Chain vs web sling vs wire rope — does the angle math change?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          No. The 1/sin(angle) tension relationship is geometry, not material — it applies equally to chain, web, and wire rope slings. What changes is the rated capacity at 90° (vertical): chain slings are rated per the chart above, while web and wire rope slings follow their own WLL tables. See our <a href="/sling-capacity-chart" class="text-amber-400 hover:underline">Sling Capacity Chart</a> for web and wire rope values.
+        </p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- Related Tools -->
+<section class="py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-white mb-4">Related Rigging Calculators</h2>
+      <p class="text-gray-400">Complete your lift plan with these free tools.</p>
+    </div>
+    
+    <div class="grid md:grid-cols-3 gap-6">
+      <a href="/shackle-size-calculator" class="tool-card block">
+        <div class="tool-card-icon">⚓</div>
+        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-400 transition">Shackle Size Calculator</h3>
+        <p class="text-sm text-gray-400">Enter load → get the exact Crosby shackle model, WLL, pin diameter, and weight.</p>
+        <div class="mt-4 text-amber-400 text-sm font-medium">Calculate →</div>
+      </a>
+      
+      <a href="/sling-capacity-chart" class="tool-card block">
+        <div class="tool-card-icon">🔗</div>
+        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-400 transition">Sling Capacity Chart</h3>
+        <p class="text-sm text-gray-400">Web, chain, and wire rope sling WLL at all standard angles from 90° down to 30°.</p>
+        <div class="mt-4 text-amber-400 text-sm font-medium">View Chart →</div>
+      </a>
+      
+      <a href="/crane-load-calculator" class="tool-card block">
+        <div class="tool-card-icon">🏗️</div>
+        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-400 transition">Crane Load Calculator</h3>
+        <p class="text-sm text-gray-400">Check load moment, working radius, and crane utilization for your lift.</p>
+        <div class="mt-4 text-amber-400 text-sm font-medium">Calculate →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-20 bg-ink-900/50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-3xl font-bold text-white mb-4">Need Slings or Shackles at Bulk Pricing?</h2>
+    <p class="text-gray-400 mb-8 max-w-xl mx-auto">Send us your calculated specs and receive competitive quotes from vetted rigging manufacturers within 24 hours.</p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <button class="accent-btn" onclick="document.getElementById('rfq-modal').classList.remove('hidden')">
+        Request a Quote
+      </button>
+      <a href="mailto:sales@riggingcalculators.com" class="accent-btn-secondary">
+        Email Us
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Disclaimer -->
+<section class="py-10 border-t border-ink-600/30">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <p class="text-xs text-gray-600 leading-relaxed">
+      <strong class="text-gray-500">Disclaimer:</strong> All calculations on this page are for preliminary reference only and are based on ASME B30.9 with the simplifying assumption of symmetric, equal-leg rigging. Actual rigging capacity depends on manufacturer ratings, component condition, environmental factors, and rigging geometry. This tool does not replace the judgment of a qualified rigger or competent person. Always verify with manufacturer data and applicable regulations before any lift. riggingcalculators.com accepts no liability for decisions made using these calculations.
+    </p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-12 border-t border-ink-600/30">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-4 gap-8">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-xl">⚓</span>
+          <span class="font-bold text-white">Rigging<span class="text-amber-400">Calculators</span></span>
+        </div>
+        <p class="text-sm text-gray-500">Free engineering calculators for rigging & lifting. ASME B30.9 / B30.26 based.</p>
+      </div>
+      
+      <div>
+        <h4 class="text-white font-semibold mb-4">Tools</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="/shackle-size-calculator" class="hover:text-amber-400 transition">Shackle Size Calculator</a></li>
+          <li><a href="/sling-angle-calculator" class="hover:text-amber-400 transition">Sling Angle Calculator</a></li>
+          <li><a href="/wire-rope-capacity-calculator" class="hover:text-amber-400 transition">Wire Rope Capacity Calculator</a></li>
+          <li><a href="/crane-load-calculator" class="hover:text-amber-400 transition">Crane Load Calculator</a></li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4 class="text-white font-semibold mb-4">Spec Charts</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="/shackle-size-chart" class="hover:text-amber-400 transition">Shackle Size Chart</a></li>
+          <li><a href="/wire-rope-size-chart" class="hover:text-amber-400 transition">Wire Rope Size Chart</a></li>
+          <li><a href="/sling-capacity-chart" class="hover:text-amber-400 transition">Sling Capacity Chart</a></li>
+          <li><a href="/swl-chart" class="hover:text-amber-400 transition">SWL Chart</a></li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4 class="text-white font-semibold mb-4">Crosby Specs</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="/crosby-g-209-capacity" class="hover:text-amber-400 transition">Crosby G-209</a></li>
+          <li><a href="/crosby-g-2130-capacity" class="hover:text-amber-400 transition">Crosby G-2130</a></li>
+          <li><a href="/crosby-s-209-capacity" class="hover:text-amber-400 transition">Crosby S-209</a></li>
+          <li><a href="/crosby-g-2150-capacity" class="hover:text-amber-400 transition">Crosby G-2150</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="mt-12 pt-8 border-t border-ink-600/30 flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-sm text-gray-600">© 2026 riggingcalculators.com. All calculations for reference only. Verify with manufacturer data.</p>
+      <div class="flex gap-4 text-sm text-gray-600">
+        <a href="/privacy" class="hover:text-amber-400 transition">Privacy</a>
+        <a href="/terms" class="hover:text-amber-400 transition">Terms</a>
+        <a href="/disclaimer" class="hover:text-amber-400 transition">Disclaimer</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- RFQ Modal -->
+<div id="rfq-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+  <div class="glass-card max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-bold text-white">Request a Quote</h3>
+      <button onclick="document.getElementById('rfq-modal').classList.add('hidden')" class="text-gray-500 hover:text-white text-2xl">×</button>
+    </div>
+    
+    <form id="rfq-form" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2">Name</label>
+          <input type="text" class="field" required placeholder="John Smith" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2">Company</label>
+          <input type="text" class="field" required placeholder="ABC Construction" />
+        </div>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Email</label>
+        <input type="email" class="field" required placeholder="john@abc.com" />
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Product Type</label>
+        <select class="field" required>
+          <option value="">Select...</option>
+          <option value="slings">Slings</option>
+          <option value="shackles">Shackles</option>
+          <option value="wire-rope">Wire Rope</option>
+          <option value="chain">Chain</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Quantity</label>
+        <input type="number" class="field" min="1" placeholder="e.g. 100" />
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Requirements</label>
+        <textarea class="field" rows="3" placeholder="Load capacity, leg count, sling angle, material, certification requirements..."></textarea>
+      </div>
+      
+      <button type="submit" class="accent-btn w-full">Submit RFQ</button>
+    </form>
+    
+    <p class="disclaimer text-center">We connect you with vetted manufacturers. No spam, no obligation.</p>
+  </div>
+</div>
+
+<!-- Calculator Script -->
+<script is:inline>
+  // Chain sling WLL table (Grade 80, single leg vertical, tonnes)
+  const CHAIN_WLL = [
+    { dia: '6mm', wll: 1.12 },
+    { dia: '8mm', wll: 2.0 },
+    { dia: '10mm', wll: 3.15 },
+    { dia: '13mm', wll: 5.3 },
+    { dia: '16mm', wll: 8.0 },
+    { dia: '18mm', wll: 11.2 },
+    { dia: '20mm', wll: 15.0 },
+    { dia: '23mm', wll: 21.2 },
+    { dia: '26mm', wll: 31.5 },
+  ];
+
+  const SLING_TYPE_LABELS = {
+    'chain': 'Chain Sling',
+    'web': 'Web Sling',
+    'wire-rope': 'Wire Rope Sling'
+  };
+
+  document.getElementById('sling-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const totalLoad = parseFloat(document.getElementById('load-input').value);
+    const legs = parseInt(document.getElementById('legs-input').value, 10);
+    const angle = parseFloat(document.getElementById('angle-input').value);
+    const slingType = document.getElementById('sling-type-input').value;
+    
+    if (!totalLoad || totalLoad <= 0) return;
+    
+    // Core math: tensionFactor = 1/sin(angle), loadPerLeg = (totalLoad/legs) × tensionFactor
+    const rad = angle * Math.PI / 180;
+    const tensionFactor = 1 / Math.sin(rad);
+    const loadPerLeg = (totalLoad / legs) * tensionFactor;
+    const verticalForce = totalLoad / legs;
+    const horizontalForce = verticalForce / Math.tan(rad);
+    
+    // Display results
+    document.getElementById('result-badge').textContent = legs + ' leg @ ' + angle + '°';
+    document.getElementById('result-leg-load').textContent = verticalForce.toFixed(2) + ' t';
+    document.getElementById('result-tension').textContent = loadPerLeg.toFixed(2) + ' t';
+    document.getElementById('result-factor').textContent = '× ' + tensionFactor.toFixed(3);
+    document.getElementById('result-vertical').textContent = verticalForce.toFixed(2) + ' t';
+    document.getElementById('result-horizontal').textContent = horizontalForce.toFixed(2) + ' t';
+    
+    // Recommended chain sling: smallest chain WLL >= tension per leg
+    const chain = CHAIN_WLL.find(c => c.wll >= loadPerLeg);
+    const chainEl = document.getElementById('result-chain');
+    if (chain) {
+      chainEl.textContent = chain.dia + ' Grade 80 chain (' + chain.wll.toFixed(2) + ' t WLL)';
+    } else {
+      chainEl.textContent = 'Exceeds 26mm chain — consult manufacturer';
+    }
+    
+    // Warnings
+    const warningEl = document.getElementById('result-warning');
+    const noteEl = document.getElementById('result-note');
+    
+    if (angle < 30) {
+      warningEl.textContent = '⚠ Angle below 30° from horizontal — NOT recommended by ASME B30.9. Tension exceeds 2× the vertical share and horizontal squeeze may damage the load. Use a spreader beam or lengthen legs.';
+      warningEl.classList.remove('hidden');
+    } else if (angle < 45) {
+      warningEl.textContent = '⚠ Shallow angle: each leg carries ' + tensionFactor.toFixed(2) + '× its vertical share. Verify attachment points and load can handle ' + horizontalForce.toFixed(1) + ' t horizontal squeeze per leg.';
+      warningEl.classList.remove('hidden');
+    } else {
+      warningEl.classList.add('hidden');
+    }
+    
+    if (slingType !== 'chain' && chain) {
+      noteEl.textContent = 'Note: chain size shown as reference. For ' + (SLING_TYPE_LABELS[slingType] || slingType) + ', select a sling whose angle-rated WLL ≥ ' + loadPerLeg.toFixed(2) + ' t per leg. See the Sling Capacity Chart.';
+      noteEl.classList.remove('hidden');
+    } else {
+      noteEl.classList.add('hidden');
+    }
+    
+    document.getElementById('sling-result').classList.remove('hidden');
+    
+    // Track event
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'tool_complete', {
+        tool_name: 'sling_angle_calculator',
+        result_value: parseFloat(loadPerLeg.toFixed(2)),
+        legs: legs,
+        angle: angle,
+        sling_type: slingType
+      });
+    }
+  });
+
+  // RFQ form
+  document.getElementById('rfq-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'rfq_submit', {
+        tool_name: 'sling_angle_calculator'
+      });
+    }
+    
+    this.innerHTML = '<div class="text-center py-8"><div class="text-4xl mb-4">✅</div><h4 class="text-xl font-bold text-white mb-2">RFQ Submitted</h4><p class="text-gray-400">We will contact you within 24 hours with quotes from vetted suppliers.</p></div>';
+  });
+</script>
+
+</Base>

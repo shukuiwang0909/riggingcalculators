@@ -1,0 +1,751 @@
+---
+import Base from '../layouts/Base.astro';
+import {
+  WIRE_ROPE_6x19_IWRC,
+  WIRE_ROPE_6x36_IWRC,
+  WIRE_ROPE_6x7_FC,
+} from '../data/wireRopes';
+
+const siteUrl = 'https://riggingcalculators.com';
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Wire Rope Capacity Calculator",
+    "url": `${siteUrl}/wire-rope-capacity-calculator`,
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "description": "Free wire rope capacity calculator. Get breaking load & working load limit for 6x19, 6x36, 6x7 constructions. ISO 2408 data. No signup.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Rigging Calculators",
+      "url": siteUrl
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the minimum safety factor for wire rope used in lifting?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ASME B30.9 recommends a minimum 5:1 safety factor for wire rope used in lifting applications. This means the breaking load must be at least 5 times the working load limit. Some specialized applications use 3.5:1, and critical lifts may require 10:1."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between 6x19 and 6x36 wire rope?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "6x19 wire rope has 19 wires per strand, making it stiffer and more abrasion-resistant — ideal for static lines and general purpose rigging. 6x36 has 36 wires per strand, making it more flexible — better for cranes and winches where the rope bends around sheaves. Breaking strength is similar for the same diameter."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between breaking load and WLL?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Breaking load (also called minimum breaking strength, MBS) is the load at which the wire rope will fail. WLL (Working Load Limit) is the maximum load the rope may be subjected to in service, calculated by dividing the breaking load by the safety factor. For a 5:1 safety factor, WLL = breaking load / 5."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When should I use 6x7 wire rope?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "6x7 wire rope is the stiffest of the common constructions, with only 7 wires per strand. It is best suited for static lines, guy ropes, and applications where the rope stays on a drum or runs over few sheaves. It is not recommended for applications requiring flexibility."
+        }
+      }
+    ]
+  }
+];
+
+const breadcrumbItems = [
+  { name: "Home", url: "/" },
+  { name: "Wire Rope Capacity Calculator", url: "/wire-rope-capacity-calculator" }
+];
+---
+
+<Base
+  title="Wire Rope Capacity Calculator — Breaking Load & WLL | riggingcalculators.com"
+  description="Free wire rope capacity calculator. Get breaking load & working load limit for 6x19, 6x36, 6x7 constructions. ISO 2408 data. No signup."
+  canonical="/wire-rope-capacity-calculator"
+  jsonLd={jsonLd}
+  breadcrumbItems={breadcrumbItems}
+  gaId="G-XXXXXXX"
+>
+
+<!-- Header -->
+<header class="sticky top-0 z-50 glass-card border-b border-ink-600/30">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <a href="/" class="flex items-center gap-2">
+        <span class="text-2xl">⚓</span>
+        <span class="font-bold text-xl text-white">Rigging<span class="text-amber-400">Calculators</span></span>
+      </a>
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="/#tools" class="text-gray-400 hover:text-amber-400 transition">Tools</a>
+        <a href="/#charts" class="text-gray-400 hover:text-amber-400 transition">Spec Charts</a>
+        <a href="#spec-tables" class="text-gray-400 hover:text-amber-400 transition">Spec Tables</a>
+        <a href="#faq" class="text-gray-400 hover:text-amber-400 transition">FAQ</a>
+      </nav>
+      <button class="accent-btn text-sm px-4 py-2" onclick="document.getElementById('calculator').scrollIntoView({behavior:'smooth'})">
+        Calculate Now
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Hero + Calculator -->
+<section class="relative py-20 lg:py-28 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-ink-900 via-ink-950 to-ink-900"></div>
+  <div class="absolute inset-0 opacity-5" style="background-image: url(&quot;data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f59e0b' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E&quot;);"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <!-- Left: Copy -->
+      <div>
+        <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-full px-4 py-1.5 mb-6">
+          <span class="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
+          <span class="text-amber-400 text-sm font-medium">ISO 2408 / ASME B30.9 Compliant</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+          Wire Rope Capacity<br/>
+          <span class="text-amber-400">Calculator</span>
+        </h1>
+
+        <p class="text-xl text-gray-400 mb-8 leading-relaxed">
+          Get breaking load, working load limit (WLL), and weight per meter for 6x19 IWRC, 6x36 IWRC, and 6x7 FC wire rope. No signup. No PDF. Just answers.
+        </p>
+
+        <div class="flex flex-wrap gap-4">
+          <button class="accent-btn" onclick="document.getElementById('calculator').scrollIntoView({behavior:'smooth'})">
+            Calculate Now
+          </button>
+          <a href="#spec-tables" class="accent-btn-secondary">View Spec Tables</a>
+        </div>
+
+        <div class="mt-10 grid grid-cols-3 gap-6">
+          <div>
+            <div class="text-2xl font-bold text-amber-400">3</div>
+            <div class="text-sm text-gray-500">constructions</div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-amber-400">35</div>
+            <div class="text-sm text-gray-500">diameter sizes</div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-amber-400">100%</div>
+            <div class="text-sm text-gray-500">free forever</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Calculator -->
+      <div id="calculator" class="glass-card p-6 lg:p-8">
+        <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+          <span class="text-amber-400">🪢</span> Wire Rope Capacity Calculator
+        </h2>
+
+        <form id="wire-rope-form" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-2">Diameter (mm)</label>
+            <input
+              type="number"
+              id="diameter-input"
+              class="field"
+              placeholder="e.g. 16"
+              min="4"
+              max="40"
+              step="1"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-2">Construction</label>
+            <select id="construction-input" class="field" required>
+              <option value="6x19">6x19 IWRC — stiff, abrasion-resistant</option>
+              <option value="6x36">6x36 IWRC — flexible, cranes &amp; winches</option>
+              <option value="6x7">6x7 FC — static lines &amp; guys</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-2">Safety Factor</label>
+            <select id="sf-input" class="field">
+              <option value="3.5">3.5:1 — specialized equipment</option>
+              <option value="5" selected>5:1 — ASME B30.9 lifting (default)</option>
+              <option value="10">10:1 — critical lifts</option>
+            </select>
+          </div>
+
+          <button type="submit" class="accent-btn w-full">
+            Calculate Capacity
+          </button>
+        </form>
+
+        <!-- Result -->
+        <div id="rope-result" class="hidden mt-6 result-panel">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-amber-400">Wire Rope Capacity</h3>
+            <span id="rope-spec" class="bg-amber-500/20 text-amber-400 px-3 py-1 rounded-full text-sm font-mono"></span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="text-gray-500">Breaking Load:</span>
+              <span id="result-breaking" class="text-white font-mono font-bold ml-2"></span>
+            </div>
+            <div>
+              <span class="text-gray-500">WLL:</span>
+              <span id="result-wll" class="text-white font-mono font-bold ml-2"></span>
+            </div>
+            <div>
+              <span class="text-gray-500">Weight/m:</span>
+              <span id="result-weight" class="text-white font-mono ml-2"></span>
+            </div>
+            <div>
+              <span class="text-gray-500">Safety Factor:</span>
+              <span id="result-sf" class="text-white font-mono ml-2"></span>
+            </div>
+          </div>
+
+          <div id="result-warning" class="hidden mt-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-sm text-yellow-400">
+          </div>
+
+          <div class="mt-6 flex gap-3">
+            <button class="accent-btn text-sm px-4 py-2" onclick="document.getElementById('rfq-modal').classList.remove('hidden')">
+              Get a Quote
+            </button>
+            <button class="accent-btn-secondary text-sm px-4 py-2" onclick="document.getElementById('rope-result').classList.add('hidden')">
+              Recalculate
+            </button>
+          </div>
+        </div>
+
+        <p class="disclaimer">
+          Based on ISO 2408 / ASME B30.9. Not a substitute for qualified rigger judgment. Always verify with manufacturer data.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Spec Tables -->
+<section id="spec-tables" class="py-20 bg-ink-900/50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-white mb-4">Wire Rope Specification Tables</h2>
+      <p class="text-gray-400 max-w-2xl mx-auto">Complete breaking load and weight data for all standard diameters. ISO 2408 compliant, EIPS grade 1960 N/mm².</p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-6">
+      <!-- 6x19 IWRC -->
+      <div class="glass-card p-6">
+        <h3 class="text-lg font-bold text-amber-400 mb-2 font-mono">6x19 IWRC</h3>
+        <p class="text-sm text-gray-500 mb-4">Stiff, abrasion-resistant. General purpose rigging.</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-gray-500 border-b border-ink-600/30">
+                <th class="py-2 pr-2">Ø (mm)</th>
+                <th class="py-2 pr-2">Break (t)</th>
+                <th class="py-2">kg/m</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-300">
+              {WIRE_ROPE_6x19_IWRC.map(r => (
+                <tr class="border-b border-ink-600/10">
+                  <td class="py-2 pr-2 font-mono">{r.diameter_mm}</td>
+                  <td class="py-2 pr-2 font-mono">{r.breaking_load_tonnes.toFixed(1)}</td>
+                  <td class="py-2 font-mono">{r.weight_kg_per_m.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 6x36 IWRC -->
+      <div class="glass-card p-6">
+        <h3 class="text-lg font-bold text-amber-400 mb-2 font-mono">6x36 IWRC</h3>
+        <p class="text-sm text-gray-500 mb-4">Flexible. Cranes, winches &amp; sheave applications.</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-gray-500 border-b border-ink-600/30">
+                <th class="py-2 pr-2">Ø (mm)</th>
+                <th class="py-2 pr-2">Break (t)</th>
+                <th class="py-2">kg/m</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-300">
+              {WIRE_ROPE_6x36_IWRC.map(r => (
+                <tr class="border-b border-ink-600/10">
+                  <td class="py-2 pr-2 font-mono">{r.diameter_mm}</td>
+                  <td class="py-2 pr-2 font-mono">{r.breaking_load_tonnes.toFixed(1)}</td>
+                  <td class="py-2 font-mono">{r.weight_kg_per_m.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 6x7 FC -->
+      <div class="glass-card p-6">
+        <h3 class="text-lg font-bold text-amber-400 mb-2 font-mono">6x7 FC</h3>
+        <p class="text-sm text-gray-500 mb-4">Very stiff. Static lines, guys &amp; stays.</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-gray-500 border-b border-ink-600/30">
+                <th class="py-2 pr-2">Ø (mm)</th>
+                <th class="py-2 pr-2">Break (t)</th>
+                <th class="py-2">kg/m</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-300">
+              {WIRE_ROPE_6x7_FC.map(r => (
+                <tr class="border-b border-ink-600/10">
+                  <td class="py-2 pr-2 font-mono">{r.diameter_mm}</td>
+                  <td class="py-2 pr-2 font-mono">{r.breaking_load_tonnes.toFixed(1)}</td>
+                  <td class="py-2 font-mono">{r.weight_kg_per_m.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-sm text-gray-600 text-center mt-6">
+      Breaking loads are minimum values for 1960 N/mm² (EIPS) grade wire rope per ISO 2408. WLL = breaking load ÷ safety factor.
+    </p>
+  </div>
+</section>
+
+<!-- Construction Comparison -->
+<section class="py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-white mb-4">Which Wire Rope Construction?</h2>
+      <p class="text-gray-400 max-w-2xl mx-auto">Breaking strength is similar for the same diameter — the difference is flexibility, abrasion resistance, and fatigue life.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="glass-card p-6">
+        <div class="text-amber-400 font-mono font-bold text-xl mb-2">6x19 IWRC</div>
+        <div class="text-sm text-amber-400/70 font-medium mb-3">Stiff &amp; Abrasion-Resistant</div>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li class="flex gap-2"><span class="text-amber-400">✓</span> Best wear resistance of the three</li>
+          <li class="flex gap-2"><span class="text-amber-400">✓</span> Resists crushing on drums</li>
+          <li class="flex gap-2"><span class="text-amber-400">✓</span> Good for general rigging &amp; slings</li>
+          <li class="flex gap-2"><span class="text-gray-600">✗</span> Less flexible — larger sheave diameters needed</li>
+        </ul>
+        <div class="mt-4 text-xs text-gray-600">Typical: hoist ropes, slings, winch lines with infrequent bending</div>
+      </div>
+
+      <div class="glass-card p-6">
+        <div class="text-amber-400 font-mono font-bold text-xl mb-2">6x36 IWRC</div>
+        <div class="text-sm text-amber-400/70 font-medium mb-3">Flexible — Cranes &amp; Winches</div>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li class="flex gap-2"><span class="text-amber-400">✓</span> Most flexible of the three</li>
+          <li class="flex gap-2"><span class="text-amber-400">✓</span> Best fatigue life over sheaves</li>
+          <li class="flex gap-2"><span class="text-amber-400">✓</span> Standard for crane hoist ropes</li>
+          <li class="flex gap-2"><span class="text-gray-600">✗</span> Wears faster than 6x19 in abrasive conditions</li>
+        </ul>
+        <div class="mt-4 text-xs text-gray-600">Typical: tower cranes, mobile cranes, high-cycle winches</div>
+      </div>
+
+      <div class="glass-card p-6">
+        <div class="text-amber-400 font-mono font-bold text-xl mb-2">6x7 FC</div>
+        <div class="text-sm text-amber-400/70 font-medium mb-3">Very Stiff — Static Lines</div>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li class="flex gap-2"><span class="text-amber-400">✓</span> Cheapest construction</li>
+          <li class="flex gap-2"><span class="text-amber-400">✓</span> Excellent stability on drums</li>
+          <li class="flex gap-2"><span class="text-amber-400">✓</span> Good for guys, stays, hand ropes</li>
+          <li class="flex gap-2"><span class="text-gray-600">✗</span> Poor flexibility &amp; fatigue life — never over sheaves</li>
+        </ul>
+        <div class="mt-4 text-xs text-gray-600">Typical: guy wires, guard rails, static mooring lines</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Safety Factor Guide -->
+<section class="py-20 bg-ink-900/50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-white mb-4">Wire Rope Safety Factor Guide</h2>
+      <p class="text-gray-400">WLL = Breaking Load ÷ Safety Factor. Choose based on your application and local regulations.</p>
+    </div>
+
+    <div class="space-y-4">
+      <div class="glass-card p-6 flex items-start gap-4">
+        <div class="text-2xl font-bold text-amber-400 font-mono w-20 shrink-0">3.5:1</div>
+        <div>
+          <div class="font-semibold text-white mb-1">Specialized Equipment</div>
+          <p class="text-sm text-gray-400">Permitted for certain cranes and winch applications under specific standards (e.g. some EU machinery directives). Never assume 3.5:1 is acceptable — verify with the equipment manufacturer and applicable code.</p>
+        </div>
+      </div>
+
+      <div class="glass-card p-6 flex items-start gap-4 border-amber-500/30">
+        <div class="text-2xl font-bold text-amber-400 font-mono w-20 shrink-0">5:1</div>
+        <div>
+          <div class="font-semibold text-white mb-1">General Lifting — ASME B30.9 Minimum <span class="text-amber-400 text-xs ml-2">(DEFAULT)</span></div>
+          <p class="text-sm text-gray-400">The standard minimum for wire rope used in lifting service. Applies to slings, hoist ropes, and rigging. When in doubt, use 5:1.</p>
+        </div>
+      </div>
+
+      <div class="glass-card p-6 flex items-start gap-4">
+        <div class="text-2xl font-bold text-amber-400 font-mono w-20 shrink-0">10:1</div>
+        <div>
+          <div class="font-semibold text-white mb-1">Critical Lifts &amp; Personnel</div>
+          <p class="text-sm text-gray-400">Used for lifts where failure would be catastrophic, man-riding applications, or where shock loading is possible. Many offshore and nuclear applications require 10:1 or higher.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-sm text-yellow-400">
+      ⚠️ A safety factor below 5:1 for general lifting is below the ASME B30.9 minimum. This calculator will warn you — but the final responsibility rests with the qualified person planning the lift.
+    </div>
+  </div>
+</section>
+
+<!-- Related Tools -->
+<section class="py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-white mb-4">Related Rigging Tools</h2>
+      <p class="text-gray-400">Complete your lift planning with these free calculators.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <a href="/wire-rope-size-chart" class="tool-card block">
+        <div class="tool-card-icon">📋</div>
+        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-400 transition">Wire Rope Size Chart</h3>
+        <p class="text-sm text-gray-400">Full breaking load and weight tables for every diameter and construction.</p>
+        <div class="mt-4 text-amber-400 text-sm font-medium">View Chart →</div>
+      </a>
+
+      <a href="/sling-angle-calculator" class="tool-card block">
+        <div class="tool-card-icon">📐</div>
+        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-400 transition">Sling Angle Calculator</h3>
+        <p class="text-sm text-gray-400">Multi-leg sling tension at any angle. ASME B30.9 tension factors included.</p>
+        <div class="mt-4 text-amber-400 text-sm font-medium">Calculate →</div>
+      </a>
+
+      <a href="/shackle-size-calculator" class="tool-card block">
+        <div class="tool-card-icon">⚓</div>
+        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-400 transition">Shackle Size Calculator</h3>
+        <p class="text-sm text-gray-400">Enter load → get exact Crosby model, WLL, and dimensions.</p>
+        <div class="mt-4 text-amber-400 text-sm font-medium">Calculate →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="py-20 bg-ink-900/50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-white mb-4">Frequently Asked Questions</h2>
+      <p class="text-gray-400">Answers based on ISO 2408 and ASME B30.9 standards.</p>
+    </div>
+
+    <div class="space-y-4">
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">What is the minimum safety factor for wire rope used in lifting?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          ASME B30.9 recommends a minimum 5:1 safety factor for wire rope in lifting service. Some specialized equipment uses 3.5:1, and critical lifts may require 10:1. Always verify with your engineering team and applicable regulations.
+        </p>
+      </details>
+
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">What is the difference between breaking load and WLL?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          Breaking load (minimum breaking strength) is the load at which the rope fails. WLL is the maximum permissible working load: WLL = breaking load ÷ safety factor. For a 20mm 6x19 IWRC rope with a 25.5t breaking load at 5:1, WLL = 5.1 tonnes.
+        </p>
+      </details>
+
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">What is the difference between 6x19 and 6x36 wire rope?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          6x19 has 19 wires per strand — stiffer, more abrasion-resistant, good for general rigging. 6x36 has 36 wires per strand — more flexible, better fatigue life over sheaves, ideal for crane hoist ropes. Breaking strength is similar for the same diameter. See our <a href="/wire-rope-size-chart" class="text-amber-400 hover:underline">Wire Rope Size Chart</a> for full data.
+        </p>
+      </details>
+
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">When should I use 6x7 wire rope?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          6x7 is the stiffest common construction. Use it for static lines, guy ropes, and stays where the rope won't bend over sheaves. Never use 6x7 in high-cycle bending applications — the wires fatigue quickly.
+        </p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- Disclaimer -->
+<section class="py-12">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="glass-card p-6 text-sm text-gray-500 leading-relaxed">
+      <strong class="text-gray-400">Disclaimer:</strong> All calculations are for reference only and based on ISO 2408 minimum breaking loads for 1960 N/mm² (EIPS) grade wire rope. Actual breaking loads vary by manufacturer, lay, and grade. Always verify with manufacturer certificates and have a qualified person plan every lift. riggingcalculators.com accepts no liability for use of these calculations.
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-20 bg-ink-900/50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-3xl font-bold text-white mb-4">Need Wire Rope Pricing?</h2>
+    <p class="text-gray-400 mb-8 max-w-xl mx-auto">Get competitive quotes from vetted wire rope manufacturers. Send us your diameter, construction, and length — receive quotes within 24 hours.</p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <button class="accent-btn" onclick="document.getElementById('rfq-modal').classList.remove('hidden')">
+        Request a Quote
+      </button>
+      <a href="mailto:sales@riggingcalculators.com" class="accent-btn-secondary">
+        Email Us
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-12 border-t border-ink-600/30">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-4 gap-8">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-xl">⚓</span>
+          <span class="font-bold text-white">Rigging<span class="text-amber-400">Calculators</span></span>
+        </div>
+        <p class="text-sm text-gray-500">Free engineering calculators for rigging &amp; lifting. ASME B30.9 / B30.26 based.</p>
+      </div>
+
+      <div>
+        <h4 class="text-white font-semibold mb-4">Tools</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="/shackle-size-calculator" class="hover:text-amber-400 transition">Shackle Size Calculator</a></li>
+          <li><a href="/sling-angle-calculator" class="hover:text-amber-400 transition">Sling Angle Calculator</a></li>
+          <li><a href="/wire-rope-capacity-calculator" class="hover:text-amber-400 transition">Wire Rope Capacity Calculator</a></li>
+          <li><a href="/crane-load-calculator" class="hover:text-amber-400 transition">Crane Load Calculator</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-white font-semibold mb-4">Spec Charts</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="/shackle-size-chart" class="hover:text-amber-400 transition">Shackle Size Chart</a></li>
+          <li><a href="/wire-rope-size-chart" class="hover:text-amber-400 transition">Wire Rope Size Chart</a></li>
+          <li><a href="/sling-capacity-chart" class="hover:text-amber-400 transition">Sling Capacity Chart</a></li>
+          <li><a href="/swl-chart" class="hover:text-amber-400 transition">SWL Chart</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-white font-semibold mb-4">Crosby Specs</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="/crosby-g-209-capacity" class="hover:text-amber-400 transition">Crosby G-209</a></li>
+          <li><a href="/crosby-g-2130-capacity" class="hover:text-amber-400 transition">Crosby G-2130</a></li>
+          <li><a href="/crosby-s-209-capacity" class="hover:text-amber-400 transition">Crosby S-209</a></li>
+          <li><a href="/crosby-g-2150-capacity" class="hover:text-amber-400 transition">Crosby G-2150</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 pt-8 border-t border-ink-600/30 flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-sm text-gray-600">© 2026 riggingcalculators.com. All calculations for reference only. Verify with manufacturer data.</p>
+      <div class="flex gap-4 text-sm text-gray-600">
+        <a href="/privacy" class="hover:text-amber-400 transition">Privacy</a>
+        <a href="/terms" class="hover:text-amber-400 transition">Terms</a>
+        <a href="/disclaimer" class="hover:text-amber-400 transition">Disclaimer</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- RFQ Modal -->
+<div id="rfq-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+  <div class="glass-card max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-bold text-white">Request a Quote</h3>
+      <button onclick="document.getElementById('rfq-modal').classList.add('hidden')" class="text-gray-500 hover:text-white text-2xl">×</button>
+    </div>
+
+    <form id="rfq-form" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2">Name</label>
+          <input type="text" class="field" required placeholder="John Smith" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2">Company</label>
+          <input type="text" class="field" required placeholder="ABC Construction" />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Email</label>
+        <input type="email" class="field" required placeholder="john@abc.com" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Product Type</label>
+        <select class="field" required>
+          <option value="">Select...</option>
+          <option value="wire-rope" selected>Wire Rope</option>
+          <option value="shackles">Shackles</option>
+          <option value="slings">Slings</option>
+          <option value="chain">Chain</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Quantity / Length</label>
+        <input type="text" class="field" placeholder="e.g. 500m of 20mm 6x36 IWRC" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Requirements</label>
+        <textarea class="field" rows="3" placeholder="Diameter, construction, grade, certification requirements..."></textarea>
+      </div>
+
+      <button type="submit" class="accent-btn w-full">Submit RFQ</button>
+    </form>
+
+    <p class="disclaimer text-center">We connect you with vetted manufacturers. No spam, no obligation.</p>
+  </div>
+</div>
+
+<!-- Calculator Script -->
+<script>
+  // Inline wire rope data (ISO 2408) for client-side calculation
+  const WIRE_ROPES = [
+    // 6x19 IWRC
+    { construction: '6x19', core: 'IWRC', diameter_mm: 6, breaking_load_tonnes: 2.4, weight_kg_per_m: 0.13 },
+    { construction: '6x19', core: 'IWRC', diameter_mm: 8, breaking_load_tonnes: 4.2, weight_kg_per_m: 0.23 },
+    { construction: '6x19', core: 'IWRC', diameter_mm: 10, breaking_load_tonnes: 6.5, weight_kg_per_m: 0.36 },
+    { construction: '6x19', core: 'IWRC', diameter_mm: 12, breaking_load_tonnes: 9.3, weight_kg_per_m: 0.52 },
+    { construction: '6x19', core: 'IWRC', diameter_mm: 14, breaking_load_tonnes: 12.6, weight_kg_per_m: 0.71 },
+    { construction: '6x19', core: 'IWRC', diameter_mm: 16, breaking_load_tonnes: 16.4, weight_kg_per_m: 0.93 },
+    { construction: '6x19', core: 'IWRC', diameter_mm: 18, breaking_load_tonnes: 20.7, weight_kg_per_m: 1.17 },
+    { construction: '6x19', core: 'IWRC', diameter_mm: 20, breaking_load_tonnes: 25.5, weight_kg_per_m: 1.45 },
+    { construction: '6x19', core: 'IWRC', diameter_mm: 22, breaking_load_tonnes: 30.8, weight_kg_per_m: 1.76 },
+    { construction: '6x19', core: 'IWRC', diameter_mm: 24, breaking_load_tonnes: 36.6, weight_kg_per_m: 2.10 },
+    { construction: '6x19', core: 'IWRC', diameter_mm: 26, breaking_load_tonnes: 42.9, weight_kg_per_m: 2.47 },
+    { construction: '6x19', core: 'IWRC', diameter_mm: 28, breaking_load_tonnes: 49.7, weight_kg_per_m: 2.87 },
+    { construction: '6x19', core: 'IWRC', diameter_mm: 32, breaking_load_tonnes: 64.8, weight_kg_per_m: 3.74 },
+    { construction: '6x19', core: 'IWRC', diameter_mm: 36, breaking_load_tonnes: 81.9, weight_kg_per_m: 4.73 },
+    { construction: '6x19', core: 'IWRC', diameter_mm: 40, breaking_load_tonnes: 101.0, weight_kg_per_m: 5.84 },
+    // 6x36 IWRC
+    { construction: '6x36', core: 'IWRC', diameter_mm: 8, breaking_load_tonnes: 3.9, weight_kg_per_m: 0.22 },
+    { construction: '6x36', core: 'IWRC', diameter_mm: 10, breaking_load_tonnes: 6.0, weight_kg_per_m: 0.35 },
+    { construction: '6x36', core: 'IWRC', diameter_mm: 12, breaking_load_tonnes: 8.6, weight_kg_per_m: 0.50 },
+    { construction: '6x36', core: 'IWRC', diameter_mm: 14, breaking_load_tonnes: 11.7, weight_kg_per_m: 0.68 },
+    { construction: '6x36', core: 'IWRC', diameter_mm: 16, breaking_load_tonnes: 15.2, weight_kg_per_m: 0.89 },
+    { construction: '6x36', core: 'IWRC', diameter_mm: 18, breaking_load_tonnes: 19.2, weight_kg_per_m: 1.13 },
+    { construction: '6x36', core: 'IWRC', diameter_mm: 20, breaking_load_tonnes: 23.7, weight_kg_per_m: 1.39 },
+    { construction: '6x36', core: 'IWRC', diameter_mm: 22, breaking_load_tonnes: 28.6, weight_kg_per_m: 1.68 },
+    { construction: '6x36', core: 'IWRC', diameter_mm: 24, breaking_load_tonnes: 34.0, weight_kg_per_m: 2.01 },
+    { construction: '6x36', core: 'IWRC', diameter_mm: 26, breaking_load_tonnes: 39.9, weight_kg_per_m: 2.36 },
+    { construction: '6x36', core: 'IWRC', diameter_mm: 28, breaking_load_tonnes: 46.2, weight_kg_per_m: 2.74 },
+    { construction: '6x36', core: 'IWRC', diameter_mm: 32, breaking_load_tonnes: 60.3, weight_kg_per_m: 3.58 },
+    { construction: '6x36', core: 'IWRC', diameter_mm: 36, breaking_load_tonnes: 76.2, weight_kg_per_m: 4.53 },
+    { construction: '6x36', core: 'IWRC', diameter_mm: 40, breaking_load_tonnes: 94.0, weight_kg_per_m: 5.60 },
+    // 6x7 FC
+    { construction: '6x7', core: 'FC', diameter_mm: 4, breaking_load_tonnes: 1.1, weight_kg_per_m: 0.06 },
+    { construction: '6x7', core: 'FC', diameter_mm: 5, breaking_load_tonnes: 1.7, weight_kg_per_m: 0.09 },
+    { construction: '6x7', core: 'FC', diameter_mm: 6, breaking_load_tonnes: 2.4, weight_kg_per_m: 0.13 },
+    { construction: '6x7', core: 'FC', diameter_mm: 8, breaking_load_tonnes: 4.3, weight_kg_per_m: 0.23 },
+    { construction: '6x7', core: 'FC', diameter_mm: 10, breaking_load_tonnes: 6.7, weight_kg_per_m: 0.36 },
+    { construction: '6x7', core: 'FC', diameter_mm: 12, breaking_load_tonnes: 9.6, weight_kg_per_m: 0.52 },
+    { construction: '6x7', core: 'FC', diameter_mm: 14, breaking_load_tonnes: 13.0, weight_kg_per_m: 0.71 },
+    { construction: '6x7', core: 'FC', diameter_mm: 16, breaking_load_tonnes: 17.0, weight_kg_per_m: 0.93 },
+  ];
+
+  document.getElementById('wire-rope-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const diameter = parseFloat(document.getElementById('diameter-input').value);
+    const construction = document.getElementById('construction-input').value;
+    const safetyFactor = parseFloat(document.getElementById('sf-input').value);
+
+    if (!diameter || diameter <= 0) return;
+
+    const rope = WIRE_ROPES.find(r => r.diameter_mm === diameter && r.construction === construction);
+
+    if (!rope) {
+      const available = [...new Set(WIRE_ROPES.filter(r => r.construction === construction).map(r => r.diameter_mm))].sort((a, b) => a - b);
+      alert('No ' + construction + ' data for ' + diameter + 'mm. Available diameters: ' + available.join(', ') + ' mm');
+      return;
+    }
+
+    const wll = rope.breaking_load_tonnes / safetyFactor;
+
+    document.getElementById('rope-spec').textContent = rope.diameter_mm + 'mm ' + rope.construction + ' ' + rope.core;
+    document.getElementById('result-breaking').textContent = rope.breaking_load_tonnes.toFixed(1) + ' t';
+    document.getElementById('result-wll').textContent = wll.toFixed(2) + ' t';
+    document.getElementById('result-weight').textContent = rope.weight_kg_per_m.toFixed(2) + ' kg/m';
+    document.getElementById('result-sf').textContent = safetyFactor + ':1';
+
+    const warningEl = document.getElementById('result-warning');
+    if (safetyFactor < 5) {
+      warningEl.textContent = '⚠️ Safety factor ' + safetyFactor + ':1 is below the ASME B30.9 minimum of 5:1 for general lifting. Verify this is acceptable for your application.';
+      warningEl.classList.remove('hidden');
+    } else {
+      warningEl.classList.add('hidden');
+    }
+
+    document.getElementById('rope-result').classList.remove('hidden');
+
+    // Track event
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'tool_complete', {
+        tool_name: 'wire_rope_capacity_calculator',
+        result_value: rope.breaking_load_tonnes,
+        construction: construction,
+        diameter_mm: diameter,
+        safety_factor: safetyFactor
+      });
+    }
+  });
+
+  // RFQ form
+  document.getElementById('rfq-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'rfq_submit', {
+        tool_name: 'wire_rope_capacity_calculator'
+      });
+    }
+
+    this.innerHTML = '<div class="text-center py-8"><div class="text-4xl mb-4">✅</div><h4 class="text-xl font-bold text-white mb-2">RFQ Submitted</h4><p class="text-gray-400">We will contact you within 24 hours with quotes from vetted suppliers.</p></div>';
+  });
+</script>
+
+</Base>

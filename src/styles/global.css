@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink-950: #07090c;
+  --color-ink-900: #0c0f14;
+  --color-ink-800: #141820;
+  --color-ink-700: #1c2128;
+  --color-ink-600: #2a3038;
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+  --color-amber-600: #d97706;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+@layer base {
+  body {
+    @apply bg-ink-950 text-gray-200 font-sans antialiased;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-ink-800/50 backdrop-blur-sm border border-ink-600/30 rounded-xl;
+  }
+  .field {
+    @apply w-full bg-ink-900 border border-ink-600 rounded-lg px-4 py-3 text-gray-200 placeholder-gray-500 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition;
+  }
+  .result-panel {
+    @apply bg-ink-900/80 border border-amber-500/30 rounded-xl p-6;
+  }
+  .disclaimer {
+    @apply text-xs text-gray-500 mt-4 border-t border-ink-600/50 pt-4;
+  }
+  .accent-btn {
+    @apply bg-amber-500 hover:bg-amber-400 text-ink-950 font-semibold px-6 py-3 rounded-lg transition shadow-lg shadow-amber-500/20;
+  }
+  .accent-btn-secondary {
+    @apply border border-amber-500/50 text-amber-400 hover:bg-amber-500/10 font-semibold px-6 py-3 rounded-lg transition;
+  }
+  .tool-card {
+    @apply glass-card p-6 hover:border-amber-500/50 transition group;
+  }
+  .tool-card-icon {
+    @apply text-3xl mb-3;
+  }
+  .spec-table {
+    @apply w-full text-sm;
+  }
+  .spec-table th {
+    @apply bg-ink-700 text-amber-400 font-mono text-xs uppercase tracking-wider px-4 py-3 text-left border-b border-ink-600;
+  }
+  .spec-table td {
+    @apply px-4 py-3 border-b border-ink-700/50 text-gray-300;
+  }
+  .spec-table tr:hover td {
+    @apply bg-ink-800/70;
+  }
+}

@@ -1,0 +1,466 @@
+---
+import Base from '../layouts/Base.astro';
+
+const siteUrl = 'https://riggingcalculators.com';
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Crane Load Calculator",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Free crane load calculator. Calculate load moment, working radius, and utilization. Preliminary lift planning tool.",
+    "provider": { "@type": "Organization", "name": "Rigging Calculators", "url": siteUrl }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is load moment?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Load moment is the product of load weight and working radius, measured in tonne-meters (t·m). It represents the overturning force on the crane. Exceeding the rated load moment is the primary cause of crane tipping accidents." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I calculate crane working radius?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Working radius = boom length × cos(boom angle from horizontal). If you know the boom angle, use this formula. If you measure the horizontal distance from crane center to load, that is your working radius directly." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a safe utilization percentage for crane lifts?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Industry practice recommends keeping crane utilization below 85% of rated capacity for normal lifts. For critical lifts (over people, expensive equipment, or complex rigging), stay below 75%. Never exceed 100%." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does crane capacity decrease with radius?",
+        "acceptedAnswer": { "@type": "Answer", "text": "As radius increases, the overturning moment on the crane increases. To stay within stability limits, the crane must reduce its rated load. This is why load charts show decreasing capacity as radius increases." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is this calculator a substitute for a crane load chart?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. This calculator provides preliminary estimates only. Always consult the crane manufacturer's load chart for the exact configuration, and have a qualified person verify all critical lifts." }
+      }
+    ]
+  }
+];
+
+const breadcrumbItems = [
+  { name: "Home", url: "/" },
+  { name: "Crane Load Calculator", url: "/crane-load-calculator" }
+];
+---
+
+<Base 
+  title="Crane Load Calculator — Load Moment & Radius | riggingcalculators.com"
+  description="Free crane load calculator. Calculate load moment, working radius, and utilization. Preliminary lift planning tool. ASME B30.5 reference."
+  canonical="/crane-load-calculator"
+  jsonLd={jsonLd}
+  breadcrumbItems={breadcrumbItems}
+  gaId="G-XXXXXXX"
+>
+
+<header class="sticky top-0 z-50 glass-card border-b border-ink-600/30">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <a href="/" class="flex items-center gap-2">
+        <span class="text-2xl">⚓</span>
+        <span class="font-bold text-xl text-white">Rigging<span class="text-amber-400">Calculators</span></span>
+      </a>
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="/#tools" class="text-gray-400 hover:text-amber-400 transition">Tools</a>
+        <a href="/#charts" class="text-gray-400 hover:text-amber-400 transition">Spec Charts</a>
+        <a href="/#crosby" class="text-gray-400 hover:text-amber-400 transition">Crosby Specs</a>
+        <a href="/#faq" class="text-gray-400 hover:text-amber-400 transition">FAQ</a>
+      </nav>
+      <button class="accent-btn text-sm px-4 py-2" onclick="document.getElementById('calculator').scrollIntoView({behavior:'smooth'})">
+        Calculate Now
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="py-12 lg:py-20">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="text-sm text-gray-500 mb-6">
+      <a href="/" class="hover:text-amber-400">Home</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-300">Crane Load Calculator</span>
+    </nav>
+
+    <div class="text-center mb-12">
+      <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4">Crane Load Calculator</h1>
+      <p class="text-xl text-gray-400 max-w-2xl mx-auto">Calculate load moment, working radius, and crane utilization. Preliminary lift planning tool based on ASME B30.5 principles.</p>
+    </div>
+
+    <div id="calculator" class="glass-card p-6 lg:p-8 mb-12">
+      <form id="crane-form" class="space-y-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2">Load Weight (tonnes)</label>
+          <input type="number" id="load-input" class="field" placeholder="e.g. 15" min="0.1" max="500" step="0.1" required />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2">Boom Length (m)</label>
+          <input type="number" id="boom-input" class="field" placeholder="e.g. 30" min="5" max="150" step="0.5" required />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2">Input Method</label>
+          <div class="flex gap-4">
+            <label class="flex items-center gap-2 text-gray-300">
+              <input type="radio" name="input-method" value="angle" checked class="text-amber-500" />
+              <span>Boom Angle</span>
+            </label>
+            <label class="flex items-center gap-2 text-gray-300">
+              <input type="radio" name="input-method" value="radius" class="text-amber-500" />
+              <span>Working Radius</span>
+            </label>
+          </div>
+        </div>
+
+        <div id="angle-group">
+          <label class="block text-sm font-medium text-gray-400 mb-2">Boom Angle from Horizontal (degrees)</label>
+          <input type="number" id="angle-input" class="field" placeholder="e.g. 60" min="10" max="90" step="1" />
+          <p class="text-xs text-gray-500 mt-1">Angle from horizontal. 90° = vertical boom, 0° = boom flat.</p>
+        </div>
+
+        <div id="radius-group" class="hidden">
+          <label class="block text-sm font-medium text-gray-400 mb-2">Working Radius (m)</label>
+          <input type="number" id="radius-input" class="field" placeholder="e.g. 15" min="1" max="100" step="0.5" />
+          <p class="text-xs text-gray-500 mt-1">Horizontal distance from crane centerline to hook/load.</p>
+        </div>
+
+        <button type="submit" class="accent-btn w-full">Calculate</button>
+      </form>
+
+      <div id="crane-result" class="hidden mt-8 result-panel">
+        <h3 class="text-xl font-bold text-amber-400 mb-6">Lift Analysis</h3>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm mb-6">
+          <div class="bg-ink-800/50 rounded-lg p-4">
+            <div class="text-gray-500 text-xs uppercase mb-1">Working Radius</div>
+            <div id="result-radius" class="text-2xl font-mono font-bold text-white"></div>
+            <div class="text-gray-500 text-xs mt-1">meters</div>
+          </div>
+          <div class="bg-ink-800/50 rounded-lg p-4">
+            <div class="text-gray-500 text-xs uppercase mb-1">Load Moment</div>
+            <div id="result-moment" class="text-2xl font-mono font-bold text-white"></div>
+            <div class="text-gray-500 text-xs mt-1">t·m</div>
+          </div>
+          <div class="bg-ink-800/50 rounded-lg p-4">
+            <div class="text-gray-500 text-xs uppercase mb-1">Est. Capacity</div>
+            <div id="result-capacity" class="text-2xl font-mono font-bold text-white"></div>
+            <div class="text-gray-500 text-xs mt-1">tonnes at this radius</div>
+          </div>
+          <div class="bg-ink-800/50 rounded-lg p-4">
+            <div class="text-gray-500 text-xs uppercase mb-1">Utilization</div>
+            <div id="result-utilization" class="text-2xl font-mono font-bold text-white"></div>
+            <div class="text-gray-500 text-xs mt-1">of estimated capacity</div>
+          </div>
+          <div class="bg-ink-800/50 rounded-lg p-4">
+            <div class="text-gray-500 text-xs uppercase mb-1">Boom Length</div>
+            <div id="result-boom" class="text-2xl font-mono font-bold text-white"></div>
+            <div class="text-gray-500 text-xs mt-1">meters</div>
+          </div>
+          <div class="bg-ink-800/50 rounded-lg p-4">
+            <div class="text-gray-500 text-xs uppercase mb-1">Boom Angle</div>
+            <div id="result-boom-angle" class="text-2xl font-mono font-bold text-white"></div>
+            <div class="text-gray-500 text-xs mt-1">degrees from horizontal</div>
+          </div>
+        </div>
+
+        <div id="result-warning" class="hidden p-4 rounded-lg text-sm font-medium mb-6"></div>
+
+        <div class="flex flex-wrap gap-3">
+          <button class="accent-btn text-sm px-4 py-2" onclick="document.getElementById('rfq-modal').classList.remove('hidden')">Get a Quote</button>
+          <button class="accent-btn-secondary text-sm px-4 py-2" onclick="document.getElementById('crane-result').classList.add('hidden')">Recalculate</button>
+        </div>
+      </div>
+
+      <p class="disclaimer">
+        Preliminary estimate only. Always consult crane manufacturer load chart and have a qualified person verify all lifts. ASME B30.5 reference.
+      </p>
+    </div>
+
+    <!-- How to Read a Load Chart -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-white mb-6">How to Read a Crane Load Chart</h2>
+      <div class="glass-card p-6 space-y-4 text-gray-300 leading-relaxed">
+        <ol class="list-decimal list-inside space-y-3">
+          <li><strong class="text-amber-400">Identify your crane model and configuration.</strong> Load charts are specific to boom length, counterweight, and outrigger setup.</li>
+          <li><strong class="text-amber-400">Find your working radius.</strong> This is the horizontal distance from crane center to hook. The load chart rows show radius values.</li>
+          <li><strong class="text-amber-400">Read across to your boom length.</strong> The intersection gives rated capacity in tonnes or pounds.</li>
+          <li><strong class="text-amber-400">Check for deductions.</strong> Subtract weight of hook block, slings, and rigging hardware from rated capacity.</li>
+          <li><strong class="text-amber-400">Verify boom angle.</strong> Some charts list angle instead of radius. Never exceed the chart's minimum angle for your radius.</li>
+          <li><strong class="text-amber-400">Account for wind and dynamic effects.</strong> Load charts assume static conditions. High winds or sudden stops reduce effective capacity.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Load Moment Explanation -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-white mb-6">Load Moment vs. Working Radius</h2>
+      <div class="glass-card p-6 text-gray-300 leading-relaxed space-y-4">
+        <p><strong class="text-amber-400">Load Moment</strong> = Load Weight × Working Radius (t·m). It represents the overturning force trying to tip the crane forward.</p>
+        <p><strong class="text-amber-400">Working Radius</strong> = Horizontal distance from crane centerline to the hook. As radius increases, load moment increases, and safe capacity must decrease.</p>
+        <p>Think of it like a seesaw: the further the load sits from the pivot (crane center), the more it tries to tip the crane. The crane's counterweight and base width resist this tipping moment.</p>
+        <div class="mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg">
+          <p class="text-amber-400 text-sm font-medium">Key Rule: Never exceed the rated load moment for your crane configuration. This is the #1 cause of mobile crane accidents.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Internal Links -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-white mb-6">Related Tools</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <a href="/sling-angle-calculator" class="tool-card block">
+          <div class="tool-card-icon">📐</div>
+          <h3 class="text-lg font-bold text-white mb-2">Sling Angle Calculator</h3>
+          <p class="text-sm text-gray-400">Multi-leg sling tension at any angle.</p>
+        </a>
+        <a href="/shackle-size-calculator" class="tool-card block">
+          <div class="tool-card-icon">⚓</div>
+          <h3 class="text-lg font-bold text-white mb-2">Shackle Size Calculator</h3>
+          <p class="text-sm text-gray-400">Find the right shackle for your load.</p>
+        </a>
+        <a href="/wire-rope-capacity-calculator" class="tool-card block">
+          <div class="tool-card-icon">🪢</div>
+          <h3 class="text-lg font-bold text-white mb-2">Wire Rope Capacity</h3>
+          <p class="text-sm text-gray-400">Breaking load & WLL for any diameter.</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-white mb-6">Frequently Asked Questions</h2>
+      <div class="space-y-4">
+        <details class="glass-card p-6 group">
+          <summary class="flex items-center justify-between cursor-pointer list-none">
+            <span class="font-semibold text-white group-hover:text-amber-400 transition">What is load moment?</span>
+            <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+          </summary>
+          <p class="mt-4 text-gray-400">Load moment = load weight × working radius (t·m). It represents the overturning force on the crane. Exceeding rated load moment is the primary cause of crane tipping accidents.</p>
+        </details>
+        <details class="glass-card p-6 group">
+          <summary class="flex items-center justify-between cursor-pointer list-none">
+            <span class="font-semibold text-white group-hover:text-amber-400 transition">How do I calculate working radius?</span>
+            <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+          </summary>
+          <p class="mt-4 text-gray-400">Working radius = boom length × cos(boom angle from horizontal). Or measure the horizontal distance from crane center to load directly.</p>
+        </details>
+        <details class="glass-card p-6 group">
+          <summary class="flex items-center justify-between cursor-pointer list-none">
+            <span class="font-semibold text-white group-hover:text-amber-400 transition">What is a safe utilization percentage?</span>
+            <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+          </summary>
+          <p class="mt-4 text-gray-400">Keep utilization below 85% for normal lifts, below 75% for critical lifts (over people, expensive equipment, complex rigging). Never exceed 100%.</p>
+        </details>
+        <details class="glass-card p-6 group">
+          <summary class="flex items-center justify-between cursor-pointer list-none">
+            <span class="font-semibold text-white group-hover:text-amber-400 transition">Why does capacity decrease with radius?</span>
+            <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+          </summary>
+          <p class="mt-4 text-gray-400">As radius increases, overturning moment increases. To stay within stability limits, rated load must decrease. Load charts show this relationship.</p>
+        </details>
+        <details class="glass-card p-6 group">
+          <summary class="flex items-center justify-between cursor-pointer list-none">
+            <span class="font-semibold text-white group-hover:text-amber-400 transition">Is this a substitute for a load chart?</span>
+            <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+          </summary>
+          <p class="mt-4 text-gray-400">No. This is a preliminary planning tool. Always consult the crane manufacturer's load chart and have a qualified person verify all critical lifts.</p>
+        </details>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- RFQ Modal -->
+<div id="rfq-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+  <div class="glass-card max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-bold text-white">Request a Quote</h3>
+      <button onclick="document.getElementById('rfq-modal').classList.add('hidden')" class="text-gray-500 hover:text-white text-2xl">×</button>
+    </div>
+    <form id="rfq-form" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2">Name</label>
+          <input type="text" class="field" required placeholder="John Smith" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2">Company</label>
+          <input type="text" class="field" required placeholder="ABC Construction" />
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Email</label>
+        <input type="email" class="field" required placeholder="john@abc.com" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Product Type</label>
+        <select class="field" required>
+          <option value="">Select...</option>
+          <option value="shackles">Shackles</option>
+          <option value="slings">Slings</option>
+          <option value="wire-rope">Wire Rope</option>
+          <option value="chain">Chain</option>
+          <option value="crane-services">Crane Services</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Quantity</label>
+        <input type="number" class="field" min="1" placeholder="e.g. 100" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Requirements</label>
+        <textarea class="field" rows="3" placeholder="Load capacity, material, certification requirements..."></textarea>
+      </div>
+      <button type="submit" class="accent-btn w-full">Submit RFQ</button>
+    </form>
+    <p class="disclaimer text-center">We connect you with vetted suppliers. No spam, no obligation.</p>
+  </div>
+</div>
+
+<footer class="py-12 border-t border-ink-600/30">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-4 gap-8">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-xl">⚓</span>
+          <span class="font-bold text-white">Rigging<span class="text-amber-400">Calculators</span></span>
+        </div>
+        <p class="text-sm text-gray-500">Free engineering calculators for rigging & lifting. ASME B30.9 / B30.26 based.</p>
+      </div>
+      <div>
+        <h4 class="text-white font-semibold mb-4">Tools</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="/shackle-size-calculator" class="hover:text-amber-400 transition">Shackle Size Calculator</a></li>
+          <li><a href="/sling-angle-calculator" class="hover:text-amber-400 transition">Sling Angle Calculator</a></li>
+          <li><a href="/wire-rope-capacity-calculator" class="hover:text-amber-400 transition">Wire Rope Capacity Calculator</a></li>
+          <li><a href="/crane-load-calculator" class="hover:text-amber-400 transition">Crane Load Calculator</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white font-semibold mb-4">Spec Charts</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="/shackle-size-chart" class="hover:text-amber-400 transition">Shackle Size Chart</a></li>
+          <li><a href="/wire-rope-size-chart" class="hover:text-amber-400 transition">Wire Rope Size Chart</a></li>
+          <li><a href="/sling-capacity-chart" class="hover:text-amber-400 transition">Sling Capacity Chart</a></li>
+          <li><a href="/swl-chart" class="hover:text-amber-400 transition">SWL Chart</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white font-semibold mb-4">Crosby Specs</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="/crosby-g-209-capacity" class="hover:text-amber-400 transition">Crosby G-209</a></li>
+          <li><a href="/crosby-g-2130-capacity" class="hover:text-amber-400 transition">Crosby G-2130</a></li>
+          <li><a href="/crosby-s-209-capacity" class="hover:text-amber-400 transition">Crosby S-209</a></li>
+          <li><a href="/crosby-g-2150-capacity" class="hover:text-amber-400 transition">Crosby G-2150</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-12 pt-8 border-t border-ink-600/30 flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-sm text-gray-600">© 2026 riggingcalculators.com. All calculations for reference only. Verify with manufacturer data.</p>
+      <div class="flex gap-4 text-sm text-gray-600">
+        <a href="/privacy" class="hover:text-amber-400 transition">Privacy</a>
+        <a href="/terms" class="hover:text-amber-400 transition">Terms</a>
+        <a href="/disclaimer" class="hover:text-amber-400 transition">Disclaimer</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Toggle angle/radius input
+  document.querySelectorAll('input[name="input-method"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      const isAngle = this.value === 'angle';
+      document.getElementById('angle-group').classList.toggle('hidden', !isAngle);
+      document.getElementById('radius-group').classList.toggle('hidden', isAngle);
+      document.getElementById('angle-input').required = isAngle;
+      document.getElementById('radius-input').required = !isAngle;
+    });
+  });
+
+  document.getElementById('crane-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const load = parseFloat(document.getElementById('load-input').value);
+    const boom = parseFloat(document.getElementById('boom-input').value);
+    const method = document.querySelector('input[name="input-method"]:checked').value;
+
+    if (!load || !boom || load <= 0 || boom <= 0) return;
+
+    let radius, angle;
+    if (method === 'angle') {
+      angle = parseFloat(document.getElementById('angle-input').value);
+      if (!angle || angle <= 0 || angle > 90) {
+        alert('Please enter a valid boom angle (1-90 degrees).');
+        return;
+      }
+      const angleRad = angle * Math.PI / 180;
+      radius = boom * Math.cos(angleRad);
+    } else {
+      radius = parseFloat(document.getElementById('radius-input').value);
+      if (!radius || radius <= 0 || radius > boom) {
+        alert('Radius must be between 1 and boom length (' + boom + 'm).');
+        return;
+      }
+      angle = Math.acos(radius / boom) * 180 / Math.PI;
+    }
+
+    const moment = load * radius;
+    // Simplified conservative capacity model
+    const capacity = 50 / (radius + 2);
+    const utilization = (load / capacity) * 100;
+
+    document.getElementById('result-radius').textContent = radius.toFixed(1) + ' m';
+    document.getElementById('result-moment').textContent = moment.toFixed(1);
+    document.getElementById('result-capacity').textContent = capacity.toFixed(1) + ' t';
+    document.getElementById('result-utilization').textContent = utilization.toFixed(0) + '%';
+    document.getElementById('result-boom').textContent = boom.toFixed(1) + ' m';
+    document.getElementById('result-boom-angle').textContent = angle.toFixed(1) + '°';
+
+    const warningEl = document.getElementById('result-warning');
+    if (utilization > 100) {
+      warningEl.className = 'p-4 rounded-lg text-sm font-medium mb-6 bg-red-500/10 border border-red-500/30 text-red-400';
+      warningEl.textContent = '⚠️ Load EXCEEDS estimated capacity. DO NOT PROCEED without verified load chart.';
+      warningEl.classList.remove('hidden');
+    } else if (utilization > 85) {
+      warningEl.className = 'p-4 rounded-lg text-sm font-medium mb-6 bg-yellow-500/10 border border-yellow-500/30 text-yellow-400';
+      warningEl.textContent = '⚠️ Load is near crane capacity (' + utilization.toFixed(0) + '%). Consult load chart and consider a larger crane.';
+      warningEl.classList.remove('hidden');
+    } else if (utilization > 75) {
+      warningEl.className = 'p-4 rounded-lg text-sm font-medium mb-6 bg-blue-500/10 border border-blue-500/30 text-blue-400';
+      warningEl.textContent = 'ℹ️ Utilization at ' + utilization.toFixed(0) + '%. Acceptable for normal lifts. Monitor carefully.';
+      warningEl.classList.remove('hidden');
+    } else {
+      warningEl.classList.add('hidden');
+    }
+
+    document.getElementById('crane-result').classList.remove('hidden');
+
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'tool_complete', {
+        tool_name: 'crane_load_calculator',
+        result_value: utilization.toFixed(0)
+      });
+    }
+  });
+
+  document.getElementById('rfq-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'rfq_submit', { tool_name: 'crane_load_calculator' });
+    }
+    this.innerHTML = '<div class="text-center py-8"><div class="text-4xl mb-4">✅</div><h4 class="text-xl font-bold text-white mb-2">RFQ Submitted</h4><p class="text-gray-400">We will contact you within 24 hours.</p></div>';
+  });
+</script>
+
+</Base>

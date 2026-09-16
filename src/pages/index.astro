@@ -1,0 +1,682 @@
+---
+import Base from '../layouts/Base.astro';
+import { CROSBY_SHACKLES, CROSBY_CHAIN_SHACKLES } from '../data/shackles';
+
+const siteUrl = 'https://riggingcalculators.com';
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Rigging Calculators",
+    "url": siteUrl,
+    "description": "Free engineering calculators for rigging & lifting. Calculate WLL, sling angles, shackle sizes & wire rope capacity.",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Rigging & Lifting Calculator Hub",
+    "url": siteUrl,
+    "hasPart": [
+      { "@type": "WebPage", "name": "Shackle Size Calculator", "url": `${siteUrl}/shackle-size-calculator` },
+      { "@type": "WebPage", "name": "Sling Angle Calculator", "url": `${siteUrl}/sling-angle-calculator` },
+      { "@type": "WebPage", "name": "Wire Rope Capacity Calculator", "url": `${siteUrl}/wire-rope-capacity-calculator` },
+      { "@type": "WebPage", "name": "Crane Load Calculator", "url": `${siteUrl}/crane-load-calculator` },
+    ]
+  }
+];
+
+const breadcrumbItems = [
+  { name: "Home", url: "/" }
+];
+
+const allShackles = [...CROSBY_SHACKLES, ...CROSBY_CHAIN_SHACKLES];
+const uniqueShackles = [...new Set(allShackles.map(s => s.model))];
+---
+
+<Base 
+  title="Free Rigging Calculator — Get Exact Specs in Seconds | riggingcalculators.com"
+  description="Free online engineering calculators for rigging & lifting. Calculate WLL, sling angles, shackle sizes & wire rope capacity. ASME B30.9 compliant. No signup, no PDF."
+  canonical="/"
+  jsonLd={jsonLd}
+  breadcrumbItems={breadcrumbItems}
+  gaId="G-XXXXXXX"
+>
+
+<!-- Header -->
+<header class="sticky top-0 z-50 glass-card border-b border-ink-600/30">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <a href="/" class="flex items-center gap-2">
+        <span class="text-2xl">⚓</span>
+        <span class="font-bold text-xl text-white">Rigging<span class="text-amber-400">Calculators</span></span>
+      </a>
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="#tools" class="text-gray-400 hover:text-amber-400 transition">Tools</a>
+        <a href="#charts" class="text-gray-400 hover:text-amber-400 transition">Spec Charts</a>
+        <a href="#crosby" class="text-gray-400 hover:text-amber-400 transition">Crosby Specs</a>
+        <a href="#faq" class="text-gray-400 hover:text-amber-400 transition">FAQ</a>
+      </nav>
+      <button class="accent-btn text-sm px-4 py-2" onclick="document.getElementById('calculator').scrollIntoView({behavior:'smooth'})">
+        Calculate Now
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="relative py-20 lg:py-28 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-ink-900 via-ink-950 to-ink-900"></div>
+  <div class="absolute inset-0 opacity-5" style="background-image: url(&quot;data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f59e0b' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E&quot;);"></div>
+  
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <!-- Left: Copy -->
+      <div>
+        <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-full px-4 py-1.5 mb-6">
+          <span class="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
+          <span class="text-amber-400 text-sm font-medium">ASME B30.9 / B30.26 Compliant</span>
+        </div>
+        
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+          Free Rigging Calculator<br/>
+          <span class="text-amber-400">Get Exact Specs in Seconds</span>
+        </h1>
+        
+        <p class="text-xl text-gray-400 mb-8 leading-relaxed">
+          Calculate WLL, sling angles, shackle sizes & wire rope capacity. No signup. No PDF. Just answers.
+        </p>
+        
+        <div class="flex flex-wrap gap-4">
+          <button class="accent-btn" onclick="document.getElementById('calculator').scrollIntoView({behavior:'smooth'})">
+            Calculate Now
+          </button>
+          <a href="#tools" class="accent-btn-secondary">View All Tools</a>
+        </div>
+        
+        <div class="mt-10 grid grid-cols-3 gap-6">
+          <div>
+            <div class="text-2xl font-bold text-amber-400">3 sec</div>
+            <div class="text-sm text-gray-500">to get specs</div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-amber-400">100%</div>
+            <div class="text-sm text-gray-500">free forever</div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-amber-400">ASME</div>
+            <div class="text-sm text-gray-500">B30.9 based</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right: Calculator -->
+      <div id="calculator" class="glass-card p-6 lg:p-8">
+        <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+          <span class="text-amber-400">⚓</span> Shackle Size Calculator
+        </h2>
+        
+        <form id="shackle-form" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-2">Load (tonnes)</label>
+            <input 
+              type="number" 
+              id="load-input" 
+              class="field" 
+              placeholder="e.g. 10"
+              min="0.5" 
+              max="120" 
+              step="0.5"
+              required
+            />
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-400 mb-2">Type</label>
+              <select id="type-input" class="field">
+                <option value="">Any (recommend)</option>
+                <option value="screw-pin">Screw Pin</option>
+                <option value="bolt-type">Bolt Type</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-400 mb-2">Material</label>
+              <select id="material-input" class="field">
+                <option value="">Any (recommend)</option>
+                <option value="alloy">Alloy Steel</option>
+                <option value="carbon">Carbon Steel</option>
+              </select>
+            </div>
+          </div>
+          
+          <button type="submit" class="accent-btn w-full">
+            Calculate Shackle Size
+          </button>
+        </form>
+        
+        <!-- Result -->
+        <div id="shackle-result" class="hidden mt-6 result-panel">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-amber-400">Recommended Shackle</h3>
+            <span id="result-model" class="bg-amber-500/20 text-amber-400 px-3 py-1 rounded-full text-sm font-mono"></span>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="text-gray-500">WLL:</span>
+              <span id="result-wll" class="text-white font-mono font-bold ml-2"></span>
+            </div>
+            <div>
+              <span class="text-gray-500">Size:</span>
+              <span id="result-size" class="text-white font-mono ml-2"></span>
+            </div>
+            <div>
+              <span class="text-gray-500">Pin Ø:</span>
+              <span id="result-pin" class="text-white font-mono ml-2"></span>
+            </div>
+            <div>
+              <span class="text-gray-500">Weight:</span>
+              <span id="result-weight" class="text-white font-mono ml-2"></span>
+            </div>
+          </div>
+          
+          <div id="result-warning" class="hidden mt-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-sm text-yellow-400">
+          </div>
+          
+          <div class="mt-6 flex gap-3">
+            <button class="accent-btn text-sm px-4 py-2" onclick="document.getElementById('rfq-modal').classList.remove('hidden')">
+              Get a Quote
+            </button>
+            <button class="accent-btn-secondary text-sm px-4 py-2" onclick="document.getElementById('shackle-result').classList.add('hidden')">
+              Recalculate
+            </button>
+          </div>
+        </div>
+        
+        <p class="disclaimer">
+          Based on ASME B30.26. Not a substitute for qualified rigger judgment. Always verify with manufacturer data.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tools Grid -->
+<section id="tools" class="py-20 bg-ink-900/50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-white mb-4">Free Rigging & Lifting Calculators</h2>
+      <p class="text-gray-400 max-w-2xl mx-auto">Engineering-grade calculators for field riggers, site engineers, and procurement teams. All calculations based on ASME B30.9, B30.26, and ISO 2408 standards.</p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <a href="/shackle-size-calculator" class="tool-card block">
+        <div class="tool-card-icon">⚓</div>
+        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-400 transition">Shackle Size Calculator</h3>
+        <p class="text-sm text-gray-400">Enter load → get exact Crosby model, WLL, and dimensions. Screw pin or bolt type.</p>
+        <div class="mt-4 text-amber-400 text-sm font-medium">Calculate →</div>
+      </a>
+      
+      <a href="/sling-angle-calculator" class="tool-card block">
+        <div class="tool-card-icon">📐</div>
+        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-400 transition">Sling Angle Calculator</h3>
+        <p class="text-sm text-gray-400">Multi-leg sling tension at any angle. ASME B30.9 tension factors included.</p>
+        <div class="mt-4 text-amber-400 text-sm font-medium">Calculate →</div>
+      </a>
+      
+      <a href="/wire-rope-capacity-calculator" class="tool-card block">
+        <div class="tool-card-icon">🪢</div>
+        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-400 transition">Wire Rope Capacity Calculator</h3>
+        <p class="text-sm text-gray-400">Breaking load & WLL for 6x19, 6x36, 6x7 constructions. ISO 2408 data.</p>
+        <div class="mt-4 text-amber-400 text-sm font-medium">Calculate →</div>
+      </a>
+      
+      <a href="/crane-load-calculator" class="tool-card block">
+        <div class="tool-card-icon">🏗️</div>
+        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-400 transition">Crane Load Calculator</h3>
+        <p class="text-sm text-gray-400">Load moment, radius, and utilization. Preliminary planning tool.</p>
+        <div class="mt-4 text-amber-400 text-sm font-medium">Calculate →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Spec Charts -->
+<section id="charts" class="py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-white mb-4">Free Rigging Specification Charts</h2>
+      <p class="text-gray-400">Complete WLL tables, dimensions, and capacity data. ASME B30.9 / B30.26 compliant.</p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <a href="/shackle-size-chart" class="tool-card block">
+        <div class="tool-card-icon">📋</div>
+        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-400 transition">Shackle Size Chart</h3>
+        <p class="text-sm text-gray-400">Crosby G-209, G-2130, S-209 full WLL tables with dimensions.</p>
+      </a>
+      
+      <a href="/wire-rope-size-chart" class="tool-card block">
+        <div class="tool-card-icon">🪢</div>
+        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-400 transition">Wire Rope Size Chart</h3>
+        <p class="text-sm text-gray-400">6x19 IWRC, 6x36 IWRC breaking loads and weights per meter.</p>
+      </a>
+      
+      <a href="/sling-capacity-chart" class="tool-card block">
+        <div class="tool-card-icon">🔗</div>
+        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-400 transition">Sling Capacity Chart</h3>
+        <p class="text-sm text-gray-400">Web, chain, and wire rope sling WLL at all standard angles.</p>
+      </a>
+      
+      <a href="/swl-chart" class="tool-card block">
+        <div class="tool-card-icon">⚖️</div>
+        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-400 transition">SWL Chart</h3>
+        <p class="text-sm text-gray-400">Safe Working Load reference tables for all rigging components.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Crosby Brand Pages -->
+<section id="crosby" class="py-20 bg-ink-900/50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-white mb-4">Crosby Shackle Specifications</h2>
+      <p class="text-gray-400">Exact WLL, dimensions, and capacity data for every Crosby shackle model. The specs you need, not "contact us."</p>
+    </div>
+    
+    <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <a href="/crosby-g-209-capacity" class="glass-card p-4 hover:border-amber-500/50 transition block">
+        <div class="text-amber-400 font-mono font-bold">G-209</div>
+        <div class="text-sm text-gray-400 mt-1">Alloy Screw Pin Anchor</div>
+        <div class="text-xs text-gray-600 mt-2">0.5t – 120t WLL</div>
+      </a>
+      
+      <a href="/crosby-g-2130-capacity" class="glass-card p-4 hover:border-amber-500/50 transition block">
+        <div class="text-amber-400 font-mono font-bold">G-2130</div>
+        <div class="text-sm text-gray-400 mt-1">Alloy Bolt Type Anchor</div>
+        <div class="text-xs text-gray-600 mt-2">0.5t – 120t WLL</div>
+      </a>
+      
+      <a href="/crosby-s-209-capacity" class="glass-card p-4 hover:border-amber-500/50 transition block">
+        <div class="text-amber-400 font-mono font-bold">S-209</div>
+        <div class="text-sm text-gray-400 mt-1">Carbon Screw Pin Anchor</div>
+        <div class="text-xs text-gray-600 mt-2">0.5t – 17t WLL</div>
+      </a>
+      
+      <a href="/crosby-g-2150-capacity" class="glass-card p-4 hover:border-amber-500/50 transition block">
+        <div class="text-amber-400 font-mono font-bold">G-2150</div>
+        <div class="text-sm text-gray-400 mt-1">Alloy Bolt Type Chain</div>
+        <div class="text-xs text-gray-600 mt-2">2t – 27t WLL</div>
+      </a>
+      
+      <a href="/crosby-bolt-type-shackle" class="glass-card p-4 hover:border-amber-500/50 transition block">
+        <div class="text-amber-400 font-mono font-bold">Bolt Type</div>
+        <div class="text-sm text-gray-400 mt-1">All bolt-type shackles</div>
+        <div class="text-xs text-gray-600 mt-2">Comparison guide</div>
+      </a>
+      
+      <a href="/crosby-screw-pin-shackle" class="glass-card p-4 hover:border-amber-500/50 transition block">
+        <div class="text-amber-400 font-mono font-bold">Screw Pin</div>
+        <div class="text-sm text-gray-400 mt-1">All screw pin shackles</div>
+        <div class="text-xs text-gray-600 mt-2">Comparison guide</div>
+      </a>
+      
+      <a href="/crosby-anchor-shackle" class="glass-card p-4 hover:border-amber-500/50 transition block">
+        <div class="text-amber-400 font-mono font-bold">Anchor</div>
+        <div class="text-sm text-gray-400 mt-1">Bow/anchor shackles</div>
+        <div class="text-xs text-gray-600 mt-2">Selection guide</div>
+      </a>
+      
+      <a href="/crosby-chain-shackle" class="glass-card p-4 hover:border-amber-500/50 transition block">
+        <div class="text-amber-400 font-mono font-bold">Chain</div>
+        <div class="text-sm text-gray-400 mt-1">D/chain shackles</div>
+        <div class="text-xs text-gray-600 mt-2">Selection guide</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="py-20">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-white mb-4">Frequently Asked Questions</h2>
+      <p class="text-gray-400">Answers based on ASME B30.9, B30.26, and OSHA rigging standards.</p>
+    </div>
+    
+    <div class="space-y-4">
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">What is the difference between SWL and WLL?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          SWL (Safe Working Load) and WLL (Working Load Limit) are often used interchangeably, but WLL is the modern preferred term per ASME B30.9. WLL is the maximum load that a component is certified to lift under normal service conditions. SWL is an older term that sometimes included additional safety factors. Always check the manufacturer documentation for exact definitions.
+        </p>
+      </details>
+      
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">How do I calculate sling tension at an angle?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          Sling tension increases as the angle from horizontal decreases. The tension factor is 1/sin(angle). At 90° (vertical), tension factor = 1.0. At 45°, tension factor = 1.414. At 30°, tension factor = 2.0. Use our <a href="/sling-angle-calculator" class="text-amber-400 hover:underline">Sling Angle Calculator</a> for instant results.
+        </p>
+      </details>
+      
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">What size shackle do I need for 10 tons?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          For a 10-ton vertical load, you need a shackle with WLL ≥ 10 tonnes. A Crosby G-209 1-1/8" (9.5t WLL) is undersized. Use 1-1/4" G-209 (12t WLL) for safety margin. Use our <a href="/shackle-size-calculator" class="text-amber-400 hover:underline">Shackle Size Calculator</a> for exact recommendations.
+        </p>
+      </details>
+      
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">What is the safety factor for wire rope?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          ASME B30.9 recommends a minimum 5:1 safety factor for wire rope used in lifting applications. Some applications require higher factors: 10:1 for critical lifts, 3.5:1 for certain specialized equipment. Always verify with your engineering team and applicable regulations.
+        </p>
+      </details>
+      
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">Can I use a screw pin shackle for permanent installation?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          No. Screw pin shackles are designed for temporary connections where the pin is checked regularly. For permanent or long-term installations, use bolt-type shackles (like Crosby G-2130) with a nut and cotter pin, which resist pin loosening from vibration.
+        </p>
+      </details>
+      
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">What is the difference between 6x19 and 6x36 wire rope?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          6x19 has 19 wires per strand — stiffer, more abrasion-resistant, good for static lines. 6x36 has 36 wires per strand — more flexible, better for cranes and winches where the rope bends around sheaves. Both have similar breaking strengths for the same diameter.
+        </p>
+      </details>
+      
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">Are these calculators OSHA compliant?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          Our calculators are based on ASME B30.9 and B30.26 standards, which OSHA references. However, compliance depends on proper use, inspection, and qualified personnel. These tools are for reference — always have a qualified rigger verify critical lifts.
+        </p>
+      </details>
+      
+      <details class="glass-card p-6 group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-white group-hover:text-amber-400 transition">Do I need to create an account?</span>
+          <span class="text-amber-400 transform group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <p class="mt-4 text-gray-400 leading-relaxed">
+          No. All calculators are 100% free with no signup required. We may add optional Pro features (PDF reports, batch calculations) in the future, but core calculators will always be free.
+        </p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-20 bg-ink-900/50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-3xl font-bold text-white mb-4">Need Bulk Pricing?</h2>
+    <p class="text-gray-400 mb-8 max-w-xl mx-auto">Get competitive quotes from vetted rigging manufacturers. Send us your specs and receive quotes within 24 hours.</p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <button class="accent-btn" onclick="document.getElementById('rfq-modal').classList.remove('hidden')">
+        Request a Quote
+      </button>
+      <a href="mailto:sales@riggingcalculators.com" class="accent-btn-secondary">
+        Email Us
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-12 border-t border-ink-600/30">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-4 gap-8">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-xl">⚓</span>
+          <span class="font-bold text-white">Rigging<span class="text-amber-400">Calculators</span></span>
+        </div>
+        <p class="text-sm text-gray-500">Free engineering calculators for rigging & lifting. ASME B30.9 / B30.26 based.</p>
+      </div>
+      
+      <div>
+        <h4 class="text-white font-semibold mb-4">Tools</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="/shackle-size-calculator" class="hover:text-amber-400 transition">Shackle Size Calculator</a></li>
+          <li><a href="/sling-angle-calculator" class="hover:text-amber-400 transition">Sling Angle Calculator</a></li>
+          <li><a href="/wire-rope-capacity-calculator" class="hover:text-amber-400 transition">Wire Rope Capacity Calculator</a></li>
+          <li><a href="/crane-load-calculator" class="hover:text-amber-400 transition">Crane Load Calculator</a></li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4 class="text-white font-semibold mb-4">Spec Charts</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="/shackle-size-chart" class="hover:text-amber-400 transition">Shackle Size Chart</a></li>
+          <li><a href="/wire-rope-size-chart" class="hover:text-amber-400 transition">Wire Rope Size Chart</a></li>
+          <li><a href="/sling-capacity-chart" class="hover:text-amber-400 transition">Sling Capacity Chart</a></li>
+          <li><a href="/swl-chart" class="hover:text-amber-400 transition">SWL Chart</a></li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4 class="text-white font-semibold mb-4">Crosby Specs</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><a href="/crosby-g-209-capacity" class="hover:text-amber-400 transition">Crosby G-209</a></li>
+          <li><a href="/crosby-g-2130-capacity" class="hover:text-amber-400 transition">Crosby G-2130</a></li>
+          <li><a href="/crosby-s-209-capacity" class="hover:text-amber-400 transition">Crosby S-209</a></li>
+          <li><a href="/crosby-g-2150-capacity" class="hover:text-amber-400 transition">Crosby G-2150</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="mt-12 pt-8 border-t border-ink-600/30 flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-sm text-gray-600">© 2026 riggingcalculators.com. All calculations for reference only. Verify with manufacturer data.</p>
+      <div class="flex gap-4 text-sm text-gray-600">
+        <a href="/privacy" class="hover:text-amber-400 transition">Privacy</a>
+        <a href="/terms" class="hover:text-amber-400 transition">Terms</a>
+        <a href="/disclaimer" class="hover:text-amber-400 transition">Disclaimer</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- RFQ Modal -->
+<div id="rfq-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+  <div class="glass-card max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-bold text-white">Request a Quote</h3>
+      <button onclick="document.getElementById('rfq-modal').classList.add('hidden')" class="text-gray-500 hover:text-white text-2xl">×</button>
+    </div>
+    
+    <form id="rfq-form" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2">Name</label>
+          <input type="text" class="field" required placeholder="John Smith" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2">Company</label>
+          <input type="text" class="field" required placeholder="ABC Construction" />
+        </div>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Email</label>
+        <input type="email" class="field" required placeholder="john@abc.com" />
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Product Type</label>
+        <select class="field" required>
+          <option value="">Select...</option>
+          <option value="shackles">Shackles</option>
+          <option value="slings">Slings</option>
+          <option value="wire-rope">Wire Rope</option>
+          <option value="chain">Chain</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Quantity</label>
+        <input type="number" class="field" min="1" placeholder="e.g. 100" />
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-400 mb-2">Requirements</label>
+        <textarea class="field" rows="3" placeholder="Load capacity, material, certification requirements..."></textarea>
+      </div>
+      
+      <button type="submit" class="accent-btn w-full">Submit RFQ</button>
+    </form>
+    
+    <p class="disclaimer text-center">We connect you with vetted manufacturers. No spam, no obligation.</p>
+  </div>
+</div>
+
+<!-- Calculator Script -->
+<script>
+  // Inline shackle data for client-side calculation
+  const SHACKLES = [
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 0.5, size: 0.25, pin: 8, weight: 0.05 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 0.75, size: 0.3125, pin: 9, weight: 0.08 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 1, size: 0.375, pin: 11, weight: 0.13 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 1.5, size: 0.4375, pin: 13, weight: 0.20 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 2, size: 0.5, pin: 14, weight: 0.28 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 3.25, size: 0.625, pin: 17, weight: 0.48 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 4.75, size: 0.75, pin: 20, weight: 0.75 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 6.5, size: 0.875, pin: 23, weight: 1.05 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 8.5, size: 1, pin: 26, weight: 1.50 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 9.5, size: 1.125, pin: 29, weight: 2.05 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 12, size: 1.25, pin: 32, weight: 2.75 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 13.5, size: 1.375, pin: 36, weight: 3.60 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 17, size: 1.5, pin: 39, weight: 4.70 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 21, size: 1.75, pin: 45, weight: 6.90 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 27, size: 2, pin: 52, weight: 9.80 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 35, size: 2.5, pin: 65, weight: 17.0 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 55, size: 3, pin: 78, weight: 29.0 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 85, size: 3.5, pin: 91, weight: 46.0 },
+    { model: 'G-209', type: 'screw-pin', material: 'alloy', wll: 120, size: 4, pin: 104, weight: 70.0 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 0.5, size: 0.25, pin: 8, weight: 0.06 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 0.75, size: 0.3125, pin: 9, weight: 0.09 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 1, size: 0.375, pin: 11, weight: 0.15 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 1.5, size: 0.4375, pin: 13, weight: 0.23 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 2, size: 0.5, pin: 14, weight: 0.32 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 3.25, size: 0.625, pin: 17, weight: 0.55 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 4.75, size: 0.75, pin: 20, weight: 0.85 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 6.5, size: 0.875, pin: 23, weight: 1.20 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 8.5, size: 1, pin: 26, weight: 1.70 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 9.5, size: 1.125, pin: 29, weight: 2.30 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 12, size: 1.25, pin: 32, weight: 3.10 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 13.5, size: 1.375, pin: 36, weight: 4.10 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 17, size: 1.5, pin: 39, weight: 5.30 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 21, size: 1.75, pin: 45, weight: 7.80 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 27, size: 2, pin: 52, weight: 11.0 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 35, size: 2.5, pin: 65, weight: 19.0 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 55, size: 3, pin: 78, weight: 33.0 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 85, size: 3.5, pin: 91, weight: 52.0 },
+    { model: 'G-2130', type: 'bolt-type', material: 'alloy', wll: 120, size: 4, pin: 104, weight: 78.0 },
+    { model: 'S-209', type: 'screw-pin', material: 'carbon', wll: 0.5, size: 0.25, pin: 8, weight: 0.06 },
+    { model: 'S-209', type: 'screw-pin', material: 'carbon', wll: 0.75, size: 0.3125, pin: 9, weight: 0.09 },
+    { model: 'S-209', type: 'screw-pin', material: 'carbon', wll: 1, size: 0.375, pin: 11, weight: 0.14 },
+    { model: 'S-209', type: 'screw-pin', material: 'carbon', wll: 1.5, size: 0.4375, pin: 13, weight: 0.21 },
+    { model: 'S-209', type: 'screw-pin', material: 'carbon', wll: 2, size: 0.5, pin: 14, weight: 0.30 },
+    { model: 'S-209', type: 'screw-pin', material: 'carbon', wll: 3.25, size: 0.625, pin: 17, weight: 0.50 },
+    { model: 'S-209', type: 'screw-pin', material: 'carbon', wll: 4.75, size: 0.75, pin: 20, weight: 0.78 },
+    { model: 'S-209', type: 'screw-pin', material: 'carbon', wll: 6.5, size: 0.875, pin: 23, weight: 1.10 },
+    { model: 'S-209', type: 'screw-pin', material: 'carbon', wll: 8.5, size: 1, pin: 26, weight: 1.60 },
+    { model: 'S-209', type: 'screw-pin', material: 'carbon', wll: 9.5, size: 1.125, pin: 29, weight: 2.20 },
+    { model: 'S-209', type: 'screw-pin', material: 'carbon', wll: 12, size: 1.25, pin: 32, weight: 2.95 },
+    { model: 'S-209', type: 'screw-pin', material: 'carbon', wll: 13.5, size: 1.375, pin: 36, weight: 3.85 },
+    { model: 'S-209', type: 'screw-pin', material: 'carbon', wll: 17, size: 1.5, pin: 39, weight: 5.00 },
+  ];
+
+  document.getElementById('shackle-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const load = parseFloat(document.getElementById('load-input').value);
+    const type = document.getElementById('type-input').value;
+    const material = document.getElementById('material-input').value;
+    
+    if (!load || load <= 0) return;
+    
+    // Filter shackles
+    let filtered = SHACKLES;
+    if (type) filtered = filtered.filter(s => s.type === type);
+    if (material) filtered = filtered.filter(s => s.material === material);
+    
+    // Find smallest shackle with WLL >= load
+    filtered.sort((a, b) => a.wll - b.wll);
+    const shackle = filtered.find(s => s.wll >= load);
+    
+    if (!shackle) {
+      alert('No shackle found for this load. Maximum WLL is 120 tonnes.');
+      return;
+    }
+    
+    // Display result
+    document.getElementById('result-model').textContent = shackle.model;
+    document.getElementById('result-wll').textContent = shackle.wll + ' t';
+    document.getElementById('result-size').textContent = shackle.size + '"';
+    document.getElementById('result-pin').textContent = shackle.pin + ' mm';
+    document.getElementById('result-weight').textContent = shackle.weight + ' kg';
+    
+    const safetyFactor = shackle.wll / load;
+    const warningEl = document.getElementById('result-warning');
+    
+    if (safetyFactor < 1.1) {
+      warningEl.textContent = 'Load is very close to WLL. Consider next size up for safety margin.';
+      warningEl.classList.remove('hidden');
+    } else if (safetyFactor > 5) {
+      warningEl.textContent = 'Shackle is significantly oversized. Consider smaller size for cost efficiency.';
+      warningEl.classList.remove('hidden');
+    } else {
+      warningEl.classList.add('hidden');
+    }
+    
+    document.getElementById('shackle-result').classList.remove('hidden');
+    
+    // Track event
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'tool_complete', {
+        tool_name: 'shackle_size_calculator',
+        result_value: shackle.wll
+      });
+    }
+  });
+
+  // RFQ form
+  document.getElementById('rfq-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'rfq_submit', {
+        tool_name: 'homepage'
+      });
+    }
+    
+    this.innerHTML = '<div class="text-center py-8"><div class="text-4xl mb-4">✅</div><h4 class="text-xl font-bold text-white mb-2">RFQ Submitted</h4><p class="text-gray-400">We will contact you within 24 hours with quotes from vetted suppliers.</p></div>';
+  });
+</script>
+
+</Base>
