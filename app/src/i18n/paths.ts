@@ -10,6 +10,7 @@ export const TOOL_PATHS = {
   sling: '/sling-angle-calculator/',
   rope: '/wire-rope-capacity-calculator/',
   crane: '/crane-load-calculator/',
+  chain: '/chain-sling-calculator/',
 } as const;
 
 export const CHART_PATHS = {

@@ -1,0 +1,41 @@
+---
+import Base from '../../layouts/Base.astro';
+import ChainSlingPage from '../../components/pages/ChainSlingPage.astro';
+import { LOCALES, type Locale } from '../../config';
+import { getDict } from '../../i18n/ui';
+import { p, TOOL_PATHS } from '../../i18n/paths';
+import { softwareApp, faqPage, breadcrumb, howTo } from '../../lib/jsonld';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = p(lang, TOOL_PATHS.chain);
+
+const meta = {
+  en: {
+    title: 'Chain Sling WLL Calculator — Grade 80 & Grade 100 Capacity (EN 818-2)',
+    description: 'Calculate total working load limit for Grade 80 and Grade 100 chain slings at any angle and leg count. EN 818-2 / ASME B30.9 data. Free, no signup.',
+  },
+  zh: {
+    title: '链条吊索 WLL 计算器 — G80 & G100 承载能力（EN 818-2）',
+    description: '计算 G80 / G100 级链条吊索在任意角度与肢数下的额定工作载荷，数据符合 EN 818-2 / ASME B30.9 标准。免费工具，无需注册。',
+  },
+} as const;
+
+const jsonLd = [
+  softwareApp(t.chain.title, meta[lang].description, path, lang),
+  howTo(t.chain.title, t.chain.howToSteps, path, t.chain.title),
+  faqPage(t.chain.faqItems),
+  breadcrumb([
+    { name: t.nav.home, path: p(lang, '/') },
+    { name: t.chain.title, path },
+  ]),
+];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <ChainSlingPage lang={lang} />
+</Base>

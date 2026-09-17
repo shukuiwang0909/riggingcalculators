@@ -8,6 +8,7 @@
 - [Sling Angle Calculator](https://riggingcalculators.com/en/sling-angle-calculator/): Calculate sling leg tension for 1–4 leg lifts at standard angles (30°/45°/60°/90°). Computes tension factor (1/sin θ), individual leg load, horizontal compression force, and recommended chain sling grade. Issues red warning below 30° per ASME B30.9.
 - [Wire Rope Capacity Calculator](https://riggingcalculators.com/en/wire-rope-capacity-calculator/): Find WLL and breaking load for 6×19 IWRC, 6×36 IWRC, and 6×7 FC wire rope constructions (ISO 2408, EIPS 1960 N/mm²), diameters 4–40 mm. Applies user-selected safety factor (3.5/5/10). Warns when safety factor falls below ASME B30.9 minimum of 5.
 - [Crane Load Calculator](https://riggingcalculators.com/en/crane-load-calculator/): Calculate operating radius, lifting moment, and load percentage. Input: boom length (m), boom angle or operating radius, lift weight (tonnes), optional rated capacity. Outputs: operating radius (m), lifting moment (t·m), load percentage. Color-coded warnings at >75%, >85%, and >100%.
+- [Chain Sling WLL Calculator](https://riggingcalculators.com/en/chain-sling-calculator/): Calculate total working load limit for Grade 80 and Grade 100 chain slings. Input: chain diameter (6mm–26mm), grade (G80/G100), number of legs (1–4), angle from horizontal (30°–90°). Outputs: total capacity (t), per-leg WLL, tension factor. Optional load check shows utilization and safety margin. EN 818-2 / ASME B30.9 data.
 
 ## Reference Charts
 
@@ -41,4 +42,4 @@ Safe Working Load (SWL), Working Load Limit (WLL), Proof Load, Breaking Load, Sa
 - Languages: English (default), Chinese Simplified (/zh/)
 - License: Free to use, no signup required
 - Full reference: https://riggingcalculators.com/llms-full.txt
-- Last updated: 2026-09-17
+- Last updated: 2026-09-18

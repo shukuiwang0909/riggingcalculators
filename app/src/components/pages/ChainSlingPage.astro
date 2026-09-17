@@ -1,0 +1,83 @@
+---
+import { getDict } from '../../i18n/ui';
+import { p, TOOL_PATHS, CHART_PATHS } from '../../i18n/paths';
+import { CHAIN_WLL, TENSION_FACTORS } from '../../data/rigging';
+import type { Locale } from '../../config';
+import ToolShell from '../ToolShell.astro';
+import ChainSlingCalc from '../ChainSlingCalc.astro';
+import SectionHead from '../SectionHead.astro';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const selfPath = p(lang, TOOL_PATHS.chain);
+---
+
+<ToolShell lang={lang} section="hero" badge={t.chain.badge} title={t.chain.title} sub={t.chain.sub}>
+  <div slot="aside" class="panel p-5" aria-hidden="true">
+    <svg viewBox="0 0 300 200" class="w-full h-auto" fill="none">
+      <!-- hook -->
+      <circle cx="150" cy="22" r="7" stroke="#f45500" stroke-width="2.5" />
+      <line x1="150" y1="29" x2="150" y2="44" stroke="#f45500" stroke-width="2.5" />
+      <!-- master link -->
+      <ellipse cx="150" cy="52" rx="12" ry="8" stroke="#f27e40" stroke-width="2" />
+      <!-- chain legs -->
+      <line x1="144" y1="58" x2="66" y2="130" stroke="#9d9d9d" stroke-width="2" stroke-dasharray="6 3" />
+      <line x1="156" y1="58" x2="234" y2="130" stroke="#9d9d9d" stroke-width="2" stroke-dasharray="6 3" />
+      <!-- load -->
+      <rect x="44" y="130" width="212" height="44" fill="#161616" stroke="#2c2c2c" stroke-width="1.5" />
+      <text x="150" y="157" text-anchor="middle" fill="#5c5c5c" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2">LOAD</text>
+      <!-- angle arc -->
+      <path d="M 94 130 A 60 60 0 0 1 112 103" stroke="#f45500" stroke-width="1.5" stroke-dasharray="3 3" />
+      <text x="74" y="120" fill="#f45500" font-family="JetBrains Mono, monospace" font-size="11">θ</text>
+      <!-- G80 label -->
+      <text x="46" y="94" fill="#f27e40" font-family="JetBrains Mono, monospace" font-size="9" transform="rotate(-48 80 110)">G80</text>
+    </svg>
+    <p class="micro mt-3 text-center">WLL = n × WLL<sub>leg</sub> × sin θ</p>
+  </div>
+  <ChainSlingCalc slot="calc" lang={lang} id="chain-calc" />
+</ToolShell>
+
+<!-- CHAIN WLL TABLE -->
+<section class="py-16 lg:py-20">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHead kicker={t.charts.kicker} title={t.chain.chartTitle} sub={t.chain.chartSub} />
+    <div class="panel overflow-hidden reveal">
+      <div class="overflow-x-auto">
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th>{t.charts.thChain}</th>
+              <th>WLL G80 (t)</th>
+              <th>{t.charts.th60}</th>
+              <th>{t.charts.th45}</th>
+              <th>{t.charts.th30}</th>
+              <th>WLL G100 (t)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {CHAIN_WLL.map((c) => (
+              <tr>
+                <td>{c.dia}</td>
+                <td>{c.wll.toFixed(2)}</td>
+                <td>{(c.wll * 0.866).toFixed(2)}</td>
+                <td>{(c.wll * 0.707).toFixed(2)}</td>
+                <td>{(c.wll * 0.5).toFixed(2)}</td>
+                <td class="text-[#f27e40]">{(c.wll * 1.25).toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-[#5c5c5c] p-5 border-t border-[#1e1e1e]">
+        {lang === 'zh'
+          ? '单肢垂直 WLL 依据 EN 818-2。多肢数值：总承载 = 肢数 × 单肢 WLL × sin(角度)。G100 = G80 × 1.25。'
+          : 'Single-leg vertical WLL per EN 818-2. Multi-leg: Total capacity = n × leg WLL × sin(angle). G100 = G80 × 1.25.'}
+      </p>
+    </div>
+  </div>
+</section>
+
+<ToolShell lang={lang} section="faq" faqTitle={t.chain.faqTitle} faqItems={t.chain.faqItems} />
+<ToolShell lang={lang} section="related" exclude={selfPath} />
+<ToolShell lang={lang} section="cta" />

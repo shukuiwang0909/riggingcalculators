@@ -1,0 +1,199 @@
+---
+import { getDict } from '../i18n/ui';
+import { CHAIN_WLL } from '../data/rigging';
+import type { Locale } from '../config';
+
+interface Props { lang: Locale; id?: string; }
+const { lang, id = 'chain-calc' } = Astro.props;
+const t = getDict(lang);
+
+const L = {
+  quote: t.common.quote, recalc: t.common.recalc, print: t.common.print,
+  dia: t.chain.dia, grade: t.chain.grade, legs: t.chain.legs, angle: t.chain.angle,
+  g80: t.chain.g80, g100: t.chain.g100,
+  leg1: t.chain.leg1, legN: t.chain.legN,
+  checkLoad: t.chain.checkLoad, checkLoadPh: t.chain.checkLoadPh,
+  resTitle: t.chain.resTitle,
+  rChain: t.chain.rChain, rLegWll: t.chain.rLegWll, rFactor: t.chain.rFactor,
+  rCapacity: t.chain.rCapacity, rTension: t.chain.rTension,
+  rLoad: t.chain.rLoad, rUtil: t.chain.rUtil, rMargin: t.chain.rMargin,
+  rOk: t.chain.rOk, rOver: t.chain.rOver,
+  exceeds: t.chain.exceeds,
+  warn30: t.chain.warn30, warn45: t.chain.warn45,
+  warnOver: t.chain.warnOver, warnClose: t.chain.warnClose,
+  btn: t.chain.btn,
+};
+---
+
+<div id={id} class="panel p-6 lg:p-8">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="display text-xl text-white">{t.chain.formTitle}</h2>
+    <span class="micro">EN 818-2</span>
+  </div>
+
+  <form class="calc-form space-y-4">
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="micro block mb-2">{t.chain.dia}</label>
+        <select name="dia" class="field">
+          {CHAIN_WLL.map((c) => (
+            <option value={c.wll}>{c.dia}</option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label class="micro block mb-2">{t.chain.grade}</label>
+        <select name="grade" class="field">
+          <option value="1">{t.chain.g80}</option>
+          <option value="1.25">{t.chain.g100}</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="micro block mb-2">{t.chain.legs}</label>
+        <select name="legs" class="field">
+          <option value="1">{t.chain.leg1}</option>
+          <option value="2" selected>2 {t.chain.legN}</option>
+          <option value="3">3 {t.chain.legN}</option>
+          <option value="4">4 {t.chain.legN}</option>
+        </select>
+      </div>
+      <div>
+        <label class="micro block mb-2">{t.chain.angle}</label>
+        <select name="angle" class="field">
+          <option value="90">90°</option>
+          <option value="60" selected>60°</option>
+          <option value="45">45°</option>
+          <option value="30">30°</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <label class="micro block mb-2">{t.chain.checkLoad}</label>
+      <input type="number" name="checkLoad" class="field" placeholder={t.chain.checkLoadPh} min="0.1" max="500" step="0.1" />
+      <p class="text-xs text-[#5c5c5c] mt-1">{t.chain.checkLoadHint}</p>
+    </div>
+    <button type="submit" class="btn-safety w-full">{t.chain.btn}</button>
+  </form>
+
+  <div class="calc-result hidden mt-6 result-panel p-5">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-bold text-[#f27e40]">{t.chain.resTitle}</h3>
+      <span class="r-badge mono text-sm bg-[#f45500]/15 text-[#f27e40] px-3 py-1 rounded-full"></span>
+    </div>
+    <div class="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+      <div><span class="text-[#5c5c5c]">{t.chain.rChain}:</span> <span class="r-chain mono font-bold text-white ml-1"></span></div>
+      <div><span class="text-[#5c5c5c]">{t.chain.rFactor}:</span> <span class="r-factor mono text-white ml-1"></span></div>
+      <div><span class="text-[#5c5c5c]">{t.chain.rLegWll}:</span> <span class="r-legwll mono text-white ml-1"></span></div>
+      <div><span class="text-[#5c5c5c]">{t.chain.rTension}:</span> <span class="r-tension mono text-[#f27e40] font-bold ml-1"></span></div>
+      <div class="col-span-2 pt-1 border-t border-[#1e1e1e]">
+        <span class="text-[#5c5c5c]">{t.chain.rCapacity}:</span>
+        <span class="r-capacity mono font-bold text-[#f27e40] text-lg ml-2"></span>
+      </div>
+    </div>
+    <div class="r-load-section hidden mt-3 pt-3 border-t border-[#1e1e1e] grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+      <div><span class="text-[#5c5c5c]">{t.chain.rLoad}:</span> <span class="r-load mono text-white ml-1"></span></div>
+      <div><span class="text-[#5c5c5c]">{t.chain.rUtil}:</span> <span class="r-util mono font-bold ml-1"></span></div>
+      <div class="col-span-2">
+        <span class="text-[#5c5c5c]">{t.chain.rMargin}:</span> <span class="r-margin mono font-bold ml-1"></span>
+        <span class="r-status ml-2 px-2 py-0.5 rounded text-xs font-bold"></span>
+      </div>
+    </div>
+    <div class="r-warn hidden mt-4 p-3 rounded border text-sm" role="alert"></div>
+    <div class="mt-5 flex flex-wrap gap-3 no-print">
+      <button type="button" class="btn-safety !py-2.5 !px-5 text-sm" data-rfq-open data-product="chain">{t.common.quote}</button>
+      <button type="button" class="r-print btn-ghost !py-2.5 !px-5 text-sm">{t.common.print}</button>
+      <button type="button" class="r-recalc btn-ghost !py-2.5 !px-5 text-sm">{t.common.recalc}</button>
+    </div>
+  </div>
+  <p class="text-xs text-[#5c5c5c] mt-4 pt-4 border-t border-[#262626]">{t.common.disclaimer}</p>
+</div>
+
+<script is:inline define:vars={{ CHAIN_WLL, L, id }}>
+  (function () {
+    var root = document.getElementById(id);
+    if (!root) return;
+    var form = root.querySelector('.calc-form');
+    var resEl = root.querySelector('.calc-result');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var legWllG80 = parseFloat(form.dia.value);
+      var gradeMult = parseFloat(form.grade.value);
+      var legs = parseInt(form.legs.value, 10);
+      var angle = parseFloat(form.angle.value);
+      var checkLoadVal = form.checkLoad.value ? parseFloat(form.checkLoad.value) : null;
+
+      var legWll = legWllG80 * gradeMult;
+      var rad = angle * Math.PI / 180;
+      var factor = 1 / Math.sin(rad);
+      var capacity = legs * legWll * Math.sin(rad);
+      var gradeLabel = gradeMult === 1.25 ? 'G100' : 'G80';
+
+      var chainLabel = CHAIN_WLL.find(function(c) { return c.wll === legWllG80; });
+      root.querySelector('.r-chain').textContent = (chainLabel ? chainLabel.dia : '-') + ' ' + gradeLabel;
+      root.querySelector('.r-badge').textContent = legs + ' LEG @ ' + angle + '°';
+      root.querySelector('.r-legwll').textContent = legWll.toFixed(2) + ' t';
+      root.querySelector('.r-factor').textContent = '× ' + factor.toFixed(3);
+      root.querySelector('.r-tension').textContent = legWll.toFixed(2) + ' t';
+      root.querySelector('.r-capacity').textContent = capacity.toFixed(2) + ' t';
+
+      var loadSec = root.querySelector('.r-load-section');
+      if (checkLoadVal && checkLoadVal > 0) {
+        var util = (checkLoadVal / capacity) * 100;
+        var margin = capacity - checkLoadVal;
+        root.querySelector('.r-load').textContent = checkLoadVal.toFixed(2) + ' t';
+        root.querySelector('.r-util').textContent = util.toFixed(1) + '%';
+        root.querySelector('.r-margin').textContent = margin.toFixed(2) + ' t';
+        var statusEl = root.querySelector('.r-status');
+        var utilEl = root.querySelector('.r-util');
+        if (util > 100) {
+          statusEl.textContent = L.rOver;
+          statusEl.className = 'r-status ml-2 px-2 py-0.5 rounded text-xs font-bold bg-[#ef4444]/20 text-[#ef4444]';
+          utilEl.className = 'r-util mono font-bold ml-1 text-[#ef4444]';
+        } else {
+          statusEl.textContent = L.rOk;
+          statusEl.className = 'r-status ml-2 px-2 py-0.5 rounded text-xs font-bold bg-[#22c55e]/20 text-[#22c55e]';
+          utilEl.className = util > 90 ? 'r-util mono font-bold ml-1 text-[#facc15]' : 'r-util mono font-bold ml-1 text-[#22c55e]';
+        }
+        loadSec.classList.remove('hidden');
+        loadSec.classList.add('grid');
+      } else {
+        loadSec.classList.add('hidden');
+        loadSec.classList.remove('grid');
+      }
+
+      var warn = root.querySelector('.r-warn');
+      var warnMsg = '';
+      var warnClass = 'r-warn mt-4 p-3 rounded border text-sm ';
+      if (angle < 30) {
+        warnMsg = L.warn30;
+        warnClass += 'border-[#ef4444]/40 bg-[#ef4444]/10 text-[#ef4444]';
+      } else if (angle < 45) {
+        warnMsg = L.warn45;
+        warnClass += 'border-[#facc15]/40 bg-[#facc15]/10 text-[#facc15]';
+      } else if (checkLoadVal && checkLoadVal > capacity) {
+        warnMsg = L.warnOver;
+        warnClass += 'border-[#ef4444]/40 bg-[#ef4444]/10 text-[#ef4444]';
+      } else if (checkLoadVal && checkLoadVal > capacity * 0.9) {
+        warnMsg = L.warnClose;
+        warnClass += 'border-[#facc15]/40 bg-[#facc15]/10 text-[#facc15]';
+      }
+
+      if (warnMsg) {
+        warn.className = warnClass;
+        warn.textContent = warnMsg;
+        warn.classList.remove('hidden');
+      } else {
+        warn.classList.add('hidden');
+      }
+
+      resEl.classList.remove('hidden');
+      if (typeof gtag !== 'undefined') gtag('event', 'tool_complete', { tool_name: 'chain_sling_calculator', result_value: parseFloat(capacity.toFixed(2)), legs: legs, angle: angle, page: location.pathname });
+    });
+
+    root.querySelector('.r-recalc').addEventListener('click', function () { resEl.classList.add('hidden'); });
+    root.querySelector('.r-print').addEventListener('click', function () { window.print(); });
+  })();
+</script>
