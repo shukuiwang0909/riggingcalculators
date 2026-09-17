@@ -149,7 +149,7 @@ const en = {
   },
   footer: {
     tag: 'Free engineering calculators for rigging & lifting. ASME B30.9 / B30.26 based.',
-    tools: 'Tools', charts: 'Spec Charts', models: 'Crosby Specs', legal: 'Legal',
+    tools: 'Tools', charts: 'Spec Charts', models: 'Crosby Specs', blog: 'Blog', legal: 'Legal',
     rights: 'All calculations for reference only. Verify with manufacturer data.',
     privacy: 'Privacy', terms: 'Terms', disclaimer: 'Disclaimer',
   },
@@ -537,7 +537,7 @@ const zh: Dict = {
   },
   footer: {
     tag: '免费吊装索具工程计算器，基于 ASME B30.9 / B30.26 标准。',
-    tools: '计算工具', charts: '规格表', models: 'Crosby 型号', legal: '法律信息',
+    tools: '计算工具', charts: '规格表', models: 'Crosby 型号', blog: '知识库', legal: '法律信息',
     rights: '所有计算结果仅供参考，请以制造商数据为准。',
     privacy: '隐私政策', terms: '使用条款', disclaimer: '免责声明',
   },

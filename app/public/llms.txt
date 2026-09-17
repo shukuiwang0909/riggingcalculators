@@ -17,6 +17,11 @@
 - [Sling Capacity Chart](https://riggingcalculators.com/en/charts/sling-capacity-chart/): EN 1492-1 colour-coded flat web sling WLL table (1 t – 10 t: violet/green/yellow/grey/red/brown/blue/orange) with tension factor multipliers at 4 standard angles.
 - [SWL Quick Reference Chart](https://riggingcalculators.com/en/charts/swl-chart/): Safe Working Load quick-reference for common rigging hardware including shackles, wire rope slings, chain slings, and web slings at key working angles.
 
+## Technical Articles
+
+- [Sling Angle vs Spreader Beam](https://riggingcalculators.com/en/blog/sling-angle-vs-spreader-beam/): When to use standard angle rigging vs a spreader beam. Tension factor table (90°/60°/45°/30°), ASME B30.9 minimum angle (30°), horizontal compression forces, and a 3-step decision guide. Key answer: use spreader beam below 30° or when load cannot tolerate horizontal compression.
+- [Chain Sling Inspection Checklist](https://riggingcalculators.com/en/blog/chain-sling-inspection-checklist/): ASME B30.9 / EN 818-2 inspection checklist for Grade 80 and Grade 100 chain slings. Pre-use visual checklist (8 items), periodic inspection procedure (8 items), rejection criteria table with thresholds (wear >10%, elongation >3%), temperature derating table (200–400°C), and OSHA 1910.184 documentation requirements.
+
 ## Product References
 
 - [Crosby G-209 Shackle](https://riggingcalculators.com/en/crosby/g-209/): Alloy steel screw pin anchor shackle. 19 sizes, WLL 0.5 t – 120 t (1/4" – 4"). Commonly used in overhead lifting and rigging assemblies.

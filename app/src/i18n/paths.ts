@@ -20,6 +20,12 @@ export const CHART_PATHS = {
   swl: '/charts/swl-chart/',
 } as const;
 
+export const BLOG_PATHS = {
+  index: '/blog/',
+  slingSpreader: '/blog/sling-angle-vs-spreader-beam/',
+  chainInspection: '/blog/chain-sling-inspection-checklist/',
+} as const;
+
 export const LEGAL_PATHS = {
   privacy: '/privacy/',
   terms: '/terms/',

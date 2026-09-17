@@ -1,0 +1,110 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { LOCALES, type Locale } from '../../../config';
+import { getDict } from '../../../i18n/ui';
+import { p, BLOG_PATHS } from '../../../i18n/paths';
+import { breadcrumb } from '../../../lib/jsonld';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = p(lang, BLOG_PATHS.index);
+const isZh = lang === 'zh';
+
+const meta = {
+  en: {
+    title: 'Rigging & Lifting Blog — Technical Guides',
+    description: 'Technical guides for rigging engineers: sling angle analysis, chain sling inspection, load planning, and equipment selection. Based on ASME B30.9 and EN 818-2.',
+  },
+  zh: {
+    title: '吊装索具知识库 — 技术指南',
+    description: '吊装工程师技术指南：吊索角度分析、链条吊索检验、载荷规划与设备选型，基于 ASME B30.9 与 EN 818-2 标准。',
+  },
+};
+
+const articles = isZh ? [
+  {
+    href: p(lang, BLOG_PATHS.slingSpreader),
+    badge: 'ASME B30.9 · 吊装知识库',
+    title: '吊索角度与展开梁：如何选择？',
+    desc: '何时用吊索角度吊装，何时用展开梁——包含张力系数表、ASME B30.9 角度限制和三步选择指南。',
+    date: '2026-09-18',
+    time: '约 6 分钟阅读',
+  },
+  {
+    href: p(lang, BLOG_PATHS.chainInspection),
+    badge: 'ASME B30.9 · 安全检验',
+    title: '链条吊索检验清单 — G80 & G100（ASME B30.9）',
+    desc: '依据 ASME B30.9 的完整检验清单，包括使用前检查、定期检验、报废判据与文档要求。',
+    date: '2026-09-18',
+    time: '约 7 分钟阅读',
+  },
+] : [
+  {
+    href: p(lang, BLOG_PATHS.slingSpreader),
+    badge: 'ASME B30.9 · RIGGING GUIDE',
+    title: 'Sling Angle vs Spreader Beam: When to Choose Each',
+    desc: 'Decision guide with tension factor table, ASME B30.9 thresholds, and a 3-step selection checklist for riggers.',
+    date: '2026-09-18',
+    time: '6 min read',
+  },
+  {
+    href: p(lang, BLOG_PATHS.chainInspection),
+    badge: 'ASME B30.9 · SAFETY INSPECTION',
+    title: 'Chain Sling Inspection Checklist — Grade 80 & Grade 100',
+    desc: 'Complete inspection checklist per ASME B30.9: pre-use checks, periodic inspection, rejection criteria, and documentation.',
+    date: '2026-09-18',
+    time: '7 min read',
+  },
+];
+
+const jsonLd = [
+  breadcrumb([
+    { name: t.nav.home, path: p(lang, '/') },
+    { name: isZh ? '知识库' : 'Blog', path },
+  ]),
+];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+
+    <!-- Breadcrumb -->
+    <nav class="micro mb-8 flex items-center gap-2 no-print" aria-label="Breadcrumb">
+      <a href={p(lang, '/')} class="hover:text-[#f27e40] transition-colors">{t.nav.home}</a>
+      <span aria-hidden="true">›</span>
+      <span class="!text-[#9d9d9d]">{isZh ? '知识库' : 'Blog'}</span>
+    </nav>
+
+    <header class="mb-12 reveal">
+      <div class="inline-flex items-center gap-2.5 border border-[#f45500]/40 bg-[#f45500]/10 rounded-full px-4 py-1.5 mb-6">
+        <span class="pulse-dot"></span>
+        <span class="micro !text-[#f27e40]">{isZh ? '技术指南 · ASME B30.9' : 'TECHNICAL GUIDES · ASME B30.9'}</span>
+      </div>
+      <h1 class="display text-4xl sm:text-5xl text-white mb-4">{isZh ? '知识库' : 'Blog'}</h1>
+      <p class="text-[#9d9d9d] leading-relaxed">{meta[lang].description}</p>
+    </header>
+
+    <div class="space-y-6 reveal">
+      {articles.map((a) => (
+        <a href={a.href} class="panel block p-7 hover:border-[#f45500]/40 transition-colors group">
+          <div class="inline-flex items-center gap-2 border border-[#f45500]/30 bg-[#f45500]/8 rounded-full px-3 py-1 mb-4">
+            <span class="micro !text-[#f27e40] text-xs">{a.badge}</span>
+          </div>
+          <h2 class="display text-xl text-white group-hover:text-[#f27e40] transition-colors mb-2">{a.title}</h2>
+          <p class="text-[#9d9d9d] text-sm leading-relaxed mb-4">{a.desc}</p>
+          <div class="flex items-center gap-3 text-xs text-[#5c5c5c]">
+            <time datetime={a.date}>{a.date}</time>
+            <span>·</span>
+            <span>{a.time}</span>
+            <span class="ml-auto text-[#f45500] group-hover:translate-x-1 transition-transform">→</span>
+          </div>
+        </a>
+      ))}
+    </div>
+
+  </div>
+</Base>
