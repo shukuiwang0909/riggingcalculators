@@ -1,0 +1,302 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { LOCALES, type Locale } from '../../../config';
+import { getDict } from '../../../i18n/ui';
+import { p, TOOL_PATHS } from '../../../i18n/paths';
+import { article, faqPage, breadcrumb, howTo } from '../../../lib/jsonld';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = p(lang, '/blog/chain-sling-inspection-checklist/');
+const DATE = '2026-09-18';
+
+const isZh = lang === 'zh';
+
+const meta = {
+  en: {
+    title: 'Chain Sling Inspection Checklist — Grade 80 & Grade 100 (ASME B30.9)',
+    description: 'Complete chain sling inspection checklist per ASME B30.9. Pre-use and periodic inspection steps, rejection criteria with measurements, and documentation requirements for Grade 80 and Grade 100 chain slings.',
+  },
+  zh: {
+    title: '链条吊索检验清单 — G80 & G100（ASME B30.9）',
+    description: '依据 ASME B30.9 的链条吊索完整检验清单，包括每次使用前检查、定期检查步骤、带具体尺寸的报废判据以及 G80 / G100 文档记录要求。',
+  },
+};
+
+const faqItems = isZh ? [
+  { q: '链条吊索多久需要检验一次？', a: 'ASME B30.9 要求每次使用前进行目视检查，并至少每年由合格人员进行一次书面定期检验。重度使用（腐蚀环境、高频次吊装、磨料接触）时应每季度检验一次。' },
+  { q: 'G80 和 G100 链条的检验标准相同吗？', a: '报废判据基本相同（磨损超过 10% 原始直径、伸长超过 3% 等），但 G100 链条通常有制造商特定的检验说明，应一并遵守。两种级别均需在使用前核查等级标识和 WLL 标牌清晰可读。' },
+  { q: '链条出现锈蚀还能继续使用吗？', a: '轻微表面浮锈通常不影响安全性，可清洁后目视检查链节磨损状况。点蚀锈蚀（坑状腐蚀）会降低强度，必须由合格人员评估；如有疑虑，立即停用。' },
+  { q: '检验记录需要保存多久？', a: 'OSHA 1910.184 要求保存吊装装置的检验记录，但未规定具体年限。行业通惯是保存至该吊索报废后至少 5 年。记录内容应包括：检验日期、检验人、检验发现和最终结论（继续使用/修复/报废）。' },
+  { q: '链条吊索在高温环境下如何处理？', a: 'G80 链条在 200°C 以下可正常使用，无需降额；200–300°C 降额 10%；300–400°C 降额 25%；超过 400°C 禁止使用。高温使用后必须重新检验。G100 请参照制造商说明书，通常限制类似。' },
+  { q: '链条吊索可以修复吗？', a: '链节不得通过电焊、气焊或任何方式修复——这会破坏热处理并使 WLL 失效。主环、连接环等配件损坏时应整体更换，不得单独修补。报废的吊索应立即打标或销毁，防止误用。' },
+] : [
+  { q: 'How often must chain slings be inspected?', a: 'ASME B30.9 requires a visual inspection before each use, plus a documented periodic inspection by a qualified person at minimum annually. In severe service — corrosive environments, high-frequency lifts, abrasive contact — inspect quarterly.' },
+  { q: 'Are the inspection criteria the same for Grade 80 and Grade 100 chain?', a: 'The rejection criteria are essentially the same (wear >10% of original diameter, elongation >3%, etc.), but Grade 100 chains often have manufacturer-specific inspection instructions that must also be followed. Both grades require legible grade and WLL markings before each use.' },
+  { q: 'Can a chain sling with surface rust still be used?', a: 'Light surface rust is generally acceptable — clean it and inspect for link wear. Pitting corrosion (deep pits) reduces strength and must be evaluated by a qualified person; when in doubt, remove from service.' },
+  { q: 'How long must inspection records be kept?', a: 'OSHA 1910.184 requires records to be maintained but specifies no retention period. Industry practice is to keep records for at least 5 years after the sling is retired. Records should include: date, inspector name, findings, and disposition (continue service / repair / retire).' },
+  { q: 'What happens to chain slings used at high temperature?', a: 'Grade 80 chain slings: full WLL up to 200°C; derate 10% from 200–300°C; derate 25% from 300–400°C; do not use above 400°C. Inspect after every high-temperature use. Grade 100: check manufacturer datasheet — limits are typically similar.' },
+  { q: 'Can a damaged chain link be repaired by welding?', a: 'No. Chain links must never be repaired by welding, heating, or any other means — this destroys the heat treatment and voids the WLL. Replace the entire sling or component. Retired slings must be marked or destroyed to prevent accidental reuse.' },
+];
+
+const howToSteps = isZh ? [
+  '查看识别标识：核查等级标记（G80/G100）、WLL 标牌和制造商标识清晰可读。',
+  '检查链节磨损：用卡尺测量最严重磨损处，若磨损量超过原始直径的 10% 则报废。',
+  '检查伸长量：使用制造商提供的校准量规或测量固定链节数的实际长度，若伸长超过额定长度的 3% 则报废。',
+  '检查变形：逐节检查有无弯曲、扭转、压扁或开口；检查主环和连接环有无裂纹或变形。',
+  '检查热损伤与腐蚀：异常变色（蓝色/黑色）提示热损伤；点蚀锈蚀需专业评估。',
+  '记录检验结果：填写日期、检验人、逐条发现和最终结论（继续使用/停用）。',
+] : [
+  'Check identification markings: verify grade stamp (G80/G100), WLL tag, and manufacturer mark are all legible.',
+  'Inspect for link wear: measure the worn cross-section with calipers at the worst-worn point — retire if reduction exceeds 10% of original diameter.',
+  'Check for elongation: use the manufacturer\'s calibration gauge or measure a fixed number of links — retire if elongation exceeds 3% of the rated length.',
+  'Inspect for deformation: check every link for bends, twists, gouges, or stretched openings; inspect master link and couplers for cracks or distortion.',
+  'Check for heat damage and corrosion: blue or black discoloration indicates heat damage; pitting corrosion requires professional evaluation.',
+  'Record findings: log date, inspector, each finding, and disposition (continue service / remove from service).',
+];
+
+const jsonLd = [
+  article(meta[lang].title, meta[lang].description, path, lang, DATE),
+  howTo(
+    isZh ? '如何检验链条吊索（ASME B30.9）' : 'How to inspect a chain sling (ASME B30.9)',
+    howToSteps, path,
+    isZh ? '链条吊索检验' : 'Chain sling inspection',
+  ),
+  faqPage(faqItems),
+  breadcrumb([
+    { name: t.nav.home, path: p(lang, '/') },
+    { name: isZh ? '知识库' : 'Blog', path: p(lang, '/blog/') },
+    { name: meta[lang].title, path },
+  ]),
+];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+
+    <!-- Breadcrumb -->
+    <nav class="micro mb-8 flex items-center gap-2 no-print" aria-label="Breadcrumb">
+      <a href={p(lang, '/')} class="hover:text-[#f27e40] transition-colors">{t.nav.home}</a>
+      <span aria-hidden="true">›</span>
+      <span class="!text-[#9d9d9d]">{isZh ? '知识库' : 'Blog'}</span>
+      <span aria-hidden="true">›</span>
+      <span class="!text-[#9d9d9d] truncate">{isZh ? '链条吊索检验清单' : 'Chain Sling Inspection Checklist'}</span>
+    </nav>
+
+    <!-- Header -->
+    <header class="mb-10 reveal">
+      <div class="inline-flex items-center gap-2.5 border border-[#f45500]/40 bg-[#f45500]/10 rounded-full px-4 py-1.5 mb-6">
+        <span class="pulse-dot"></span>
+        <span class="micro !text-[#f27e40]">{isZh ? 'ASME B30.9 · 安全检验' : 'ASME B30.9 · SAFETY INSPECTION'}</span>
+      </div>
+      <h1 class="display text-4xl sm:text-5xl text-white mb-5">{meta[lang].title}</h1>
+      <div class="flex items-center gap-4 text-sm text-[#5c5c5c]">
+        <time datetime={DATE}>{DATE}</time>
+        <span>·</span>
+        <span>{isZh ? '约 7 分钟阅读' : '7 min read'}</span>
+        <span>·</span>
+        <span>ASME B30.9 / EN 818-2</span>
+      </div>
+    </header>
+
+    <!-- Key answer box -->
+    <div class="panel border-l-4 border-[#f45500] p-6 mb-10 reveal">
+      <div class="micro text-[#f27e40] mb-2">{isZh ? '核心要点' : 'KEY REQUIREMENTS'}</div>
+      {isZh ? (
+        <p class="text-white font-semibold leading-relaxed">
+          ASME B30.9 要求每次使用前进行目视检查，并至少每年由合格人员完成一次书面定期检验。重度使用时每季度检验。以下任一情况立即停用：链节磨损超过原始直径 10%、伸长超过额定长度 3%、任何弯曲变形或热损伤迹象。
+        </p>
+      ) : (
+        <p class="text-white font-semibold leading-relaxed">
+          ASME B30.9 requires a visual inspection before every use and documented periodic inspection at minimum annually. In severe service: quarterly. Remove from service immediately if any link is worn more than 10% of original diameter, elongated more than 3% of rated length, or shows any deformation or heat damage.
+        </p>
+      )}
+    </div>
+
+    <div class="prose-article space-y-10 reveal">
+
+      <!-- Section 1: Pre-use checklist -->
+      <section>
+        <h2 class="display text-2xl text-white mb-2">{isZh ? '每次使用前检查（目视，使用前必做）' : 'Pre-Use Inspection (Visual — Before Every Lift)'}</h2>
+        <p class="text-[#5c5c5c] text-sm mb-4">{isZh ? '时间：2–5 分钟 · 工具：目视检查，必要时用手电' : 'Time: 2–5 min · Tools: Visual, torch if needed'}</p>
+        <div class="panel p-5 space-y-3">
+          {(isZh ? [
+            '等级标记和 WLL 标牌清晰可读（G80/G100、WLL 吨数、制造商名称）',
+            '主环、连接环与链节无可见裂纹或开口',
+            '各链节无明显弯曲、扭转或挤压变形',
+            '无明显磨损区域（目视，如有疑问需用卡尺测量）',
+            '无点蚀锈蚀或焦痕（热损伤迹象）',
+            '链节开口/销轴（如适用）无过度磨损',
+            '标识牌/颜色标签无脱落或无法辨识',
+            '整体长度未见明显拉伸（与新品相比）',
+          ] : [
+            'Grade and WLL tag present and legible (grade, WLL in tonnes, manufacturer)',
+            'Master link, coupling links, and chain links — no visible cracks or opened links',
+            'No obvious bends, twists, or crush deformation in any link',
+            'No obvious wear spots (visual — measure with calipers if in doubt)',
+            'No pitting corrosion or scorch marks (signs of heat damage)',
+            'Hook or end fittings (if present) show no excessive wear or deformation',
+            'Identification tag or colour code is intact and legible',
+            'No visible overall elongation compared with original length',
+          ]).map((item) => (
+            <label class="flex items-start gap-3 cursor-default">
+              <span class="w-5 h-5 shrink-0 mt-0.5 border border-[#f45500]/60 rounded bg-[#f45500]/5 flex items-center justify-center" aria-hidden="true">
+                <span class="text-[#f45500] text-xs">✓</span>
+              </span>
+              <span class="text-[#9d9d9d] text-sm">{item}</span>
+            </label>
+          ))}
+        </div>
+      </section>
+
+      <!-- Section 2: Periodic inspection -->
+      <section>
+        <h2 class="display text-2xl text-white mb-2">{isZh ? '定期检验（书面记录，至少每年一次）' : 'Periodic Inspection (Documented — Minimum Annually)'}</h2>
+        <p class="text-[#5c5c5c] text-sm mb-4">{isZh ? '时间：15–30 分钟 · 工具：卡尺、校准量规、检验记录表' : 'Time: 15–30 min · Tools: calipers, calibrated gauge, inspection form'}</p>
+        <div class="panel p-5 space-y-3">
+          {(isZh ? [
+            '用卡尺测量每个链节的实际磨损直径，对比制造商原始直径数据',
+            '使用制造商校准量规或精确测量固定链节数核查整体伸长量',
+            '逐节检查扭转、弯曲、缺口、凹坑和裂纹（必要时借助放大镜）',
+            '检查主环：开口宽度是否在允许范围内，焊缝是否完好',
+            '检查连接环：销轴配合是否正常，有无过度磨损',
+            '确认等级标识仍完整（部分标识会随使用磨损消失）',
+            '核查高温工况或冲击事故记录',
+            '整体功能性检查：各部件连接是否正常，动作是否顺畅',
+          ] : [
+            'Measure actual link cross-section at the most worn point with calipers; compare with manufacturer\'s original diameter',
+            'Check overall elongation: use manufacturer\'s calibration gauge or count a fixed number of links and compare to original pitch',
+            'Inspect every link for twists, bends, nicks, gouges, and cracks — use a magnifying glass if needed',
+            'Inspect master link: verify opening width is within tolerance and weld is intact',
+            'Inspect coupling links: pin fit, wear, and any distortion',
+            'Confirm grade markings remain legible (markings can wear off in service)',
+            'Review service history for heat exposure or shock-load incidents',
+            'Overall functional check: confirm all components connect and move correctly',
+          ]).map((item) => (
+            <label class="flex items-start gap-3 cursor-default">
+              <span class="w-5 h-5 shrink-0 mt-0.5 border border-[#f45500]/60 rounded bg-[#f45500]/5 flex items-center justify-center" aria-hidden="true">
+                <span class="text-[#f45500] text-xs">✓</span>
+              </span>
+              <span class="text-[#9d9d9d] text-sm">{item}</span>
+            </label>
+          ))}
+        </div>
+      </section>
+
+      <!-- Section 3: Rejection criteria -->
+      <section>
+        <h2 class="display text-2xl text-white mb-4">{isZh ? '报废判据（符合任一条件立即停用）' : 'Rejection Criteria — Remove from Service If Any Apply'}</h2>
+        <div class="panel overflow-hidden">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>{isZh ? '缺陷类型' : 'DEFECT'}</th>
+                <th>{isZh ? '报废限值' : 'REJECTION THRESHOLD'}</th>
+                <th>{isZh ? '依据' : 'STANDARD'}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="text-[#ef4444]"><td>{isZh ? '链节磨损（直径减小）' : 'Link wear (diameter reduction)'}</td><td>{isZh ? '> 原始直径的 10%' : '> 10% of original diameter'}</td><td>ASME B30.9</td></tr>
+              <tr class="text-[#ef4444]"><td>{isZh ? '整体伸长' : 'Overall elongation'}</td><td>{isZh ? '> 额定长度的 3%' : '> 3% of rated length'}</td><td>ASME B30.9</td></tr>
+              <tr class="text-[#ef4444]"><td>{isZh ? '弯曲或扭转链节' : 'Bent or twisted links'}</td><td>{isZh ? '任何可见变形' : 'Any visible deformation'}</td><td>ASME B30.9</td></tr>
+              <tr class="text-[#ef4444]"><td>{isZh ? '开裂或撕裂' : 'Cracks or fractures'}</td><td>{isZh ? '任何' : 'Any'}</td><td>ASME B30.9</td></tr>
+              <tr class="text-[#ef4444]"><td>{isZh ? '热损伤（变色/退火）' : 'Heat damage (discoloration/anneal)'}</td><td>{isZh ? '任何迹象' : 'Any evidence'}</td><td>ASME B30.9</td></tr>
+              <tr class="text-[#ef4444]"><td>{isZh ? '等级或 WLL 标识不清' : 'Grade or WLL markings illegible'}</td><td>{isZh ? '无法辨识' : 'Unable to read'}</td><td>ASME B30.26</td></tr>
+              <tr class="text-[#ef4444]"><td>{isZh ? '点蚀锈蚀' : 'Pitting corrosion'}</td><td>{isZh ? '超过制造商允许限值' : 'Exceeds manufacturer\'s limit'}</td><td>ASME B30.9</td></tr>
+              <tr class="text-[#ef4444]"><td>{isZh ? '曾超载或冲击载荷' : 'Known overload or shock load'}</td><td>{isZh ? '任何已确认事件' : 'Any confirmed incident'}</td><td>ASME B30.9</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 4: Temperature derating -->
+      <section>
+        <h2 class="display text-2xl text-white mb-4">{isZh ? '高温降额（G80 / G100）' : 'Temperature Derating (G80 / G100)'}</h2>
+        <div class="panel overflow-hidden">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>{isZh ? '工作温度' : 'SERVICE TEMPERATURE'}</th>
+                <th>{isZh ? 'G80 降额' : 'G80 DERATING'}</th>
+                <th>{isZh ? '备注' : 'NOTE'}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>{isZh ? '≤ 200°C' : '≤ 200°C'}</td><td>{isZh ? '无需降额' : 'No derating'}</td><td>{isZh ? '正常额定值适用' : 'Full rated WLL applies'}</td></tr>
+              <tr class="text-[#facc15]"><td>200°C – 300°C</td><td>{isZh ? '降额 10%' : 'Reduce WLL by 10%'}</td><td>{isZh ? '用后必须重新检验' : 'Reinspect after each use'}</td></tr>
+              <tr class="text-[#f45500]"><td>300°C – 400°C</td><td>{isZh ? '降额 25%' : 'Reduce WLL by 25%'}</td><td>{isZh ? '严格控制，记录每次使用' : 'Strict control, log every use'}</td></tr>
+              <tr class="text-[#ef4444]"><td>{isZh ? '> 400°C' : '> 400°C'}</td><td>{isZh ? '禁止使用' : 'Do not use'}</td><td>{isZh ? '强度无法保证' : 'Strength cannot be assured'}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-[#5c5c5c] mt-3">{isZh ? 'G100 级请参照制造商说明书。所有高温使用后必须完整重新检验。' : 'Grade 100: consult manufacturer datasheet. Reinspect fully after every high-temperature use.'}</p>
+      </section>
+
+      <!-- Section 5: Documentation -->
+      <section>
+        <h2 class="display text-2xl text-white mb-4">{isZh ? '记录与文档要求' : 'Documentation Requirements'}</h2>
+        {isZh ? (
+          <p class="text-[#9d9d9d] leading-relaxed mb-4">OSHA 1910.184 要求对吊装装置保存检验记录。完整的检验记录应包含：</p>
+        ) : (
+          <p class="text-[#9d9d9d] leading-relaxed mb-4">OSHA 1910.184 requires inspection records for rigging hardware. A complete record should include:</p>
+        )}
+        <div class="panel p-5 grid sm:grid-cols-2 gap-3">
+          {(isZh ? [
+            '检验日期',
+            '检验人姓名和资质',
+            '吊索唯一标识（序列号或标签）',
+            '吊索规格（直径、等级、WLL、肢数）',
+            '每项检验发现（含无问题的描述）',
+            '最终结论：继续使用 / 修复 / 报废',
+            '下次定期检验日期',
+          ] : [
+            'Date of inspection',
+            'Inspector name and qualifications',
+            'Sling unique identifier (serial number or tag)',
+            'Sling specification (diameter, grade, WLL, number of legs)',
+            'Each finding (including "no defect found" observations)',
+            'Disposition: continue service / remove for repair / retire',
+            'Next periodic inspection due date',
+          ]).map((item) => (
+            <div class="flex items-center gap-2 text-sm text-[#9d9d9d]">
+              <span class="text-[#f45500] shrink-0">›</span>
+              <span>{item}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <div class="panel border border-[#f45500]/30 p-6 text-center">
+        <p class="text-[#9d9d9d] mb-4">{isZh ? '计算链条吊索在任意角度与肢数下的额定工作载荷' : 'Calculate chain sling WLL at any angle and leg count'}</p>
+        <a href={p(lang, TOOL_PATHS.chain)} class="btn-safety inline-block">
+          {isZh ? '使用链条吊索 WLL 计算器 →' : 'Chain Sling WLL Calculator →'}
+        </a>
+      </div>
+
+      <!-- FAQ -->
+      <section>
+        <h2 class="display text-2xl text-white mb-6">{isZh ? '常见问题' : 'Frequently Asked Questions'}</h2>
+        <div class="space-y-px border border-[#1e1e1e]">
+          {faqItems.map((f) => (
+            <details class="group bg-[#0a0a0a] p-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none">
+                <span class="font-semibold text-white group-hover:text-[#f27e40] transition-colors pr-6">{f.q}</span>
+                <span class="faq-plus mono text-[#f45500] text-xl shrink-0" aria-hidden="true">+</span>
+              </summary>
+              <p class="mt-4 text-[#9d9d9d] leading-relaxed text-sm">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <!-- Disclaimer -->
+      <p class="text-xs text-[#5c5c5c] border-t border-[#1e1e1e] pt-6">{t.common.disclaimer}</p>
+
+    </div>
+  </article>
+</Base>

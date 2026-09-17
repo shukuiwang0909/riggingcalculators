@@ -88,6 +88,29 @@ export function howTo(name: string, steps: string[], path: string, toolName: str
   };
 }
 
+export function article(
+  headline: string,
+  description: string,
+  path: string,
+  lang: Locale,
+  datePublished: string,
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline,
+    description,
+    url: `${SITE.url}${path}`,
+    datePublished,
+    dateModified: datePublished,
+    inLanguage: htmlLang(lang),
+    author: { '@id': `${SITE.url}/#organization` },
+    publisher: { '@id': `${SITE.url}/#organization` },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE.url}${path}` },
+    isPartOf: { '@id': `${SITE.url}/#website` },
+  };
+}
+
 export function collectionPage(
   name: string,
   description: string,

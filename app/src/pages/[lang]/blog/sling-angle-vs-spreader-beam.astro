@@ -1,0 +1,270 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { LOCALES, type Locale } from '../../../config';
+import { getDict } from '../../../i18n/ui';
+import { p, TOOL_PATHS } from '../../../i18n/paths';
+import { article, faqPage, breadcrumb, howTo } from '../../../lib/jsonld';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = p(lang, '/blog/sling-angle-vs-spreader-beam/');
+const DATE = '2026-09-18';
+
+const isZh = lang === 'zh';
+
+const meta = {
+  en: {
+    title: 'Sling Angle vs Spreader Beam: When to Choose Each',
+    description: 'When to use sling angle rigging vs a spreader beam. Decision guide with tension factor table, ASME B30.9 thresholds, and 3-step selection checklist.',
+  },
+  zh: {
+    title: '吊索角度与展开梁：如何选择？',
+    description: '何时用吊索角度吊装，何时用展开梁——包含张力系数表、ASME B30.9 角度限制和三步选择指南。',
+  },
+};
+
+const faqItems = isZh ? [
+  { q: '吊装角度最小可以到多少？', a: 'ASME B30.9 规定吊索与水平面夹角不应小于 30°。低于 30° 时，每肢张力超过垂直分载的 2 倍，吊装极不安全。实际操作中建议保持在 45° 以上。' },
+  { q: '展开梁消除水平压力吗？', a: '是的。展开梁使吊索保持近垂直状态，吊点间的水平压力几乎为零。这对无法承受侧向挤压的载荷（压力容器、精密设备）尤为重要。' },
+  { q: '如何计算吊装角度？', a: '角度 = arctan（吊钩高度 / 半吊点间距）。例如：吊钩在吊点上方 3m，两吊点间距 4m，则半间距 2m，角度 = arctan(3/2) ≈ 56°。或使用上方吊索角度计算器自动计算。' },
+  { q: '展开梁自重需要从额定载荷中扣除吗？', a: '必须扣除。展开梁重量计入起重机总提升重量，需从载荷表额定值中减去。始终核对吊装方案中的全部吊具重量（卸扣、吊索、展开梁）。' },
+  { q: '45° 角是安全的吗？', a: '45° 时张力系数为 1.414，即每肢张力是垂直分载的 1.414 倍，WLL 有效利用率为 70.7%。对结构件通常可接受，但需确认吊点能承受相应水平压力（每肢等于垂直分载）。' },
+] : [
+  { q: 'What is the minimum safe sling angle?', a: 'ASME B30.9 sets 30° from horizontal as the minimum. Below 30°, each leg tension exceeds twice its vertical share — the rig becomes extremely dangerous. In practice, plan for 45° or above whenever possible.' },
+  { q: 'Does a spreader beam eliminate horizontal compression?', a: 'Yes. A spreader beam keeps sling legs near-vertical, reducing the horizontal squeeze force on the load to near zero. This is critical for loads that cannot tolerate side loading — pressure vessels, delicate equipment, packaged goods.' },
+  { q: 'How do I calculate my sling angle?', a: 'Angle = arctan(hook height ÷ half the distance between lift points). Example: hook 3 m above lift points, lift points 4 m apart — half-distance = 2 m, angle = arctan(3/2) ≈ 56°. Use the Sling Angle Calculator above to compute tension instantly.' },
+  { q: 'Does spreader beam weight need to be deducted from crane capacity?', a: 'Yes. The spreader beam dead weight counts as lifted load on the crane. Deduct it from the load-chart rated capacity, just like hook blocks, shackles, and slings.' },
+  { q: 'Is a 45° sling angle safe?', a: 'At 45°, the tension factor is 1.414 — each leg carries 41.4% more tension than its vertical share, and the sling operates at 70.7% of its rated WLL. This is generally acceptable for structural loads, but verify that lift points can handle the horizontal compression (equal to the vertical share per leg).' },
+];
+
+const howToSteps = isZh ? [
+  '测量吊钩到吊点的垂直高度（H）和两吊点之间的水平距离（D）。',
+  '计算角度：θ = arctan（H / (D/2)）。',
+  '查表：θ ≥ 60° 时可正常使用角度吊装；45° ≤ θ < 60° 时确认吊点能承受水平压力；30° ≤ θ < 45° 时谨慎使用或改用展开梁。',
+  '若载荷不能承受水平压力，或 θ < 30°，必须使用展开梁。',
+] : [
+  'Measure the vertical height H from hook to lift points and horizontal distance D between lift points.',
+  'Calculate angle: θ = arctan(H ÷ (D/2)).',
+  'Apply the threshold: θ ≥ 60° — standard angle rigging; 45° ≤ θ < 60° — acceptable, verify lift points; 30° ≤ θ < 45° — use caution or switch to spreader beam.',
+  'If the load cannot tolerate horizontal compression, or θ < 30°, a spreader beam is required.',
+];
+
+const jsonLd = [
+  article(meta[lang].title, meta[lang].description, path, lang, DATE),
+  howTo(isZh ? '如何决定是否使用展开梁' : 'How to decide whether to use a spreader beam', howToSteps, path, isZh ? '吊索角度计算器' : 'Sling Angle Calculator'),
+  faqPage(faqItems),
+  breadcrumb([
+    { name: t.nav.home, path: p(lang, '/') },
+    { name: isZh ? '知识库' : 'Blog', path: p(lang, '/blog/') },
+    { name: meta[lang].title, path },
+  ]),
+];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+
+    <!-- Breadcrumb -->
+    <nav class="micro mb-8 flex items-center gap-2 no-print" aria-label="Breadcrumb">
+      <a href={p(lang, '/')} class="hover:text-[#f27e40] transition-colors">{t.nav.home}</a>
+      <span aria-hidden="true">›</span>
+      <span class="!text-[#9d9d9d]">{isZh ? '知识库' : 'Blog'}</span>
+      <span aria-hidden="true">›</span>
+      <span class="!text-[#9d9d9d] truncate">{isZh ? '吊索角度 vs 展开梁' : 'Sling Angle vs Spreader Beam'}</span>
+    </nav>
+
+    <!-- Header -->
+    <header class="mb-10 reveal">
+      <div class="inline-flex items-center gap-2.5 border border-[#f45500]/40 bg-[#f45500]/10 rounded-full px-4 py-1.5 mb-6">
+        <span class="pulse-dot"></span>
+        <span class="micro !text-[#f27e40]">{isZh ? 'ASME B30.9 · 吊装知识库' : 'ASME B30.9 · RIGGING GUIDE'}</span>
+      </div>
+      <h1 class="display text-4xl sm:text-5xl text-white mb-5">{meta[lang].title}</h1>
+      <div class="flex items-center gap-4 text-sm text-[#5c5c5c]">
+        <time datetime={DATE}>{DATE}</time>
+        <span>·</span>
+        <span>{isZh ? '约 6 分钟阅读' : '6 min read'}</span>
+        <span>·</span>
+        <span>ASME B30.9</span>
+      </div>
+    </header>
+
+    <!-- Key answer box -->
+    <div class="panel border-l-4 border-[#f45500] p-6 mb-10 reveal">
+      <div class="micro text-[#f27e40] mb-2">{isZh ? '核心结论' : 'KEY ANSWER'}</div>
+      {isZh ? (
+        <p class="text-white font-semibold leading-relaxed">
+          吊装角度 ≥ 45° 时使用角度吊装；角度在 30°–45° 之间时谨慎评估吊点；角度低于 30° 时必须使用展开梁。任何不能承受水平压力的载荷，无论角度多大，都应使用展开梁。
+        </p>
+      ) : (
+        <p class="text-white font-semibold leading-relaxed">
+          Use standard angle rigging when θ ≥ 45°. Evaluate carefully at 30°–45°. A spreader beam is required below 30° and for any load that cannot tolerate horizontal compression forces.
+        </p>
+      )}
+    </div>
+
+    <div class="prose-article space-y-10 reveal">
+
+      <!-- Section 1: Why sling angle matters -->
+      <section>
+        <h2 class="display text-2xl text-white mb-4">{isZh ? '为什么吊装角度很重要' : 'Why Sling Angle Matters'}</h2>
+        {isZh ? (
+          <p class="text-[#9d9d9d] leading-relaxed mb-4">
+            吊索与水平面的夹角决定每肢承受的实际张力。角度越小，张力越大——这就是"张力系数"（1/sin θ）。在 90°（垂直）时，张力系数为 1.0，吊索在额定 WLL 下工作；在 30°（ASME B30.9 允许最小值）时，张力系数达到 2.0，每肢张力是垂直分载的 2 倍。
+          </p>
+        ) : (
+          <p class="text-[#9d9d9d] leading-relaxed mb-4">
+            The angle of a sling from horizontal determines the actual tension each leg must carry. The lower the angle, the higher the tension — this is the tension factor (1 ÷ sin θ). At 90° (vertical), the factor is 1.0 and the sling works at its full rated WLL. At 30° (ASME B30.9 minimum), the factor reaches 2.0 — each leg carries twice its vertical share.
+          </p>
+        )}
+
+        <div class="panel overflow-hidden">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>{isZh ? '角度（水平面）' : 'ANGLE FROM HORIZONTAL'}</th>
+                <th>{isZh ? '张力系数' : 'TENSION FACTOR'}</th>
+                <th>{isZh ? 'WLL 有效利用率' : 'WLL EFFICIENCY'}</th>
+                <th>{isZh ? '备注' : 'NOTE'}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>90°</td><td>× 1.000</td><td>100%</td><td>{isZh ? '理想垂直' : 'Ideal — vertical'}</td></tr>
+              <tr><td>60°</td><td>× 1.155</td><td>86.6%</td><td>{isZh ? '标准双肢吊装' : 'Standard 2-leg rig'}</td></tr>
+              <tr class="text-[#facc15]"><td>45°</td><td>× 1.414</td><td>70.7%</td><td>{isZh ? '可接受，需核查吊点' : 'Acceptable — verify lift points'}</td></tr>
+              <tr class="text-[#f45500]"><td>30°</td><td>× 2.000</td><td>50%</td><td>{isZh ? 'ASME B30.9 最小值' : 'ASME B30.9 minimum'}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-[#5c5c5c] mt-3">{isZh ? '水平压力 = 垂直分载 / tan(θ)。角度越浅，吊点侧向挤压越大。' : 'Horizontal compression per leg = vertical share ÷ tan(θ). Shallower angles increase the inward squeeze on lift points.'}</p>
+      </section>
+
+      <!-- Section 2: When angle rigging is fine -->
+      <section>
+        <h2 class="display text-2xl text-white mb-4">{isZh ? '何时可以直接使用角度吊装' : 'When Standard Angle Rigging Is Fine'}</h2>
+        {isZh ? (
+          <ul class="space-y-3 text-[#9d9d9d]">
+            <li class="flex gap-3"><span class="text-[#f45500] font-bold shrink-0">60°–90°</span><span>正常操作范围。吊索容量充裕，水平压力可控。按实际角度计算张力，选用合适的吊索 WLL。</span></li>
+            <li class="flex gap-3"><span class="text-[#facc15] font-bold shrink-0">45°–60°</span><span>可接受，但需核查每个吊点能否承受水平压力（= 垂直分载）。对结构件焊接吊耳通常没问题；对木箱或薄壁设备需谨慎。</span></li>
+            <li class="flex gap-3"><span class="text-[#ef4444] font-bold shrink-0">30°–45°</span><span>ASME B30.9 允许范围内，但应仔细评估：每肢张力比垂直分载高 41%–100%，且水平压力显著。建议优先改善几何条件或使用展开梁。</span></li>
+          </ul>
+        ) : (
+          <ul class="space-y-3 text-[#9d9d9d]">
+            <li class="flex gap-3"><span class="text-[#f45500] font-bold shrink-0">60°–90°</span><span>Normal operating range. Sling capacity is well-utilised, horizontal forces are manageable. Calculate tension at your actual angle and select slings with adequate WLL.</span></li>
+            <li class="flex gap-3"><span class="text-[#facc15] font-bold shrink-0">45°–60°</span><span>Acceptable but verify each lift point can handle horizontal compression equal to the vertical share per leg. Fine for welded structural padeyes; evaluate carefully for crates or thin-walled equipment.</span></li>
+            <li class="flex gap-3"><span class="text-[#ef4444] font-bold shrink-0">30°–45°</span><span>Within ASME B30.9 limits but warrants careful evaluation. Each leg carries 41–100% more tension than its vertical share, and horizontal forces are significant. Improve geometry or use a spreader beam if possible.</span></li>
+          </ul>
+        )}
+      </section>
+
+      <!-- Section 3: When to use a spreader beam -->
+      <section>
+        <h2 class="display text-2xl text-white mb-4">{isZh ? '何时必须用展开梁' : 'When to Use a Spreader Beam'}</h2>
+        {isZh ? (
+          <p class="text-[#9d9d9d] leading-relaxed mb-4">展开梁将吊索吊点向外推开，使吊索接近垂直，消除水平压力。以下情况应优先考虑：</p>
+        ) : (
+          <p class="text-[#9d9d9d] leading-relaxed mb-4">A spreader beam pushes the sling attachment points apart, keeping legs near-vertical and eliminating horizontal compression. Use one when:</p>
+        )}
+        <div class="panel overflow-hidden">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>{isZh ? '场景' : 'SCENARIO'}</th>
+                <th>{isZh ? '原因' : 'REASON'}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>{isZh ? '吊索角度低于 30°' : 'Sling angle below 30°'}</td><td>{isZh ? 'ASME B30.9 禁止低于此角度' : 'Below ASME B30.9 minimum — not permitted'}</td></tr>
+              <tr><td>{isZh ? '载荷不能承受侧向挤压' : 'Load cannot tolerate horizontal squeeze'}</td><td>{isZh ? '压力容器、精密仪器、纸板包装' : 'Pressure vessels, instruments, carton packaging'}</td></tr>
+              <tr><td>{isZh ? '两吊点水平距离很大' : 'Lift points very far apart'}</td><td>{isZh ? '吊钩高度不足以达到足够角度' : 'Insufficient hook height for acceptable angle'}</td></tr>
+              <tr><td>{isZh ? '需要精确控制载荷姿态' : 'Precise load orientation required'}</td><td>{isZh ? '展开梁提供稳定的垂直吊点' : 'Beam provides stable, near-vertical attachment'}</td></tr>
+              <tr><td>{isZh ? '多吊点（4点以上）' : 'Multiple lift points (4+)'}</td><td>{isZh ? '展开梁可均匀分配载荷' : 'Beam distributes load evenly across points'}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 4: Comparison table -->
+      <section>
+        <h2 class="display text-2xl text-white mb-4">{isZh ? '对比：角度吊装 vs 展开梁' : 'Comparison: Angle Rigging vs Spreader Beam'}</h2>
+        <div class="panel overflow-hidden">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>{isZh ? '指标' : 'FACTOR'}</th>
+                <th>{isZh ? '角度吊装' : 'ANGLE RIGGING'}</th>
+                <th>{isZh ? '展开梁' : 'SPREADER BEAM'}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>{isZh ? '安装时间' : 'Setup time'}</td><td>{isZh ? '快' : 'Fast'}</td><td>{isZh ? '较慢' : 'Slower'}</td></tr>
+              <tr><td>{isZh ? '水平压力' : 'Horizontal compression'}</td><td>{isZh ? '有（随角度增大）' : 'Yes (increases at lower angles)'}</td><td>{isZh ? '几乎为零' : 'Near zero'}</td></tr>
+              <tr><td>{isZh ? '角度限制' : 'Angle restriction'}</td><td>{isZh ? '最小 30°（ASME B30.9）' : 'Minimum 30° (ASME B30.9)'}</td><td>{isZh ? '几乎无限制' : 'Near vertical regardless of span'}</td></tr>
+              <tr><td>{isZh ? '成本' : 'Cost'}</td><td>{isZh ? '低' : 'Low'}</td><td>{isZh ? '中至高（需配套吊索）' : 'Medium–high (plus rigging hardware)'}</td></tr>
+              <tr><td>{isZh ? '对精密载荷安全性' : 'Safety for delicate loads'}</td><td>{isZh ? '有风险（侧向挤压）' : 'Risk of side load damage'}</td><td>{isZh ? '高' : 'High'}</td></tr>
+              <tr><td>{isZh ? '适用场景' : 'Best for'}</td><td>{isZh ? '大多数结构件、常规载荷' : 'Most structural loads, routine lifts'}</td><td>{isZh ? '精密/宽幅/不能受挤压的载荷' : 'Sensitive, wide, or compression-intolerant loads'}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 5: 3-step decision guide -->
+      <section>
+        <h2 class="display text-2xl text-white mb-4">{isZh ? '三步决策指南' : '3-Step Decision Guide'}</h2>
+        <ol class="space-y-5">
+          {[
+            isZh
+              ? { n: '1', title: '计算角度', body: '角度 θ = arctan（H / (D/2)），H 为吊钩到吊点的垂直高度，D 为两吊点水平间距。或直接使用下方计算器。' }
+              : { n: '1', title: 'Calculate the angle', body: 'θ = arctan(H ÷ (D/2)), where H = vertical height from hook to lift points and D = horizontal distance between lift points. Or use the Sling Angle Calculator below.' },
+            isZh
+              ? { n: '2', title: '查阈值表', body: 'θ ≥ 60°：常规角度吊装；45° ≤ θ < 60°：可用，但核查吊点侧向承载能力；30° ≤ θ < 45°：谨慎，建议展开梁；θ < 30°：禁止，必须用展开梁。' }
+              : { n: '2', title: 'Check the threshold table', body: 'θ ≥ 60°: standard angle rigging. 45° ≤ θ < 60°: acceptable — verify lift point lateral capacity. 30° ≤ θ < 45°: caution — spreader beam preferred. θ < 30°: not permitted — spreader beam required.' },
+            isZh
+              ? { n: '3', title: '评估载荷类型', body: '即使角度够大，若载荷不能承受水平挤压（精密仪器、压力容器、软包装），也应使用展开梁。最终决策由合格起重工人或工程师负责。' }
+              : { n: '3', title: 'Evaluate load type', body: 'Even at acceptable angles, use a spreader beam if the load cannot tolerate horizontal compression (instruments, pressure vessels, packaged goods). Final call rests with a qualified rigger or lifting engineer.' },
+          ].map((step) => (
+            <li class="flex gap-5">
+              <span class="mono text-[#f45500] text-2xl font-bold shrink-0 w-8">{step.n}</span>
+              <div>
+                <div class="font-semibold text-white mb-1">{step.title}</div>
+                <p class="text-[#9d9d9d] text-sm leading-relaxed">{step.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <!-- CTA -->
+      <div class="panel border border-[#f45500]/30 p-6 text-center">
+        <p class="text-[#9d9d9d] mb-4">{isZh ? '立即计算你的吊索角度与张力' : 'Calculate your sling angle and leg tension instantly'}</p>
+        <a href={p(lang, TOOL_PATHS.sling)} class="btn-safety inline-block">
+          {isZh ? '使用吊索角度计算器 →' : 'Sling Angle Calculator →'}
+        </a>
+      </div>
+
+      <!-- FAQ -->
+      <section>
+        <h2 class="display text-2xl text-white mb-6">{isZh ? '常见问题' : 'Frequently Asked Questions'}</h2>
+        <div class="space-y-px border border-[#1e1e1e]">
+          {faqItems.map((f) => (
+            <details class="group bg-[#0a0a0a] p-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none">
+                <span class="font-semibold text-white group-hover:text-[#f27e40] transition-colors pr-6">{f.q}</span>
+                <span class="faq-plus mono text-[#f45500] text-xl shrink-0" aria-hidden="true">+</span>
+              </summary>
+              <p class="mt-4 text-[#9d9d9d] leading-relaxed text-sm">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <!-- Disclaimer -->
+      <p class="text-xs text-[#5c5c5c] border-t border-[#1e1e1e] pt-6">{t.common.disclaimer}</p>
+
+    </div>
+  </article>
+</Base>
