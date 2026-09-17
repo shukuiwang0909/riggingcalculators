@@ -182,6 +182,12 @@ const en = {
     chartTitle: 'Full G-209 / G-2130 / S-209 Table',
     chartSub: 'Every standard size with WLL, body size, pin diameter and unit weight.',
     faqTitle: 'Shackle FAQ',
+    howToSteps: [
+      'Enter the working load in tonnes.',
+      'Select shackle type (Screw Pin or Bolt Type) and material if required — "Any" searches alloy steel first.',
+      'Click "Calculate Shackle Size" to see the matched Crosby model, WLL, pin diameter, and weight.',
+      'If the result shows a tight-WLL warning, choose the next size up for adequate safety margin.',
+    ],
     faqItems: [
       { q: 'Screw pin vs bolt type — which should I choose?', a: 'Screw pin shackles (G-209) are for temporary, frequently disconnected rigging. Bolt type shackles (G-2130) use a nut and cotter pin and are required for permanent or semi-permanent installations, or anywhere vibration could rotate a pin loose.' },
       { q: 'Can I side-load a shackle?', a: 'Side loading reduces WLL dramatically. Per ASME B30.26 and Crosby guidance: 45° from centerline reduces WLL to 70%; 90° side loading reduces it to 50%. Multiple sling legs should load the bow, not the pin side.' },
@@ -217,6 +223,12 @@ const en = {
     chartTitle: 'Chain Sling WLL Chart',
     chartSub: 'Single-leg vertical Working Load Limits for Grade 80 alloy chain slings. Select the smallest chain whose WLL meets or exceeds the calculated tension per leg.',
     faqTitle: 'Sling Angle FAQ',
+    howToSteps: [
+      'Enter the total suspended load weight in tonnes.',
+      'Select the number of sling legs (1, 2, 3, or 4).',
+      'Select the sling angle from horizontal (30°, 45°, 60°, or 90°).',
+      'Click "Calculate Sling Tension" to see load per leg, tension factor, and horizontal compression force.',
+    ],
     faqItems: [
       { q: 'What is the sling tension factor?', a: 'The tension factor is 1/sin(angle), where the angle is measured from horizontal. At 90° (vertical) the factor is 1.0; at 60° it is 1.155; at 45° it is 1.414; at 30° it is 2.0. Multiplying the vertical load share per leg by this factor gives the actual tension in the leg.' },
       { q: 'Why does sling tension increase at lower angles?', a: 'Only the vertical component of sling tension (T × sin θ) supports the load; the horizontal component squeezes the load. As the angle drops, total tension must grow to hold the same weight. At 30°, each leg carries twice its vertical share.' },
@@ -260,6 +272,12 @@ const en = {
     sfg3p: 'Used where failure would be catastrophic, man-riding applications, or where shock loading is possible. Many offshore and nuclear applications require 10:1 or higher.',
     defaultTag: 'DEFAULT',
     faqTitle: 'Wire Rope FAQ',
+    howToSteps: [
+      'Select wire rope construction (6×19 IWRC, 6×36 IWRC, or 6×7 FC).',
+      'Enter the rope nominal diameter in millimetres.',
+      'Select the required safety factor (3.5, 5, or 10).',
+      'Click "Calculate" to see minimum breaking load and WLL for the selected rope.',
+    ],
     faqItems: [
       { q: 'What is the minimum safety factor for wire rope used in lifting?', a: 'ASME B30.9 recommends a minimum 5:1 safety factor for wire rope in lifting service. Some specialized equipment uses 3.5:1, and critical lifts may require 10:1.' },
       { q: 'What is the difference between breaking load and WLL?', a: 'Breaking load (minimum breaking strength) is the load at which the rope fails. WLL = breaking load ÷ safety factor. For a 20mm 6×19 IWRC rope with a 25.5 t breaking load at 5:1, WLL = 5.1 tonnes.' },
@@ -306,6 +324,12 @@ const en = {
     lmP2: 'Working Radius = horizontal distance from crane centerline to the hook. As radius increases, load moment increases, and safe capacity must decrease.',
     lmRule: 'Key rule: never exceed the rated load moment for your crane configuration — the #1 cause of mobile crane accidents.',
     faqTitle: 'Crane Load FAQ',
+    howToSteps: [
+      'Enter the boom length in metres and either the boom angle from horizontal or the operating radius.',
+      'Enter the lift weight (payload) in tonnes.',
+      'Optionally enter the crane rated capacity from the manufacturer load chart.',
+      'Click "Calculate" to see operating radius, lifting moment (t·m), and load utilization percentage.',
+    ],
     faqItems: [
       { q: 'What is load moment?', a: 'Load moment = load weight × working radius (t·m). It represents the overturning force on the crane. Exceeding rated load moment is the primary cause of crane tipping accidents.' },
       { q: 'How do I calculate working radius?', a: 'Working radius = boom length × cos(boom angle from horizontal). Or measure the horizontal distance from crane center to load directly.' },
@@ -503,6 +527,12 @@ const zh: Dict = {
     chartTitle: 'G-209 / G-2130 / S-209 完整规格表',
     chartSub: '所有标准规格的 WLL、本体尺寸、销轴直径与单重。',
     faqTitle: '卸扣常见问题',
+    howToSteps: [
+      '输入工作载荷（吨）。',
+      '如需筛选，选择卸扣类型（螺丝销 / 螺栓销）和材质——"任意"优先搜索合金钢型号，范围最广。',
+      '点击"计算卸扣规格"，查看匹配的 Crosby 型号、WLL、销轴直径和重量。',
+      '若结果显示 WLL 偏紧警告，建议选大一级以留出足够安全余量。',
+    ],
     faqItems: [
       { q: '螺丝销和螺栓销卸扣怎么选？', a: '螺丝销卸扣（G-209）用于临时、频繁拆装的吊装；螺栓销卸扣（G-2130）带螺母和开口销，适用于永久或半永久安装，以及任何振动可能导致销轴松脱的场合。' },
       { q: '卸扣可以侧向受力吗？', a: '侧向受力会大幅降低 WLL。按 ASME B30.26 与 Crosby 指南：偏离中心线 45° 时 WLL 降为 70%；90° 侧载时降为 50%。多肢吊索应作用于卸扣弓背而非销轴侧。' },
@@ -538,6 +568,12 @@ const zh: Dict = {
     chartTitle: '链条吊索 WLL 表',
     chartSub: '80 级合金链条吊索单肢垂直额定工作载荷。选择满足计算每肢张力的最小链条规格。',
     faqTitle: '吊装角度常见问题',
+    howToSteps: [
+      '输入总悬挂载荷重量（吨）。',
+      '选择吊索肢数（1、2、3 或 4 肢）。',
+      '选择吊索与水平面的夹角（30°、45°、60° 或 90°）。',
+      '点击"计算吊索张力"，查看每肢载荷、张力系数和水平挤压分力。',
+    ],
     faqItems: [
       { q: '什么是吊索张力系数？', a: '张力系数 = 1/sin（角度），角度从水平面测量。90°（垂直）时系数为 1.0；60° 为 1.155；45° 为 1.414；30° 为 2.0。每肢垂直分担载荷乘以该系数即为该肢实际张力。' },
       { q: '为什么角度越小张力越大？', a: '吊索张力只有垂直分量（T × sin θ）用于承载，水平分量挤压货物。角度减小时垂直分量变小，总张力必须增大才能承受同样的重量。30° 时每肢承受其垂直分担量的 2 倍。' },
@@ -581,6 +617,12 @@ const zh: Dict = {
     sfg3p: '用于失效后果严重、载人或可能有冲击载荷的场合。许多海上与核电应用要求 10:1 或更高。',
     defaultTag: '默认',
     faqTitle: '钢丝绳常见问题',
+    howToSteps: [
+      '选择钢丝绳结构（6×19 IWRC、6×36 IWRC 或 6×7 FC）。',
+      '输入钢丝绳公称直径（毫米）。',
+      '选择所需安全系数（3.5、5 或 10）。',
+      '点击"计算"，查看所选钢丝绳的最小破断拉力和 WLL。',
+    ],
     faqItems: [
       { q: '吊装用钢丝绳的最小安全系数是多少？', a: 'ASME B30.9 建议吊装钢丝绳最小安全系数为 5:1。某些专用设备可用 3.5:1，关键吊装可能需要 10:1。' },
       { q: '破断拉力和 WLL 有什么区别？', a: '破断拉力（最小破断载荷）是钢丝绳拉断时的载荷。WLL = 破断拉力 ÷ 安全系数。例如 20mm 6×19 IWRC 破断拉力 25.5 t，5:1 时 WLL = 5.1 吨。' },
@@ -627,6 +669,12 @@ const zh: Dict = {
     lmP2: '作业半径 = 吊车回转中心到吊钩的水平距离。半径越大，力矩越大，安全载荷必须越小。',
     lmRule: '核心规则：任何工况下都不得超过额定力矩——这是汽车吊事故的第一大诱因。',
     faqTitle: '吊车负荷常见问题',
+    howToSteps: [
+      '输入臂长（米）及臂架仰角或作业半径。',
+      '输入吊重（净载荷，吨）。',
+      '可选：从制造商载荷表中输入额定起重量。',
+      '点击"计算"，查看作业半径、起重力矩（t·m）和负荷率百分比。',
+    ],
     faqItems: [
       { q: '什么是起重力矩？', a: '起重力矩 = 吊重 × 作业半径（t·m），代表吊车上的倾覆力矩。超过额定力矩是吊车倾覆事故的首要原因。' },
       { q: '如何计算作业半径？', a: '作业半径 = 臂长 × cos（臂架与水平面夹角）。也可直接测量吊车回转中心到载荷的水平距离。' },

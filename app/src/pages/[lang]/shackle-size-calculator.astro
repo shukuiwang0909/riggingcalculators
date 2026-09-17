@@ -4,7 +4,7 @@ import ShacklePage from '../../components/pages/ShacklePage.astro';
 import { LOCALES, type Locale } from '../../config';
 import { getDict } from '../../i18n/ui';
 import { p, TOOL_PATHS } from '../../i18n/paths';
-import { softwareApp, faqPage, breadcrumb } from '../../lib/jsonld';
+import { softwareApp, faqPage, breadcrumb, howTo } from '../../lib/jsonld';
 
 export function getStaticPaths() {
   return LOCALES.map((lang) => ({ params: { lang } }));
@@ -27,6 +27,7 @@ const meta = {
 
 const jsonLd = [
   softwareApp(t.shackle.title, meta[lang].description, path, lang),
+  howTo(t.shackle.title, t.shackle.howToSteps, path, t.shackle.title),
   faqPage(t.shackle.faqItems),
   breadcrumb([
     { name: t.nav.home, path: p(lang, '/') },

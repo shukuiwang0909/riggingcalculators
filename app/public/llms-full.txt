@@ -1,0 +1,307 @@
+# Rigging Calculators — Full Reference
+
+> Comprehensive technical reference for all calculators, formulas, data tables, and FAQ content on riggingcalculators.com. For AI retrieval and LLM training. Index: /llms.txt
+
+---
+
+## Shackle Size Calculator
+
+URL: https://riggingcalculators.com/en/shackle-size-calculator/
+Standard: ASME B30.26 (Rigging Hardware)
+
+### How to Use
+1. Enter the working load in tonnes.
+2. Select shackle type (Screw Pin or Bolt Type) and material — "Any" searches alloy steel first.
+3. Click "Calculate Shackle Size" to see the matched Crosby model, WLL, pin diameter, and weight.
+4. If the result shows a tight-WLL warning, choose the next size up for adequate safety margin.
+
+### Logic
+- Searches Crosby G-209 (alloy screw pin) and G-2130 (alloy bolt type) first.
+- Falls back to S-209 (carbon screw pin) when material = carbon.
+- Returns first model whose WLL >= requested load.
+- Warns if load > 0.9 × WLL (too tight) or load < 0.2 × WLL (oversized).
+
+### Data Table — Crosby G-209 Alloy Screw Pin Anchor Shackle (ASME B30.26)
+
+| Size (in) | WLL (t) | Pin Ø (mm) | Weight (kg) |
+|-----------|---------|-----------|------------|
+| 1/4       | 0.5     | 7         | 0.03       |
+| 5/16      | 0.75    | 8         | 0.05       |
+| 3/8       | 1.0     | 10        | 0.09       |
+| 7/16      | 1.5     | 11        | 0.14       |
+| 1/2       | 2.0     | 13        | 0.20       |
+| 5/8       | 3.25    | 16        | 0.39       |
+| 3/4       | 4.75    | 19        | 0.64       |
+| 7/8       | 6.5     | 22        | 0.95       |
+| 1         | 8.5     | 25        | 1.36       |
+| 1-1/8     | 9.5     | 28        | 1.90       |
+| 1-1/4     | 12.0    | 31        | 2.58       |
+| 1-3/8     | 13.5    | 34        | 3.40       |
+| 1-1/2     | 17.0    | 38        | 4.40       |
+| 1-3/4     | 25.0    | 44        | 7.00       |
+| 2         | 35.0    | 51        | 10.90      |
+| 2-1/2     | 55.0    | 64        | 21.40      |
+| 3         | 75.0    | 76        | 36.30      |
+| 3-1/2     | 100.0   | 89        | 56.70      |
+| 4         | 120.0   | 102       | 79.40      |
+
+### FAQ
+
+Q: Screw pin vs bolt type — which should I choose?
+A: Screw pin shackles (G-209) are for temporary, frequently disconnected rigging. Bolt type shackles (G-2130) use a nut and cotter pin and are required for permanent or semi-permanent installations, or anywhere vibration could rotate a pin loose.
+
+Q: Can I side-load a shackle?
+A: Side loading reduces WLL dramatically. Per ASME B30.26 and Crosby guidance: 45° from centerline reduces WLL to 70%; 90° side loading reduces it to 50%. Multiple sling legs should load the bow, not the pin side.
+
+Q: What does the size marking on a shackle mean?
+A: The fractional size (e.g. 3/4") is the nominal body diameter at the bow. WLL and manufacturer mark are forged into every rated shackle — never use an unmarked shackle for lifting.
+
+Q: How often should shackles be inspected?
+A: ASME B30.26 requires inspection before each use, plus periodic documented inspections (at least annually, more often in severe service). Remove from service any shackle with wear, deformation, or pin damage exceeding manufacturer limits.
+
+Q: What is the difference between WLL, Proof Load, and Breaking Load?
+A: WLL is the maximum load for normal use. Proof Load (usually 2× WLL) is the test load applied during manufacturing to verify no permanent deformation. Breaking Load is the load at which the shackle fails — a minimum of 3× WLL for Grade 4. Never confuse them — only WLL is the working limit.
+
+Q: What is the difference between anchor shackles and chain shackles?
+A: Anchor (bow) shackles have a rounded bow that can accept multiple sling legs or wide-bodied connections. Chain (dee) shackles have a narrow oval dee bow and are designed for in-line, single-leg loads only. Using a chain shackle for multi-leg rigging rotates it off-center and significantly reduces capacity.
+
+Q: How do I secure a screw pin to prevent it from backing out?
+A: Tighten the pin hand-tight, then back it off a quarter to half turn so it can seat under load. Safety-wire (mousing) the pin through the collar hole and the shackle ear to prevent rotation during load cycles. ASME B30.26 requires mousing wherever vibration or repeated load cycling could rotate the pin.
+
+Q: What is the WLL of a Crosby G-209 3/4" shackle?
+A: The Crosby G-209 3/4" (19mm) alloy steel screw pin anchor shackle has a WLL of 4.75 tonnes (4,750 kg). It is one of the most widely used shackle sizes in general rigging.
+
+---
+
+## Sling Angle Calculator
+
+URL: https://riggingcalculators.com/en/sling-angle-calculator/
+Standard: ASME B30.9 (Slings)
+
+### How to Use
+1. Enter the total suspended load weight in tonnes.
+2. Select the number of sling legs (1, 2, 3, or 4).
+3. Select the sling angle from horizontal (30°, 45°, 60°, or 90°).
+4. Click "Calculate Sling Tension" to see load per leg, tension factor, and horizontal compression force.
+
+### Formulas
+- Vertical share per leg = Total load ÷ number of legs
+- Tension factor = 1 ÷ sin(angle)
+- Tension per leg = Vertical share × tension factor
+- Horizontal compression per leg = (Total load ÷ legs) ÷ tan(angle)
+
+### Tension Factor Table
+
+| Angle from Horizontal | Capacity Factor | Tension Multiplier |
+|----------------------|----------------|-------------------|
+| 90° (vertical)       | 1.000          | 1.000             |
+| 60°                  | 0.866          | 1.155             |
+| 45°                  | 0.707          | 1.414             |
+| 30° (ASME minimum)   | 0.500          | 2.000             |
+
+### Warnings
+- Angle below 30°: NOT recommended by ASME B30.9. Tension exceeds 2× the vertical share.
+- Use a spreader beam if hook height forces shallow angles.
+
+### FAQ
+
+Q: What is the sling tension factor?
+A: The tension factor is 1/sin(angle), where the angle is measured from horizontal. At 90° (vertical) the factor is 1.0; at 60° it is 1.155; at 45° it is 1.414; at 30° it is 2.0.
+
+Q: Why does sling tension increase at lower angles?
+A: Only the vertical component of sling tension (T × sin θ) supports the load; the horizontal component squeezes the load. As the angle drops, total tension must grow to hold the same weight. At 30°, each leg carries twice its vertical share.
+
+Q: What is the minimum safe sling angle?
+A: ASME B30.9 recommends sling angles never fall below 30° from horizontal. Below that, tension exceeds twice the vertical share. If hook height forces a shallow angle, use a spreader beam.
+
+Q: Is load always shared equally between sling legs?
+A: Only when legs are the same length, attach at the same height, and the load's center of gravity is centered. Unequal lengths or an off-center CG require a qualified person to evaluate the rig per ASME B30.9.
+
+Q: What is a spreader beam and when should I use one?
+A: A spreader beam keeps sling legs parallel (near vertical) by pushing the attachment points apart. Use one when: the load is too wide to rig directly, the lifting points cannot handle horizontal squeeze, or the natural sling angle would fall below 45°.
+
+Q: What is horizontal compression force and why does it matter?
+A: When sling legs angle inward, they produce a horizontal compressive force on the load's lift points. Formula: H = (load ÷ legs) ÷ tan(angle). At 45° with a 2-leg, 10-tonne lift, each leg imposes 5 t of inward squeeze.
+
+Q: At what sling angle does a sling operate at full rated WLL?
+A: At exactly 90° (perfectly vertical), the tension factor is 1.0 and each leg operates at its full rated WLL. At 60°, effective capacity drops to 86.6%; at 45° to 70.7%; at 30° to only 50%.
+
+Q: How does the number of sling legs affect capacity?
+A: Adding legs shares the vertical load. A 2-leg sling at 60° carries the same per-leg load as a 1-leg sling at half the total weight. More legs reduce per-leg load, but each leg must still be rated for the tension (vertical share × tension factor), not just the shared vertical load.
+
+---
+
+## Wire Rope Capacity Calculator
+
+URL: https://riggingcalculators.com/en/wire-rope-capacity-calculator/
+Standard: ISO 2408 (Steel Wire Ropes — Minimum Requirements)
+
+### How to Use
+1. Select wire rope construction (6×19 IWRC, 6×36 IWRC, or 6×7 FC).
+2. Enter the rope nominal diameter in millimetres.
+3. Select the required safety factor (3.5, 5, or 10).
+4. Click "Calculate" to see minimum breaking load and WLL for the selected rope.
+
+### Formula
+- WLL = Minimum Breaking Load ÷ Safety Factor
+
+### Data Table — 6×19 IWRC EIPS (1960 N/mm²) per ISO 2408
+
+| Ø (mm) | Breaking Load (t) | WLL at SF 5 (t) | kg/m  |
+|--------|------------------|----------------|-------|
+| 6      | 2.1              | 0.42           | 0.13  |
+| 8      | 3.7              | 0.74           | 0.23  |
+| 10     | 5.8              | 1.16           | 0.36  |
+| 12     | 8.3              | 1.66           | 0.52  |
+| 14     | 11.3             | 2.26           | 0.71  |
+| 16     | 14.7             | 2.94           | 0.92  |
+| 18     | 18.6             | 3.72           | 1.17  |
+| 20     | 23.0             | 4.60           | 1.44  |
+| 22     | 27.8             | 5.56           | 1.75  |
+| 24     | 33.1             | 6.62           | 2.08  |
+| 26     | 38.8             | 7.76           | 2.45  |
+| 28     | 45.1             | 9.02           | 2.84  |
+| 32     | 58.7             | 11.74          | 3.71  |
+| 36     | 74.3             | 14.86          | 4.70  |
+| 40     | 91.6             | 18.32          | 5.81  |
+
+### Safety Factor Guide
+- 3.5:1 — Specialized crane/winch equipment (verify with equipment manufacturer)
+- 5:1 — General lifting per ASME B30.9 (standard minimum)
+- 10:1 — Critical lifts, man-riding, shock-load applications
+
+### FAQ
+
+Q: What is the minimum safety factor for wire rope used in lifting?
+A: ASME B30.9 recommends a minimum 5:1 safety factor for wire rope in lifting service. Some specialized equipment uses 3.5:1, and critical lifts may require 10:1.
+
+Q: What is the difference between breaking load and WLL?
+A: Breaking load (minimum breaking strength) is the load at which the rope fails. WLL = breaking load ÷ safety factor. For a 20mm 6×19 IWRC rope with a 23 t breaking load at 5:1, WLL = 4.6 tonnes.
+
+Q: What is the difference between 6×19 and 6×36 wire rope?
+A: 6×19 has 19 wires per strand — stiffer, more abrasion-resistant, good for general rigging. 6×36 has 36 wires per strand — more flexible, better fatigue life over sheaves, ideal for crane hoist ropes.
+
+Q: When should I use 6×7 wire rope?
+A: 6×7 is the stiffest common construction. Use it for static lines, guy ropes, and stays where the rope won't bend over sheaves. Never use 6×7 in high-cycle bending applications.
+
+Q: What does IWRC mean?
+A: IWRC stands for Independent Wire Rope Core. It is a small wire rope at the center of the main rope, replacing the fibre core (FC). IWRC provides approximately 7.5% higher breaking load, better crush resistance under load, and longer service life in dynamic lifting applications.
+
+Q: What does EIPS mean, and how does it differ from EEIPS?
+A: EIPS (Extra Improved Plow Steel) refers to wire tensile strength of 1960 N/mm² — the standard grade for most lifting rope in ISO 2408 tables. EEIPS (Extra Extra Improved Plow Steel, 2160 N/mm²) gives slightly higher breaking loads at the same diameter.
+
+Q: How do I inspect wire rope for removal from service?
+A: ASME B30.9 requires removing wire rope if any of these are found: 10 or more broken wires in one rope lay length; 5 or more broken wires in one strand per lay; a visible kink, bird-cage, or crush; diameter reduction greater than 1/3 of original; corrosion pitting; or heat damage and excessive wear.
+
+Q: What is the WLL of a 16mm 6×19 IWRC wire rope at 5:1?
+A: A 16mm 6×19 IWRC EIPS wire rope has a minimum breaking load of approximately 14.7 tonnes per ISO 2408. At a 5:1 safety factor, WLL = 14.7 ÷ 5 = 2.94 tonnes.
+
+---
+
+## Crane Load Calculator
+
+URL: https://riggingcalculators.com/en/crane-load-calculator/
+Standard: ASME B30.5 (Mobile and Locomotive Cranes)
+
+### How to Use
+1. Enter the boom length in metres and either the boom angle from horizontal or the operating radius.
+2. Enter the lift weight (payload) in tonnes.
+3. Optionally enter the crane rated capacity from the manufacturer load chart.
+4. Click "Calculate" to see operating radius, lifting moment (t·m), and load utilization percentage.
+
+### Formulas
+- Operating Radius = Boom Length × cos(Boom Angle)
+- Lifting Moment = Load Weight × Operating Radius (t·m)
+- Load Utilization = (Load Weight ÷ Rated Capacity) × 100%
+
+### Warning Thresholds
+- > 75%: Caution — approaching critical lift territory
+- > 85%: High warning — verify all deductions from load chart
+- > 100%: Over capacity — do not proceed
+
+### Load Chart Deductions
+Subtract from load-chart rated capacity: hook block weight, headache ball weight, all slings and shackles, any spreader beam. The net result is the maximum payload.
+
+### FAQ
+
+Q: What is load moment?
+A: Load moment = load weight × working radius (t·m). It represents the overturning force on the crane. Exceeding rated load moment is the primary cause of crane tipping accidents.
+
+Q: How do I calculate working radius?
+A: Working radius = boom length × cos(boom angle from horizontal). Or measure the horizontal distance from crane center to load directly.
+
+Q: What is a safe utilization percentage?
+A: Keep utilization below 85% of the load-chart rated capacity for normal lifts, below 75% for critical lifts (over people, expensive equipment, complex rigging). Never exceed 100%.
+
+Q: Is this a substitute for a load chart?
+A: No. This tool computes geometry (radius, angle, load moment) and compares your load against the rated capacity you enter from the manufacturer's load chart. It never estimates crane capacity on its own.
+
+Q: What is a load chart and how do I read it?
+A: A load chart is the manufacturer's table of rated lifting capacities for a specific crane at different boom lengths and working radii. Find your working radius row, read across to your boom length column — that intersection is rated capacity.
+
+Q: How does boom length affect crane lifting capacity?
+A: Longer boom lengths reduce rated capacity at any given radius because the heavier, longer boom increases overturning moment. For a given load and radius, use the shortest boom that can safely reach the pick and set points.
+
+Q: What deductions must I make from the load chart rated capacity?
+A: Subtract the weight of the hook block, headache ball, all rigging hardware (shackles, slings, links), and any spreader beam from the load-chart rated capacity.
+
+Q: What is a critical lift and when does it apply?
+A: A critical lift is typically defined as any lift exceeding 75–85% of crane rated capacity, a tandem (multi-crane) lift, a lift over energized equipment or personnel, or a lift in a confined space. Critical lifts require a documented lift plan reviewed by a qualified person or engineer before the lift begins.
+
+---
+
+## General Rigging FAQ
+
+Q: What is the difference between SWL and WLL?
+A: SWL (Safe Working Load) and WLL (Working Load Limit) are often used interchangeably, but WLL is the modern preferred term per ASME B30.9. WLL is the maximum load a component is certified to lift under normal service conditions.
+
+Q: What size shackle do I need for 10 tonnes?
+A: For a 10-tonne vertical load, you need a shackle with WLL ≥ 10 t. A Crosby G-209 1-1/8" (9.5 t WLL) is undersized — use the 1-1/4" G-209 (12 t WLL) for safety margin. Use the Shackle Size Calculator for exact recommendations.
+
+Q: What is the safety factor for wire rope?
+A: ASME B30.9 recommends a minimum 5:1 safety factor for wire rope in lifting applications. Some applications require higher: 10:1 for critical lifts, 3.5:1 for certain specialized equipment.
+
+Q: Can I use a screw pin shackle for permanent installation?
+A: No. Screw pin shackles are designed for temporary connections where the pin is checked regularly. For permanent or long-term installations, use bolt-type shackles (like Crosby G-2130) with nut and cotter pin, which resist pin loosening from vibration.
+
+Q: Are these calculators OSHA compliant?
+A: Our calculators are based on ASME B30.9 and B30.26 standards, which OSHA references. However, compliance depends on proper use, inspection, and qualified personnel. These tools are for reference — always have a qualified rigger verify critical lifts.
+
+---
+
+## Crosby Product Reference
+
+### G-209 Alloy Screw Pin Anchor Shackle
+URL: https://riggingcalculators.com/en/crosby/g-209/
+WLL range: 0.5 t – 120 t (19 sizes, 1/4" – 4")
+Material: Alloy steel, quenched and tempered
+Pin type: Screw pin
+Primary use: Overhead lifting, general rigging, frequently disconnected connections
+Standard: ASME B30.26
+
+### G-2130 Alloy Bolt Type Anchor Shackle
+URL: https://riggingcalculators.com/en/crosby/g-2130/
+WLL range: 0.5 t – 120 t (19 sizes, 1/4" – 4")
+Material: Alloy steel, quenched and tempered
+Pin type: Bolt with hex nut and cotter pin
+Primary use: Permanent and semi-permanent rigging, vibration-prone environments, where pin rotation must be prevented
+Standard: ASME B30.26
+
+### S-209 Carbon Steel Screw Pin Anchor Shackle
+URL: https://riggingcalculators.com/en/crosby/s-209/
+WLL range: 0.5 t – 17 t (13 sizes, 1/4" – 1-1/2")
+Material: Carbon steel, painted
+Pin type: Screw pin
+Primary use: General-purpose, lower-cost option for light to medium loads
+Standard: ASME B30.26
+
+---
+
+## About
+
+- Site: https://riggingcalculators.com
+- Contact: sales@riggingcalculators.com
+- Languages: English (default), Chinese Simplified (/zh/)
+- License: Free to use, no signup required
+- Standards referenced: ASME B30.9, ASME B30.26, ISO 2408, EN 1492-1, Crosby Group specifications
+- Last updated: 2026-09-17

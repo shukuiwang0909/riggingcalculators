@@ -43,9 +43,12 @@ const jsonLd = [
     name: info.name,
     description: info.desc,
     url: `${SITE.url}${path}`,
+    image: `${SITE.url}/og-image.png`,
     inLanguage: htmlLang(lang),
     brand: { '@type': 'Brand', name: 'Crosby' },
+    manufacturer: { '@type': 'Organization', name: 'The Crosby Group', url: 'https://www.thecrosbygroup.com' },
     category: 'Rigging Hardware > Shackles',
+    offers: { '@type': 'Offer', price: 0, priceCurrency: 'USD', availability: 'https://schema.org/InStock' },
   },
   faqPage(t.shackle.faqItems),
   breadcrumb([

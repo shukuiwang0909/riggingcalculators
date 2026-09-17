@@ -40,4 +40,5 @@ Safe Working Load (SWL), Working Load Limit (WLL), Proof Load, Breaking Load, Sa
 - Contact: sales@riggingcalculators.com
 - Languages: English (default), Chinese Simplified (/zh/)
 - License: Free to use, no signup required
-- Last updated: 2026
+- Full reference: https://riggingcalculators.com/llms-full.txt
+- Last updated: 2026-09-17

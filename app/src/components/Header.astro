@@ -23,35 +23,42 @@ const navItems = [
 ];
 ---
 
-<header class="sticky top-0 z-50 border-b border-[#262626] no-print" style="background: linear-gradient(180deg, rgba(10,10,10,0.92), rgba(10,10,10,0.85)); backdrop-filter: blur(12px);">
+<header class="sticky top-0 z-50 border-b border-line header-glass no-print">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
       <a href={home} class="flex items-center gap-2.5" aria-label={t.nav.home}>
         <span class="w-2.5 h-2.5 rounded-full bg-[#f45500]" style="box-shadow: 0 0 12px hsla(21,100%,48%,0.9)"></span>
-        <span class="display text-lg text-white tracking-tight">RIGGING<span class="text-[#f45500]">CALCULATORS</span></span>
+        <span class="display text-lg text-heading tracking-tight">RIGGING<span class="text-[#f45500]">CALCULATORS</span></span>
       </a>
       <nav class="hidden md:flex items-center gap-8" aria-label="Main">
         {navItems.map((n) => (
-          <a href={n.href} class="text-sm text-[#9d9d9d] hover:text-[#f27e40] transition-colors">{n.label}</a>
+          <a href={n.href} class="text-sm text-muted hover:text-[#f27e40] transition-colors">{n.label}</a>
         ))}
       </nav>
       <div class="flex items-center gap-3">
+        <button
+          id="theme-toggle"
+          aria-label="Toggle light/dark theme"
+          class="w-8 h-8 flex items-center justify-center rounded-full border border-line text-muted hover:text-[#f45500] hover:border-[#f45500] transition-colors text-base leading-none"
+        >
+          <span id="theme-icon">☀</span>
+        </button>
         <a
           href={otherLangPath}
           hreflang={otherLang === 'zh' ? 'zh-CN' : 'en'}
-          class="mono text-[11px] tracking-widest border border-[#262626] rounded-full px-3.5 py-1.5 text-[#9d9d9d] hover:text-[#f27e40] hover:border-[#f45500] transition-colors"
+          class="mono text-[11px] tracking-widest border border-line rounded-full px-3.5 py-1.5 text-muted hover:text-[#f27e40] hover:border-[#f45500] transition-colors"
         >
           {otherLang === 'zh' ? '中文' : 'EN'}
         </a>
         <button class="btn-safety hidden sm:inline-flex !py-2.5 !px-5 text-sm" data-rfq-open>
           {t.nav.cta}
         </button>
-        <button id="menu-btn" class="md:hidden text-[#9d9d9d] text-2xl leading-none" aria-label="menu" aria-expanded="false">≡</button>
+        <button id="menu-btn" class="md:hidden text-muted text-2xl leading-none" aria-label="menu" aria-expanded="false">≡</button>
       </div>
     </div>
-    <nav id="mobile-menu" class="hidden md:hidden pb-4 flex-col gap-3 border-t border-[#1e1e1e] pt-4" aria-label="Mobile">
+    <nav id="mobile-menu" class="hidden md:hidden pb-4 flex-col gap-3 border-t border-soft pt-4" aria-label="Mobile">
       {navItems.map((n) => (
-        <a href={n.href} class="text-sm text-[#9d9d9d] hover:text-[#f27e40]">{n.label}</a>
+        <a href={n.href} class="text-sm text-muted hover:text-[#f27e40]">{n.label}</a>
       ))}
       <button class="btn-safety text-sm" data-rfq-open>{t.nav.cta}</button>
     </nav>
@@ -69,5 +76,31 @@ const navItems = [
       btn.textContent = open ? '≡' : '×';
       btn.setAttribute('aria-expanded', String(!open));
     });
+  })();
+
+  (function () {
+    var toggleBtn = document.getElementById('theme-toggle');
+    var icon = document.getElementById('theme-icon');
+    var html = document.documentElement;
+
+    function applyTheme(t) {
+      if (t === 'light') {
+        html.setAttribute('data-theme', 'light');
+        if (icon) icon.textContent = '☽';
+      } else {
+        html.removeAttribute('data-theme');
+        if (icon) icon.textContent = '☀';
+      }
+    }
+
+    applyTheme(localStorage.getItem('theme') || 'dark');
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', function () {
+        var next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        localStorage.setItem('theme', next);
+        applyTheme(next);
+      });
+    }
   })();
 </script>

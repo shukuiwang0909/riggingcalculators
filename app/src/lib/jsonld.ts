@@ -8,6 +8,13 @@ export function organization() {
     name: SITE.name,
     url: SITE.url,
     email: SITE.email,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE.url}/og-image.png`,
+      width: 1200,
+      height: 630,
+    },
+    sameAs: ['https://github.com/shukuiwang0909/riggingcalculators'],
     description:
       'Free online rigging calculators for industrial lifting and crane operations — shackle sizing, sling angle tension, wire rope WLL, and crane load analysis.',
   };
@@ -22,26 +29,6 @@ export function webSite() {
     url: SITE.url,
     inLanguage: ['en', 'zh-CN'],
     publisher: { '@id': `${SITE.url}/#organization` },
-  };
-}
-
-export function webSiteWithSearch() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    '@id': `${SITE.url}/#website`,
-    name: SITE.name,
-    url: SITE.url,
-    inLanguage: ['en', 'zh-CN'],
-    publisher: { '@id': `${SITE.url}/#organization` },
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${SITE.url}/en/shackle-size-calculator/?q={search_term_string}`,
-      },
-      'query-input': 'required name=search_term_string',
-    },
   };
 }
 
@@ -86,7 +73,28 @@ export function softwareApp(name: string, description: string, path: string, lan
   };
 }
 
-export function collectionPage(name: string, description: string, path: string, lang: Locale) {
+export function howTo(name: string, steps: string[], path: string, toolName: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name,
+    url: `${SITE.url}${path}`,
+    tool: [{ '@type': 'HowToTool', name: toolName }],
+    step: steps.map((text, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      text,
+    })),
+  };
+}
+
+export function collectionPage(
+  name: string,
+  description: string,
+  path: string,
+  lang: Locale,
+  hasPart?: { name: string; url: string }[],
+) {
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
@@ -95,5 +103,13 @@ export function collectionPage(name: string, description: string, path: string, 
     url: `${SITE.url}${path}`,
     inLanguage: htmlLang(lang),
     isPartOf: { '@id': `${SITE.url}/#website` },
+    ...(hasPart && {
+      hasPart: hasPart.map((p) => ({
+        '@type': 'SoftwareApplication',
+        name: p.name,
+        url: p.url,
+        applicationCategory: 'EngineeringApplication',
+      })),
+    }),
   };
 }

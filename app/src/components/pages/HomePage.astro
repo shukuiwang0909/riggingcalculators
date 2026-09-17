@@ -33,12 +33,12 @@ const rope619 = WIRE_ROPES.filter((r) => r.construction === '6x19');
           <span class="pulse-dot"></span>
           <span class="micro !text-[#f27e40]">{t.hero.badge}</span>
         </div>
-        <h1 class="display text-5xl sm:text-6xl lg:text-7xl text-white mb-6">
+        <h1 class="display text-5xl sm:text-6xl lg:text-7xl text-heading mb-6">
           {t.hero.titleA}<br />
           <span class="text-[#f45500]">{t.hero.titleB}</span><br />
-          <span class="text-[#9d9d9d] text-3xl sm:text-4xl lg:text-5xl font-medium">{t.hero.titleC}</span>
+          <span class="text-muted text-3xl sm:text-4xl lg:text-5xl font-medium">{t.hero.titleC}</span>
         </h1>
-        <p class="text-lg text-[#9d9d9d] mb-10 leading-relaxed max-w-xl">{t.hero.sub}</p>
+        <p class="text-lg text-muted mb-10 leading-relaxed max-w-xl">{t.hero.sub}</p>
         <div class="flex flex-wrap gap-4 no-print">
           <a href="#calculator" class="btn-safety">{t.hero.cta1}</a>
           <a href="#tools" class="btn-ghost">{t.hero.cta2}</a>
@@ -49,9 +49,9 @@ const rope619 = WIRE_ROPES.filter((r) => r.construction === '6x19');
             { v: t.hero.stat2v, l: t.hero.stat2l },
             { v: t.hero.stat3v, l: t.hero.stat3l },
           ].map((s) => (
-            <div class="border-l border-[#262626] pl-4">
+            <div class="border-l border-line pl-4">
               <div class="stat-num text-2xl">{s.v}</div>
-              <div class="text-xs text-[#5c5c5c] mt-1">{s.l}</div>
+              <div class="text-xs text-faint mt-1">{s.l}</div>
             </div>
           ))}
         </div>
@@ -69,15 +69,15 @@ const rope619 = WIRE_ROPES.filter((r) => r.construction === '6x19');
 <section id="tools" class="py-20 lg:py-28">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <SectionHead kicker={t.tools.kicker} title={t.tools.title} sub={t.tools.sub} />
-    <div class="grid md:grid-cols-2 gap-px bg-[#1e1e1e] border border-[#1e1e1e] reveal">
+    <div class="grid md:grid-cols-2 gap-px bg-line-soft border border-soft reveal">
       {tools.map((tool) => (
-        <a href={tool.href} class="panel-hover block bg-[#0a0a0a] p-8 lg:p-10 h-full group">
+        <a href={tool.href} class="panel-hover block bg-page p-8 lg:p-10 h-full group">
           <div class="flex items-start justify-between mb-8">
-            <span class="mono text-[#333] text-sm">/{tool.no}</span>
+            <span class="mono text-faint text-sm">/{tool.no}</span>
             <span class="mono text-[#f45500] text-xl transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
           </div>
-          <h3 class="display text-2xl text-white mb-3 group-hover:text-[#f27e40] transition-colors">{tool.name}</h3>
-          <p class="text-sm text-[#9d9d9d] leading-relaxed">{tool.desc}</p>
+          <h3 class="display text-2xl text-heading mb-3 group-hover:text-[#f27e40] transition-colors">{tool.name}</h3>
+          <p class="text-sm text-muted leading-relaxed">{tool.desc}</p>
           <div class="micro mt-8 !text-[#f45500]">{t.tools.go} →</div>
         </a>
       ))}
@@ -86,21 +86,21 @@ const rope619 = WIRE_ROPES.filter((r) => r.construction === '6x19');
 </section>
 
 <!-- CHARTS -->
-<section id="charts" class="py-20 lg:py-28 bg-[#0d0d0d] border-y border-[#1e1e1e]">
+<section id="charts" class="py-20 lg:py-28 bg-alt-sec border-y border-soft">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <SectionHead kicker={t.charts.kicker} title={t.charts.title} sub={t.charts.sub} />
     <div class="grid lg:grid-cols-2 gap-6">
       <div class="panel overflow-hidden reveal">
         <div class="p-6 pb-0 flex items-baseline justify-between gap-4">
           <div>
-            <h3 class="display text-lg text-white">{t.charts.shackleTitle}</h3>
-            <p class="text-xs text-[#5c5c5c] mt-2 mb-4">{t.charts.shackleNote}</p>
+            <h3 class="display text-lg text-heading">{t.charts.shackleTitle}</h3>
+            <p class="text-xs text-faint mt-2 mb-4">{t.charts.shackleNote}</p>
           </div>
           <a href={p(lang, CHART_PATHS.shackle)} class="micro !text-[#f45500] shrink-0 no-print">{t.charts.viewFull} →</a>
         </div>
         <div class="overflow-x-auto max-h-[420px] overflow-y-auto">
           <table class="spec-table">
-            <thead class="sticky top-0 bg-[#161616]">
+            <thead class="sticky top-0 bg-panel-c">
               <tr><th>{t.charts.thWll}</th><th>{t.charts.thSize}</th><th>{t.charts.thPin}</th><th>{t.charts.thWeight}</th></tr>
             </thead>
             <tbody>
@@ -116,14 +116,14 @@ const rope619 = WIRE_ROPES.filter((r) => r.construction === '6x19');
         <div class="panel overflow-hidden reveal" style="transition-delay: 80ms">
           <div class="p-6 pb-0 flex items-baseline justify-between gap-4">
             <div>
-              <h3 class="display text-lg text-white">{t.charts.ropeTitle}</h3>
-              <p class="text-xs text-[#5c5c5c] mt-2 mb-4">{t.charts.ropeNote}</p>
+              <h3 class="display text-lg text-heading">{t.charts.ropeTitle}</h3>
+              <p class="text-xs text-faint mt-2 mb-4">{t.charts.ropeNote}</p>
             </div>
             <a href={p(lang, CHART_PATHS.wire)} class="micro !text-[#f45500] shrink-0 no-print">{t.charts.viewFull} →</a>
           </div>
           <div class="overflow-x-auto max-h-[220px] overflow-y-auto">
             <table class="spec-table">
-              <thead class="sticky top-0 bg-[#161616]">
+              <thead class="sticky top-0 bg-panel-c">
                 <tr><th>{t.charts.thDia}</th><th>{t.charts.thBreak}</th><th>{t.charts.thKgm}</th></tr>
               </thead>
               <tbody>
@@ -138,14 +138,14 @@ const rope619 = WIRE_ROPES.filter((r) => r.construction === '6x19');
         <div class="panel overflow-hidden reveal" style="transition-delay: 160ms">
           <div class="p-6 pb-0 flex items-baseline justify-between gap-4">
             <div>
-              <h3 class="display text-lg text-white">{t.charts.chainTitle}</h3>
-              <p class="text-xs text-[#5c5c5c] mt-2 mb-4">{t.charts.chainNote}</p>
+              <h3 class="display text-lg text-heading">{t.charts.chainTitle}</h3>
+              <p class="text-xs text-faint mt-2 mb-4">{t.charts.chainNote}</p>
             </div>
             <a href={p(lang, CHART_PATHS.sling)} class="micro !text-[#f45500] shrink-0 no-print">{t.charts.viewFull} →</a>
           </div>
           <div class="overflow-x-auto max-h-[220px] overflow-y-auto">
             <table class="spec-table">
-              <thead class="sticky top-0 bg-[#161616]">
+              <thead class="sticky top-0 bg-panel-c">
                 <tr><th>{t.charts.thChain}</th><th>{t.charts.th90}</th><th>{t.charts.th60}</th><th>{t.charts.th45}</th><th>{t.charts.th30}</th></tr>
               </thead>
               <tbody>
@@ -175,8 +175,8 @@ const rope619 = WIRE_ROPES.filter((r) => r.construction === '6x19');
       {t.models.items.map((m, i) => (
         <a href={p(lang, m.href)} class="panel panel-hover block p-6 group reveal" style={`transition-delay: ${i * 60}ms`}>
           <div class="mono text-2xl font-bold text-[#f45500] group-hover:text-[#f27e40] transition-colors">{m.id}</div>
-          <div class="text-sm text-[#9d9d9d] mt-2">{m.desc}</div>
-          <div class="micro mt-4">{t.models.range}: <span class="text-white">{m.range}</span></div>
+          <div class="text-sm text-muted mt-2">{m.desc}</div>
+          <div class="micro mt-4">{t.models.range}: <span class="text-heading">{m.range}</span></div>
         </a>
       ))}
     </div>
@@ -184,17 +184,17 @@ const rope619 = WIRE_ROPES.filter((r) => r.construction === '6x19');
 </section>
 
 <!-- FAQ -->
-<section id="faq" class="py-20 lg:py-28 bg-[#0d0d0d] border-y border-[#1e1e1e]">
+<section id="faq" class="py-20 lg:py-28 bg-alt-sec border-y border-soft">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <SectionHead kicker={t.faq.kicker} title={t.faq.title} sub={t.faq.sub} />
-    <div class="space-y-px border border-[#1e1e1e]">
+    <div class="space-y-px border border-soft">
       {t.faq.items.map((f) => (
-        <details class="group bg-[#0a0a0a] p-6 reveal">
+        <details class="group bg-page p-6 reveal">
           <summary class="flex items-center justify-between cursor-pointer list-none">
-            <span class="font-semibold text-white group-hover:text-[#f27e40] transition-colors pr-6">{f.q}</span>
+            <span class="font-semibold text-heading group-hover:text-[#f27e40] transition-colors pr-6">{f.q}</span>
             <span class="faq-plus mono text-[#f45500] text-xl shrink-0" aria-hidden="true">+</span>
           </summary>
-          <p class="mt-4 text-[#9d9d9d] leading-relaxed text-sm">{f.a}</p>
+          <p class="mt-4 text-muted leading-relaxed text-sm">{f.a}</p>
         </details>
       ))}
     </div>
@@ -206,8 +206,8 @@ const rope619 = WIRE_ROPES.filter((r) => r.construction === '6x19');
   <div class="hazard h-2 w-full absolute top-0 left-0 opacity-80"></div>
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
     <div class="micro mb-4">RFQ / 24H</div>
-    <h2 class="display text-4xl md:text-5xl text-white mb-5">{t.cta.title}</h2>
-    <p class="text-[#9d9d9d] mb-10 max-w-xl mx-auto">{t.cta.sub}</p>
+    <h2 class="display text-4xl md:text-5xl text-heading mb-5">{t.cta.title}</h2>
+    <p class="text-muted mb-10 max-w-xl mx-auto">{t.cta.sub}</p>
     <div class="flex flex-wrap justify-center gap-4">
       <button class="btn-safety" data-rfq-open>{t.cta.btn}</button>
       <a href={`mailto:${SITE.email}`} class="btn-ghost">{t.cta.mail}</a>
