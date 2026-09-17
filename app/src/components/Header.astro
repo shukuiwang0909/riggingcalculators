@@ -1,6 +1,6 @@
 ---
 import { getDict } from '../i18n/ui';
-import { p } from '../i18n/paths';
+import { p, BLOG_PATHS } from '../i18n/paths';
 import type { Locale } from '../config';
 
 interface Props {
@@ -20,6 +20,7 @@ const navItems = [
   { label: t.nav.charts, href: `${home}#charts` },
   { label: t.nav.models, href: `${home}#models` },
   { label: t.nav.faq, href: `${home}#faq` },
+  { label: t.nav.blog, href: p(lang, BLOG_PATHS.index) },
 ];
 ---
 

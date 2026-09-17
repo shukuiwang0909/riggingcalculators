@@ -2,7 +2,7 @@ import type { Locale } from '../config';
 
 const en = {
   nav: {
-    tools: 'Tools', charts: 'Spec Charts', models: 'Crosby Specs', faq: 'FAQ',
+    tools: 'Tools', charts: 'Spec Charts', models: 'Crosby Specs', faq: 'FAQ', blog: 'Blog',
     cta: 'Calculate Now', home: 'Home',
   },
   hero: {
@@ -390,7 +390,7 @@ export type Dict = typeof en;
 
 const zh: Dict = {
   nav: {
-    tools: '计算工具', charts: '规格表', models: 'Crosby 型号', faq: '常见问题',
+    tools: '计算工具', charts: '规格表', models: 'Crosby 型号', faq: '常见问题', blog: '知识库',
     cta: '立即计算', home: '首页',
   },
   hero: {
