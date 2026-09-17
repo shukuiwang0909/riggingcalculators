@@ -1,0 +1,143 @@
+---
+import { getDict } from '../i18n/ui';
+import { CHAIN_WLL } from '../data/rigging';
+import type { Locale } from '../config';
+
+interface Props { lang: Locale; id?: string; }
+const { lang, id = 'sling-calc' } = Astro.props;
+const t = getDict(lang);
+
+const L = {
+  quote: t.common.quote, recalc: t.common.recalc, print: t.common.print,
+  exceeds: t.sling.exceeds, g80: t.sling.g80,
+  warn30: t.sling.warn30, warn45a: t.sling.warn45a, warn45b: t.sling.warn45b, warn45c: t.sling.warn45c,
+  noteRefA: t.sling.noteRefA, noteRefB: t.sling.noteRefB, noteRefC: t.sling.noteRefC,
+  slingLabels: { chain: t.sling.chainSling, web: t.sling.webSling, 'wire-rope': t.sling.wireSling },
+};
+---
+
+<div id={id} class="panel p-6 lg:p-8">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="display text-xl text-white">{t.sling.formTitle}</h2>
+    <span class="micro">ASME B30.9</span>
+  </div>
+
+  <form class="calc-form space-y-4">
+    <div>
+      <label class="micro block mb-2">{t.sling.totalLoad}</label>
+      <input type="number" name="load" class="field" placeholder="e.g. 10" min="0.1" max="200" step="0.1" required />
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="micro block mb-2">{t.sling.legs}</label>
+        <select name="legs" class="field">
+          <option value="1">{t.sling.leg1}</option>
+          <option value="2" selected>2 {t.sling.legN}</option>
+          <option value="3">3 {t.sling.legN}</option>
+          <option value="4">4 {t.sling.legN}</option>
+        </select>
+      </div>
+      <div>
+        <label class="micro block mb-2">{t.sling.angle}</label>
+        <select name="angle" class="field">
+          <option value="90">90°</option>
+          <option value="60" selected>60°</option>
+          <option value="45">45°</option>
+          <option value="30">30°</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <label class="micro block mb-2">{t.sling.slingType}</label>
+      <select name="slingType" class="field">
+        <option value="chain" selected>{t.sling.chainSling}</option>
+        <option value="web">{t.sling.webSling}</option>
+        <option value="wire-rope">{t.sling.wireSling}</option>
+      </select>
+    </div>
+    <button type="submit" class="btn-safety w-full">{t.sling.btn}</button>
+  </form>
+
+  <div class="calc-result hidden mt-6 result-panel p-5">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-bold text-[#f27e40]">{t.sling.resTitle}</h3>
+      <span class="r-badge mono text-sm bg-[#f45500]/15 text-[#f27e40] px-3 py-1 rounded-full"></span>
+    </div>
+    <div class="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+      <div><span class="text-[#5c5c5c]">{t.sling.legLoad}:</span> <span class="r-leg mono font-bold text-white ml-1"></span></div>
+      <div><span class="text-[#5c5c5c]">{t.sling.tension}:</span> <span class="r-tension mono font-bold text-[#f27e40] ml-1"></span></div>
+      <div><span class="text-[#5c5c5c]">{t.sling.factor}:</span> <span class="r-factor mono text-white ml-1"></span></div>
+      <div><span class="text-[#5c5c5c]">{t.sling.vert}:</span> <span class="r-vert mono text-white ml-1"></span></div>
+      <div class="col-span-2"><span class="text-[#5c5c5c]">{t.sling.horiz}:</span> <span class="r-horiz mono font-bold text-white ml-1"></span></div>
+      <div class="col-span-2"><span class="text-[#5c5c5c]">{t.sling.chain}:</span> <span class="r-chain mono font-bold text-[#f27e40] ml-1"></span></div>
+    </div>
+    <div class="r-warn hidden mt-4 p-3 rounded border text-sm" role="alert"></div>
+    <div class="r-note hidden mt-4 p-3 rounded border border-[#facc15]/40 bg-[#facc15]/10 text-sm text-[#facc15]"></div>
+    <div class="mt-5 flex flex-wrap gap-3 no-print">
+      <button type="button" class="btn-safety !py-2.5 !px-5 text-sm" data-rfq-open data-product="slings">{t.common.quote}</button>
+      <button type="button" class="r-print btn-ghost !py-2.5 !px-5 text-sm">{t.common.print}</button>
+      <button type="button" class="r-recalc btn-ghost !py-2.5 !px-5 text-sm">{t.common.recalc}</button>
+    </div>
+  </div>
+  <p class="text-xs text-[#5c5c5c] mt-4 pt-4 border-t border-[#262626]">{t.common.disclaimer}</p>
+</div>
+
+<script is:inline define:vars={{ CHAIN_WLL, L, id }}>
+  (function () {
+    var root = document.getElementById(id);
+    if (!root) return;
+    var form = root.querySelector('.calc-form');
+    var resEl = root.querySelector('.calc-result');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var total = parseFloat(form.load.value);
+      if (!total || total <= 0) return;
+      var legs = parseInt(form.legs.value, 10);
+      var angle = parseFloat(form.angle.value);
+      var slingType = form.slingType.value;
+      var rad = angle * Math.PI / 180;
+      var factor = 1 / Math.sin(rad);
+      var tension = (total / legs) * factor;
+      var vertical = total / legs;
+      var horizontal = vertical / Math.tan(rad);
+
+      root.querySelector('.r-badge').textContent = legs + ' LEG @ ' + angle + '°';
+      root.querySelector('.r-leg').textContent = vertical.toFixed(2) + ' t';
+      root.querySelector('.r-tension').textContent = tension.toFixed(2) + ' t';
+      root.querySelector('.r-factor').textContent = '× ' + factor.toFixed(3);
+      root.querySelector('.r-vert').textContent = vertical.toFixed(2) + ' t';
+      root.querySelector('.r-horiz').textContent = horizontal.toFixed(2) + ' t';
+
+      var chain = CHAIN_WLL.find(function (c) { return c.wll >= tension; });
+      root.querySelector('.r-chain').textContent = chain
+        ? chain.dia + ' ' + L.g80 + ' (' + chain.wll.toFixed(2) + ' t WLL)'
+        : L.exceeds;
+
+      var warn = root.querySelector('.r-warn');
+      if (angle < 30) {
+        warn.className = 'r-warn mt-4 p-3 rounded border text-sm border-[#ef4444]/40 bg-[#ef4444]/10 text-[#ef4444]';
+        warn.textContent = L.warn30;
+      } else if (angle < 45) {
+        warn.className = 'r-warn mt-4 p-3 rounded border text-sm border-[#facc15]/40 bg-[#facc15]/10 text-[#facc15]';
+        warn.textContent = L.warn45a + factor.toFixed(2) + L.warn45b + horizontal.toFixed(1) + L.warn45c;
+      } else {
+        warn.classList.add('hidden');
+      }
+
+      var note = root.querySelector('.r-note');
+      if (slingType !== 'chain' && chain) {
+        note.textContent = L.noteRefA + (L.slingLabels[slingType] || slingType) + L.noteRefB + tension.toFixed(2) + L.noteRefC;
+        note.classList.remove('hidden');
+      } else {
+        note.classList.add('hidden');
+      }
+
+      resEl.classList.remove('hidden');
+      if (typeof gtag !== 'undefined') gtag('event', 'tool_complete', { tool_name: 'sling_angle_calculator', result_value: parseFloat(tension.toFixed(2)), legs: legs, angle: angle, page: location.pathname });
+    });
+
+    root.querySelector('.r-recalc').addEventListener('click', function () { resEl.classList.add('hidden'); });
+    root.querySelector('.r-print').addEventListener('click', function () { window.print(); });
+  })();
+</script>

@@ -1,0 +1,67 @@
+---
+import { getDict } from '../../i18n/ui';
+import { p, TOOL_PATHS } from '../../i18n/paths';
+import { SHACKLES, fmtSize } from '../../data/rigging';
+import type { Locale } from '../../config';
+import ChartHead from '../ChartHead.astro';
+import ToolShell from '../ToolShell.astro';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const tp = t.chartPages.shackle;
+
+const groups = [
+  { id: 'G-209', rows: SHACKLES.filter((s) => s.model === 'G-209'), ...t.crosby.g209 },
+  { id: 'G-2130', rows: SHACKLES.filter((s) => s.model === 'G-2130'), ...t.crosby.g2130 },
+  { id: 'S-209', rows: SHACKLES.filter((s) => s.model === 'S-209'), ...t.crosby.s209 },
+];
+---
+
+<ChartHead lang={lang} kicker={tp.kicker} title={tp.title} sub={tp.sub} note={tp.note} />
+
+<section class="py-16 lg:py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    {groups.map((g, gi) => (
+      <div class="reveal" style={`transition-delay: ${gi * 40}ms`}>
+        <div class="flex flex-wrap items-baseline justify-between gap-3 mb-4">
+          <div>
+            <h2 class="mono text-2xl font-bold text-[#f45500]">{g.id}</h2>
+            <p class="text-sm text-[#5c5c5c] mt-1 max-w-2xl">{g.desc}</p>
+          </div>
+          <a href={p(lang, `/crosby/${g.id.toLowerCase()}/`)} class="micro !text-[#f45500] no-print shrink-0">
+            {t.charts.viewFull} →
+          </a>
+        </div>
+        <div class="panel overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="spec-table">
+              <thead>
+                <tr>
+                  <th>{t.charts.thModel}</th><th>{t.charts.thWll}</th><th>{t.charts.thSize}</th>
+                  <th>{t.charts.thPin}</th><th>{t.charts.thWeight}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {g.rows.map((s) => (
+                  <tr>
+                    <td>{s.model}</td><td>{s.wll} t</td><td>{fmtSize(s.size)}</td>
+                    <td>{s.pin} mm</td><td>{s.weight} kg</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    ))}
+
+    <div class="panel p-6 reveal no-print flex flex-wrap items-center justify-between gap-4">
+      <p class="text-sm text-[#9d9d9d]">{t.shackle.sub}</p>
+      <a href={p(lang, TOOL_PATHS.shackle)} class="btn-safety">{t.tools.shackle.name} →</a>
+    </div>
+  </div>
+</section>
+
+<ToolShell lang={lang} section="faq" faqTitle={tp.faqTitle} faqItems={t.shackle.faqItems} />
+<ToolShell lang={lang} section="cta" />

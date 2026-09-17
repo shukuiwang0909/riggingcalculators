@@ -1,0 +1,84 @@
+---
+import { getDict } from '../../i18n/ui';
+import { p, TOOL_PATHS } from '../../i18n/paths';
+import { SHACKLES, fmtSize, type ShackleModel } from '../../data/rigging';
+import type { Locale } from '../../config';
+import ChartHead from '../ChartHead.astro';
+import ToolShell from '../ToolShell.astro';
+
+interface Props { lang: Locale; model: ShackleModel; }
+const { lang, model } = Astro.props;
+const t = getDict(lang);
+
+const modelKey = model === 'G-209' ? 'g209' : model === 'G-2130' ? 'g2130' : 's209';
+const info = t.crosby[modelKey];
+const rows = SHACKLES.filter((s) => s.model === model);
+const wllMin = Math.min(...rows.map((r) => r.wll));
+const wllMax = Math.max(...rows.map((r) => r.wll));
+---
+
+<ChartHead lang={lang} kicker={t.crosby.kicker} title={info.name} sub={info.desc} crumb={t.nav.models} crumbHref={`${p(lang, '/')}#models`} />
+
+<section class="py-16 lg:py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+
+    <!-- QUICK STATS -->
+    <div class="grid grid-cols-3 gap-px bg-[#1e1e1e] border border-[#1e1e1e] reveal max-w-3xl">
+      <div class="bg-[#0a0a0a] p-6">
+        <div class="stat-num text-2xl">{wllMin} – {wllMax} t</div>
+        <div class="micro mt-2">{t.models.range}</div>
+      </div>
+      <div class="bg-[#0a0a0a] p-6">
+        <div class="stat-num text-2xl">{rows.length}</div>
+        <div class="micro mt-2">{lang === 'zh' ? '标准规格' : 'STANDARD SIZES'}</div>
+      </div>
+      <div class="bg-[#0a0a0a] p-6">
+        <div class="stat-num text-2xl">B30.26</div>
+        <div class="micro mt-2">ASME</div>
+      </div>
+    </div>
+
+    <!-- SIDE LOAD NOTE -->
+    <div class="panel p-6 reveal border-l-2 !border-l-[#f45500] max-w-3xl">
+      <span class="micro block mb-2 !text-[#f45500]">⚠ {t.crosby.sideLoad}</span>
+      <p class="text-sm text-[#9d9d9d] leading-relaxed">{t.crosby.sideLoadNote}</p>
+    </div>
+
+    <!-- FULL TABLE -->
+    <div class="reveal">
+      <h2 class="display text-2xl text-white mb-4">{t.crosby.fullTable}</h2>
+      <div class="panel overflow-hidden">
+        <div class="overflow-x-auto max-h-[560px] overflow-y-auto">
+          <table class="spec-table">
+            <thead class="sticky top-0 bg-[#161616]">
+              <tr>
+                <th>{t.charts.thWll}</th><th>{t.charts.thSize}</th>
+                <th>{t.charts.thPin}</th><th>{t.charts.thWeight}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((s) => (
+                <tr><td>{s.wll} t</td><td>{fmtSize(s.size)}</td><td>{s.pin} mm</td><td>{s.weight} kg</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUOTE CTA -->
+    <div class="panel p-8 reveal no-print flex flex-wrap items-center justify-between gap-6">
+      <div>
+        <h2 class="display text-2xl text-white">{t.crosby.quoteCta} {model}?</h2>
+        <p class="text-sm text-[#9d9d9d] mt-2">{t.cta.sub}</p>
+      </div>
+      <div class="flex flex-wrap gap-4">
+        <button class="btn-safety" data-rfq-open data-product="shackles">{t.cta.btn}</button>
+        <a href={p(lang, TOOL_PATHS.shackle)} class="btn-ghost">{t.tools.shackle.name} →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ToolShell lang={lang} section="faq" faqTitle={t.crosby.faqTitle} faqItems={t.shackle.faqItems} />
+<ToolShell lang={lang} section="cta" />

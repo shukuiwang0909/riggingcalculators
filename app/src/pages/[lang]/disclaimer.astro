@@ -1,0 +1,38 @@
+---
+import Base from '../../layouts/Base.astro';
+import LegalPage from '../../components/pages/LegalPage.astro';
+import { LOCALES, type Locale } from '../../config';
+import { getDict } from '../../i18n/ui';
+import { p, LEGAL_PATHS } from '../../i18n/paths';
+import { breadcrumb } from '../../lib/jsonld';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = p(lang, LEGAL_PATHS.disclaimer);
+
+const meta = {
+  en: {
+    title: 'Disclaimer — Rigging Calculators',
+    description: 'Reference-only disclaimer: verify all capacities with manufacturer data and qualified personnel before any lift.',
+  },
+  zh: {
+    title: '免责声明 — 吊装索具计算器',
+    description: '仅供参考声明：任何吊装作业前请以制造商数据与合格人员复核为准。',
+  },
+} as const;
+
+const jsonLd = [
+  breadcrumb([
+    { name: t.nav.home, path: p(lang, '/') },
+    { name: t.legal.disclaimerTitle, path },
+  ]),
+];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <LegalPage lang={lang} kind="disclaimer" />
+</Base>

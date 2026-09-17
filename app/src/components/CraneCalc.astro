@@ -1,0 +1,195 @@
+---
+import { getDict } from '../i18n/ui';
+import type { Locale } from '../config';
+
+interface Props { lang: Locale; id?: string; }
+const { lang, id = 'crane-calc' } = Astro.props;
+const t = getDict(lang);
+
+const L = {
+  quote: t.common.quote, recalc: t.common.recalc, print: t.common.print,
+  errAngle: t.crane.errAngle, errRadiusA: t.crane.errRadiusA, errRadiusB: t.crane.errRadiusB,
+  warnOver: t.crane.warnOver, warnHighA: t.crane.warnHighA, warnHighB: t.crane.warnHighB,
+  warnMidA: t.crane.warnMidA, warnMidB: t.crane.warnMidB, noRated: t.crane.noRated,
+};
+---
+
+<div id={id} class="panel p-6 lg:p-8">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="display text-xl text-white">{t.crane.formTitle}</h2>
+    <span class="micro">ASME B30.5</span>
+  </div>
+
+  <form class="calc-form space-y-4">
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="micro block mb-2">{t.crane.load}</label>
+        <input type="number" name="load" class="field" placeholder="e.g. 15" min="0.1" max="500" step="0.1" required />
+      </div>
+      <div>
+        <label class="micro block mb-2">{t.crane.boom}</label>
+        <input type="number" name="boom" class="field" placeholder="e.g. 30" min="5" max="150" step="0.5" required />
+      </div>
+    </div>
+
+    <div>
+      <label class="micro block mb-2">{t.crane.method}</label>
+      <div class="grid grid-cols-2 gap-px bg-[#1e1e1e] border border-[#262626] rounded-md overflow-hidden">
+        <button type="button" class="m-btn py-2.5 text-sm font-semibold transition-colors bg-[#f45500] text-[#0a0a0a]" data-method="angle">{t.crane.mAngle}</button>
+        <button type="button" class="m-btn py-2.5 text-sm font-semibold transition-colors bg-[#0f0f0f] text-[#9d9d9d] hover:text-white" data-method="radius">{t.crane.mRadius}</button>
+      </div>
+    </div>
+
+    <div class="angle-group">
+      <label class="micro block mb-2">{t.crane.angle}</label>
+      <input type="number" name="angle" class="field" placeholder="e.g. 60" min="10" max="90" step="1" />
+      <p class="text-xs text-[#5c5c5c] mt-1.5">{t.crane.angleHint}</p>
+    </div>
+
+    <div class="radius-group hidden">
+      <label class="micro block mb-2">{t.crane.radius}</label>
+      <input type="number" name="radius" class="field" placeholder="e.g. 15" min="1" max="100" step="0.5" />
+      <p class="text-xs text-[#5c5c5c] mt-1.5">{t.crane.radiusHint}</p>
+    </div>
+
+    <div>
+      <label class="micro block mb-2">{t.crane.rated}</label>
+      <input type="number" name="rated" class="field" placeholder="e.g. 20" min="0.1" max="2000" step="0.1" />
+      <p class="text-xs text-[#5c5c5c] mt-1.5">{t.crane.ratedHint}</p>
+    </div>
+
+    <button type="submit" class="btn-safety w-full">{t.crane.btn}</button>
+  </form>
+
+  <div class="calc-error hidden mt-4 p-3 rounded border border-[#ef4444]/40 bg-[#ef4444]/10 text-sm text-[#ef4444]" role="alert"></div>
+
+  <div class="calc-result hidden mt-6 result-panel p-5">
+    <h3 class="font-bold text-[#f27e40] mb-5">{t.crane.resTitle}</h3>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-5">
+      <div class="bg-[#161616] rounded p-3.5 border border-[#262626]">
+        <div class="micro !text-[9px] mb-1.5">{t.crane.rRadius}</div>
+        <div class="r-radius mono text-xl font-bold text-white"></div>
+        <div class="text-[10px] text-[#5c5c5c] mt-1">{t.crane.uM}</div>
+      </div>
+      <div class="bg-[#161616] rounded p-3.5 border border-[#262626]">
+        <div class="micro !text-[9px] mb-1.5">{t.crane.rMoment}</div>
+        <div class="r-moment mono text-xl font-bold text-white"></div>
+        <div class="text-[10px] text-[#5c5c5c] mt-1">{t.crane.uTm}</div>
+      </div>
+      <div class="bg-[#161616] rounded p-3.5 border border-[#262626] r-cap-card">
+        <div class="micro !text-[9px] mb-1.5">{t.crane.rCap}</div>
+        <div class="r-cap mono text-xl font-bold text-white"></div>
+        <div class="text-[10px] text-[#5c5c5c] mt-1">{t.crane.uT}</div>
+      </div>
+      <div class="bg-[#161616] rounded p-3.5 border border-[#262626] r-util-card">
+        <div class="micro !text-[9px] mb-1.5">{t.crane.rUtil}</div>
+        <div class="r-util mono text-xl font-bold text-[#f27e40]"></div>
+        <div class="text-[10px] text-[#5c5c5c] mt-1">{t.crane.uPct}</div>
+      </div>
+      <div class="bg-[#161616] rounded p-3.5 border border-[#262626]">
+        <div class="micro !text-[9px] mb-1.5">{t.crane.rBoom}</div>
+        <div class="r-boom mono text-xl font-bold text-white"></div>
+        <div class="text-[10px] text-[#5c5c5c] mt-1">{t.crane.uM}</div>
+      </div>
+      <div class="bg-[#161616] rounded p-3.5 border border-[#262626]">
+        <div class="micro !text-[9px] mb-1.5">{t.crane.rAngle}</div>
+        <div class="r-angle mono text-xl font-bold text-white"></div>
+        <div class="text-[10px] text-[#5c5c5c] mt-1">{t.crane.uDeg}</div>
+      </div>
+    </div>
+    <div class="r-warn hidden p-3.5 rounded border text-sm mb-5" role="alert"></div>
+    <div class="flex flex-wrap gap-3 no-print">
+      <button type="button" class="btn-safety !py-2.5 !px-5 text-sm" data-rfq-open data-product="crane-services">{t.common.quote}</button>
+      <button type="button" class="r-print btn-ghost !py-2.5 !px-5 text-sm">{t.common.print}</button>
+      <button type="button" class="r-recalc btn-ghost !py-2.5 !px-5 text-sm">{t.common.recalc}</button>
+    </div>
+  </div>
+  <p class="text-xs text-[#5c5c5c] mt-4 pt-4 border-t border-[#262626]">{t.common.disclaimer}</p>
+</div>
+
+<script is:inline define:vars={{ L, id }}>
+  (function () {
+    var root = document.getElementById(id);
+    if (!root) return;
+    var form = root.querySelector('.calc-form');
+    var errEl = root.querySelector('.calc-error');
+    var resEl = root.querySelector('.calc-result');
+    var method = 'angle';
+
+    root.querySelectorAll('.m-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        method = btn.getAttribute('data-method');
+        root.querySelectorAll('.m-btn').forEach(function (b) {
+          var active = b === btn;
+          b.className = 'm-btn py-2.5 text-sm font-semibold transition-colors ' + (active ? 'bg-[#f45500] text-[#0a0a0a]' : 'bg-[#0f0f0f] text-[#9d9d9d] hover:text-white');
+        });
+        root.querySelector('.angle-group').classList.toggle('hidden', method !== 'angle');
+        root.querySelector('.radius-group').classList.toggle('hidden', method !== 'radius');
+      });
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var load = parseFloat(form.load.value);
+      var boom = parseFloat(form.boom.value);
+      if (!load || !boom || load <= 0 || boom <= 0) return;
+
+      var radius, angle;
+      if (method === 'angle') {
+        angle = parseFloat(form.angle.value);
+        if (!angle || angle <= 0 || angle > 90) { errEl.textContent = L.errAngle; errEl.classList.remove('hidden'); return; }
+        radius = boom * Math.cos(angle * Math.PI / 180);
+      } else {
+        radius = parseFloat(form.radius.value);
+        if (!radius || radius <= 0 || radius > boom) { errEl.textContent = L.errRadiusA + boom + L.errRadiusB; errEl.classList.remove('hidden'); return; }
+        angle = Math.acos(radius / boom) * 180 / Math.PI;
+      }
+      errEl.classList.add('hidden');
+
+      var moment = load * radius;
+      var rated = parseFloat(form.rated.value);
+
+      root.querySelector('.r-radius').textContent = radius.toFixed(1);
+      root.querySelector('.r-moment').textContent = moment.toFixed(1);
+      root.querySelector('.r-boom').textContent = boom.toFixed(1);
+      root.querySelector('.r-angle').textContent = angle.toFixed(1) + '°';
+
+      var warn = root.querySelector('.r-warn');
+      var capCard = root.querySelector('.r-cap-card');
+      var utilCard = root.querySelector('.r-util-card');
+
+      if (rated && rated > 0) {
+        var util = (load / rated) * 100;
+        root.querySelector('.r-cap').textContent = rated.toFixed(1) + ' t';
+        root.querySelector('.r-util').textContent = util.toFixed(0) + '%';
+        capCard.classList.remove('hidden');
+        utilCard.classList.remove('hidden');
+        if (util > 100) {
+          warn.className = 'r-warn p-3.5 rounded border text-sm mb-5 border-[#ef4444]/40 bg-[#ef4444]/10 text-[#ef4444]';
+          warn.textContent = L.warnOver;
+        } else if (util > 85) {
+          warn.className = 'r-warn p-3.5 rounded border text-sm mb-5 border-[#facc15]/40 bg-[#facc15]/10 text-[#facc15]';
+          warn.textContent = L.warnHighA + util.toFixed(0) + L.warnHighB;
+        } else if (util > 75) {
+          warn.className = 'r-warn p-3.5 rounded border text-sm mb-5 border-[#60a5fa]/40 bg-[#60a5fa]/10 text-[#60a5fa]';
+          warn.textContent = L.warnMidA + util.toFixed(0) + L.warnMidB;
+        } else {
+          warn.classList.add('hidden');
+        }
+        if (typeof gtag !== 'undefined') gtag('event', 'tool_complete', { tool_name: 'crane_load_calculator', result_value: parseFloat(util.toFixed(0)), page: location.pathname });
+      } else {
+        capCard.classList.add('hidden');
+        utilCard.classList.add('hidden');
+        warn.className = 'r-warn p-3.5 rounded border text-sm mb-5 border-[#262626] bg-[#161616] text-[#9d9d9d]';
+        warn.textContent = L.noRated;
+        warn.classList.remove('hidden');
+        if (typeof gtag !== 'undefined') gtag('event', 'tool_complete', { tool_name: 'crane_load_calculator', result_value: parseFloat(moment.toFixed(1)), page: location.pathname });
+      }
+
+      resEl.classList.remove('hidden');
+    });
+
+    root.querySelector('.r-recalc').addEventListener('click', function () { resEl.classList.add('hidden'); });
+    root.querySelector('.r-print').addEventListener('click', function () { window.print(); });
+  })();
+</script>

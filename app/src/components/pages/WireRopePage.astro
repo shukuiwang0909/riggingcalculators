@@ -1,0 +1,89 @@
+---
+import { getDict } from '../../i18n/ui';
+import { p, TOOL_PATHS, CHART_PATHS } from '../../i18n/paths';
+import { WIRE_ROPES } from '../../data/rigging';
+import type { Locale } from '../../config';
+import ToolShell from '../ToolShell.astro';
+import WireRopeCalc from '../WireRopeCalc.astro';
+import SectionHead from '../SectionHead.astro';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const selfPath = p(lang, TOOL_PATHS.rope);
+
+const constructions = [
+  { key: '6x19' as const, name: '6×19 IWRC', desc: t.rope.c1d },
+  { key: '6x36' as const, name: '6×36 IWRC', desc: t.rope.c2d },
+  { key: '6x7' as const, name: '6×7 FC', desc: t.rope.c3d },
+];
+
+const sfGuide = [
+  { sf: '3.5:1', title: t.rope.sfg1t, text: t.rope.sfg1p, tag: '' },
+  { sf: '5:1', title: t.rope.sfg2t, text: t.rope.sfg2p, tag: t.rope.defaultTag },
+  { sf: '10:1', title: t.rope.sfg3t, text: t.rope.sfg3p, tag: '' },
+];
+---
+
+<ToolShell lang={lang} section="hero" badge={t.rope.badge} title={t.rope.title} sub={t.rope.sub}>
+  <div slot="aside" class="panel p-5 text-sm text-[#9d9d9d] leading-relaxed">
+    <span class="micro block mb-2 !text-[#f45500]">WLL = MBL ÷ SF</span>
+    {t.rope.sfGuideSub}
+  </div>
+  <WireRopeCalc slot="calc" lang={lang} id="rope-calc" />
+</ToolShell>
+
+<!-- SPEC TABLES -->
+<section class="py-16 lg:py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHead kicker={t.charts.kicker} title={t.rope.chartTitle} sub={t.rope.chartSub} />
+    <div class="grid lg:grid-cols-3 gap-6">
+      {constructions.map((c, ci) => (
+        <div class="panel overflow-hidden reveal" style={`transition-delay: ${ci * 60}ms`}>
+          <div class="p-6 pb-4">
+            <h3 class="mono text-lg font-bold text-[#f45500]">{c.name}</h3>
+            <p class="text-xs text-[#5c5c5c] mt-2">{c.desc}</p>
+          </div>
+          <div class="overflow-x-auto max-h-[360px] overflow-y-auto">
+            <table class="spec-table">
+              <thead class="sticky top-0 bg-[#161616]">
+                <tr><th>{t.charts.thDia}</th><th>{t.charts.thBreak}</th><th>{t.charts.thKgm}</th></tr>
+              </thead>
+              <tbody>
+                {WIRE_ROPES.filter((r) => r.construction === c.key).map((r) => (
+                  <tr><td>{r.diameter_mm}</td><td>{r.breaking_load_tonnes.toFixed(1)}</td><td>{r.weight_kg_per_m.toFixed(2)}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="mt-6 no-print reveal">
+      <a href={p(lang, CHART_PATHS.wire)} class="micro !text-[#f45500]">{t.charts.viewFull} →</a>
+    </div>
+  </div>
+</section>
+
+<!-- SF GUIDE -->
+<section class="py-16 lg:py-20 bg-[#0d0d0d] border-y border-[#1e1e1e]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHead kicker={t.charts.kicker} title={t.rope.sfGuideTitle} sub={t.rope.sfGuideSub} />
+    <div class="grid md:grid-cols-3 gap-px bg-[#1e1e1e] border border-[#1e1e1e]">
+      {sfGuide.map((g, i) => (
+        <div class="bg-[#0a0a0a] p-8 reveal" style={`transition-delay: ${i * 60}ms`}>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="stat-num text-3xl">{g.sf}</span>
+            {g.tag && <span class="micro !text-[#f45500] border border-[#f45500]/40 bg-[#f45500]/10 rounded-full px-3 py-1">{g.tag}</span>}
+          </div>
+          <h3 class="font-semibold text-white mb-2">{g.title}</h3>
+          <p class="text-sm text-[#9d9d9d] leading-relaxed">{g.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<ToolShell lang={lang} section="faq" faqTitle={t.rope.faqTitle} faqItems={t.rope.faqItems} />
+<ToolShell lang={lang} section="related" exclude={selfPath} />
+<ToolShell lang={lang} section="cta" />

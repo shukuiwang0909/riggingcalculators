@@ -1,0 +1,42 @@
+---
+import { getDict } from '../../i18n/ui';
+import { p, TOOL_PATHS } from '../../i18n/paths';
+import type { Locale } from '../../config';
+import ToolShell from '../ToolShell.astro';
+import CraneCalc from '../CraneCalc.astro';
+import SectionHead from '../SectionHead.astro';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const selfPath = p(lang, TOOL_PATHS.crane);
+---
+
+<ToolShell lang={lang} section="hero" badge={t.crane.badge} title={t.crane.title} sub={t.crane.sub}>
+  <div slot="aside" class="panel p-6 text-sm leading-relaxed">
+    <span class="micro block mb-3 !text-[#f45500]">:: {t.crane.lmTitle}</span>
+    <p class="text-[#9d9d9d] mb-3"><span class="mono text-white">M = W × R</span> — {t.crane.lmP1}</p>
+    <p class="text-[#9d9d9d] mb-4">{t.crane.lmP2}</p>
+    <p class="text-[#f27e40] border-l-2 border-[#f45500] pl-3">{t.crane.lmRule}</p>
+  </div>
+  <CraneCalc slot="calc" lang={lang} id="crane-calc" />
+</ToolShell>
+
+<!-- HOW TO READ A LOAD CHART -->
+<section class="py-16 lg:py-20">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHead kicker={t.chartPages.swl.kicker} title={t.crane.howTitle} />
+    <ol class="space-y-px border border-[#1e1e1e]">
+      {t.crane.howItems.map((item, i) => (
+        <li class="flex gap-6 bg-[#0d0d0d] p-6 reveal" style={`transition-delay: ${i * 40}ms`}>
+          <span class="mono text-2xl font-bold text-[#f45500] shrink-0 w-12">{String(i + 1).padStart(2, '0')}</span>
+          <p class="text-[#9d9d9d] leading-relaxed pt-1">{item}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<ToolShell lang={lang} section="faq" faqTitle={t.crane.faqTitle} faqItems={t.crane.faqItems} />
+<ToolShell lang={lang} section="related" exclude={selfPath} />
+<ToolShell lang={lang} section="cta" />

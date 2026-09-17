@@ -1,0 +1,60 @@
+---
+import { getDict } from '../i18n/ui';
+import { p, TOOL_PATHS, CHART_PATHS, LEGAL_PATHS } from '../i18n/paths';
+import type { Locale } from '../config';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = getDict(lang);
+---
+
+<footer class="border-t border-[#262626] py-14 no-print">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-5 gap-10">
+      <div>
+        <a href={p(lang, '/')} class="flex items-center gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#f45500]" style="box-shadow: 0 0 12px hsla(21,100%,48%,0.9)"></span>
+          <span class="display text-base text-white tracking-tight">RIGGING<span class="text-[#f45500]">CALCULATORS</span></span>
+        </a>
+        <p class="text-sm text-[#5c5c5c] mt-4 leading-relaxed">{t.footer.tag}</p>
+      </div>
+      <div>
+        <h4 class="micro mb-4">{t.footer.tools}</h4>
+        <ul class="space-y-2.5 text-sm text-[#9d9d9d]">
+          <li><a href={p(lang, TOOL_PATHS.shackle)} class="hover:text-[#f27e40] transition-colors">{t.tools.shackle.name}</a></li>
+          <li><a href={p(lang, TOOL_PATHS.sling)} class="hover:text-[#f27e40] transition-colors">{t.tools.sling.name}</a></li>
+          <li><a href={p(lang, TOOL_PATHS.rope)} class="hover:text-[#f27e40] transition-colors">{t.tools.rope.name}</a></li>
+          <li><a href={p(lang, TOOL_PATHS.crane)} class="hover:text-[#f27e40] transition-colors">{t.tools.crane.name}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="micro mb-4">{t.footer.charts}</h4>
+        <ul class="space-y-2.5 text-sm text-[#9d9d9d]">
+          <li><a href={p(lang, CHART_PATHS.shackle)} class="hover:text-[#f27e40] transition-colors">{t.chartPages.shackle.title}</a></li>
+          <li><a href={p(lang, CHART_PATHS.wire)} class="hover:text-[#f27e40] transition-colors">{t.chartPages.wire.title}</a></li>
+          <li><a href={p(lang, CHART_PATHS.sling)} class="hover:text-[#f27e40] transition-colors">{t.chartPages.sling.title}</a></li>
+          <li><a href={p(lang, CHART_PATHS.swl)} class="hover:text-[#f27e40] transition-colors">{t.chartPages.swl.title}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="micro mb-4">{t.footer.models}</h4>
+        <ul class="space-y-2.5 text-sm text-[#9d9d9d]">
+          <li><a href={p(lang, '/crosby/g-209/')} class="hover:text-[#f27e40] transition-colors">Crosby G-209</a></li>
+          <li><a href={p(lang, '/crosby/g-2130/')} class="hover:text-[#f27e40] transition-colors">Crosby G-2130</a></li>
+          <li><a href={p(lang, '/crosby/s-209/')} class="hover:text-[#f27e40] transition-colors">Crosby S-209</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="micro mb-4">{t.footer.legal}</h4>
+        <ul class="space-y-2.5 text-sm text-[#9d9d9d]">
+          <li><a href={p(lang, LEGAL_PATHS.privacy)} class="hover:text-[#f27e40] transition-colors">{t.footer.privacy}</a></li>
+          <li><a href={p(lang, LEGAL_PATHS.terms)} class="hover:text-[#f27e40] transition-colors">{t.footer.terms}</a></li>
+          <li><a href={p(lang, LEGAL_PATHS.disclaimer)} class="hover:text-[#f27e40] transition-colors">{t.footer.disclaimer}</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-12 pt-8 border-t border-[#1e1e1e] flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-xs text-[#5c5c5c]">© 2026 riggingcalculators.com — {t.footer.rights}</p>
+    </div>
+  </div>
+</footer>

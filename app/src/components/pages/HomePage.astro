@@ -1,0 +1,216 @@
+---
+import { getDict } from '../../i18n/ui';
+import { p, TOOL_PATHS, CHART_PATHS } from '../../i18n/paths';
+import { SITE } from '../../config';
+import { SHACKLES, WIRE_ROPES, CHAIN_WLL, fmtSize } from '../../data/rigging';
+import type { Locale } from '../../config';
+import ShackleCalc from '../ShackleCalc.astro';
+import Marquee from '../Marquee.astro';
+import SectionHead from '../SectionHead.astro';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = getDict(lang);
+
+const tools = [
+  { href: p(lang, TOOL_PATHS.shackle), no: '01', ...t.tools.shackle },
+  { href: p(lang, TOOL_PATHS.sling), no: '02', ...t.tools.sling },
+  { href: p(lang, TOOL_PATHS.rope), no: '03', ...t.tools.rope },
+  { href: p(lang, TOOL_PATHS.crane), no: '04', ...t.tools.crane },
+];
+
+const g209 = SHACKLES.filter((s) => s.model === 'G-209');
+const rope619 = WIRE_ROPES.filter((r) => r.construction === '6x19');
+---
+
+<!-- HERO -->
+<section class="relative overflow-hidden dotgrid">
+  <div class="absolute inset-0" style="background: radial-gradient(ellipse 70% 60% at 30% 20%, hsla(21,100%,48%,0.08), transparent 60%)"></div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div class="reveal">
+        <div class="inline-flex items-center gap-2.5 border border-[#f45500]/40 bg-[#f45500]/10 rounded-full px-4 py-1.5 mb-8">
+          <span class="pulse-dot"></span>
+          <span class="micro !text-[#f27e40]">{t.hero.badge}</span>
+        </div>
+        <h1 class="display text-5xl sm:text-6xl lg:text-7xl text-white mb-6">
+          {t.hero.titleA}<br />
+          <span class="text-[#f45500]">{t.hero.titleB}</span><br />
+          <span class="text-[#9d9d9d] text-3xl sm:text-4xl lg:text-5xl font-medium">{t.hero.titleC}</span>
+        </h1>
+        <p class="text-lg text-[#9d9d9d] mb-10 leading-relaxed max-w-xl">{t.hero.sub}</p>
+        <div class="flex flex-wrap gap-4 no-print">
+          <a href="#calculator" class="btn-safety">{t.hero.cta1}</a>
+          <a href="#tools" class="btn-ghost">{t.hero.cta2}</a>
+        </div>
+        <div class="mt-12 grid grid-cols-3 gap-6 max-w-md">
+          {[
+            { v: t.hero.stat1v, l: t.hero.stat1l },
+            { v: t.hero.stat2v, l: t.hero.stat2l },
+            { v: t.hero.stat3v, l: t.hero.stat3l },
+          ].map((s) => (
+            <div class="border-l border-[#262626] pl-4">
+              <div class="stat-num text-2xl">{s.v}</div>
+              <div class="text-xs text-[#5c5c5c] mt-1">{s.l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay: 150ms" id="calculator">
+        <ShackleCalc lang={lang} compact id="hero-shackle-calc" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<Marquee text={t.hero.marquee} />
+
+<!-- TOOLS -->
+<section id="tools" class="py-20 lg:py-28">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHead kicker={t.tools.kicker} title={t.tools.title} sub={t.tools.sub} />
+    <div class="grid md:grid-cols-2 gap-px bg-[#1e1e1e] border border-[#1e1e1e] reveal">
+      {tools.map((tool) => (
+        <a href={tool.href} class="panel-hover block bg-[#0a0a0a] p-8 lg:p-10 h-full group">
+          <div class="flex items-start justify-between mb-8">
+            <span class="mono text-[#333] text-sm">/{tool.no}</span>
+            <span class="mono text-[#f45500] text-xl transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
+          </div>
+          <h3 class="display text-2xl text-white mb-3 group-hover:text-[#f27e40] transition-colors">{tool.name}</h3>
+          <p class="text-sm text-[#9d9d9d] leading-relaxed">{tool.desc}</p>
+          <div class="micro mt-8 !text-[#f45500]">{t.tools.go} →</div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- CHARTS -->
+<section id="charts" class="py-20 lg:py-28 bg-[#0d0d0d] border-y border-[#1e1e1e]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHead kicker={t.charts.kicker} title={t.charts.title} sub={t.charts.sub} />
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div class="panel overflow-hidden reveal">
+        <div class="p-6 pb-0 flex items-baseline justify-between gap-4">
+          <div>
+            <h3 class="display text-lg text-white">{t.charts.shackleTitle}</h3>
+            <p class="text-xs text-[#5c5c5c] mt-2 mb-4">{t.charts.shackleNote}</p>
+          </div>
+          <a href={p(lang, CHART_PATHS.shackle)} class="micro !text-[#f45500] shrink-0 no-print">{t.charts.viewFull} →</a>
+        </div>
+        <div class="overflow-x-auto max-h-[420px] overflow-y-auto">
+          <table class="spec-table">
+            <thead class="sticky top-0 bg-[#161616]">
+              <tr><th>{t.charts.thWll}</th><th>{t.charts.thSize}</th><th>{t.charts.thPin}</th><th>{t.charts.thWeight}</th></tr>
+            </thead>
+            <tbody>
+              {g209.map((s) => (
+                <tr><td>{s.wll} t</td><td>{fmtSize(s.size)}</td><td>{s.pin} mm</td><td>{s.weight} kg</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div class="panel overflow-hidden reveal" style="transition-delay: 80ms">
+          <div class="p-6 pb-0 flex items-baseline justify-between gap-4">
+            <div>
+              <h3 class="display text-lg text-white">{t.charts.ropeTitle}</h3>
+              <p class="text-xs text-[#5c5c5c] mt-2 mb-4">{t.charts.ropeNote}</p>
+            </div>
+            <a href={p(lang, CHART_PATHS.wire)} class="micro !text-[#f45500] shrink-0 no-print">{t.charts.viewFull} →</a>
+          </div>
+          <div class="overflow-x-auto max-h-[220px] overflow-y-auto">
+            <table class="spec-table">
+              <thead class="sticky top-0 bg-[#161616]">
+                <tr><th>{t.charts.thDia}</th><th>{t.charts.thBreak}</th><th>{t.charts.thKgm}</th></tr>
+              </thead>
+              <tbody>
+                {rope619.map((r) => (
+                  <tr><td>{r.diameter_mm}</td><td>{r.breaking_load_tonnes.toFixed(1)}</td><td>{r.weight_kg_per_m.toFixed(2)}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel overflow-hidden reveal" style="transition-delay: 160ms">
+          <div class="p-6 pb-0 flex items-baseline justify-between gap-4">
+            <div>
+              <h3 class="display text-lg text-white">{t.charts.chainTitle}</h3>
+              <p class="text-xs text-[#5c5c5c] mt-2 mb-4">{t.charts.chainNote}</p>
+            </div>
+            <a href={p(lang, CHART_PATHS.sling)} class="micro !text-[#f45500] shrink-0 no-print">{t.charts.viewFull} →</a>
+          </div>
+          <div class="overflow-x-auto max-h-[220px] overflow-y-auto">
+            <table class="spec-table">
+              <thead class="sticky top-0 bg-[#161616]">
+                <tr><th>{t.charts.thChain}</th><th>{t.charts.th90}</th><th>{t.charts.th60}</th><th>{t.charts.th45}</th><th>{t.charts.th30}</th></tr>
+              </thead>
+              <tbody>
+                {CHAIN_WLL.map((c) => (
+                  <tr>
+                    <td>{c.dia}</td>
+                    <td>{c.wll.toFixed(2)} t</td>
+                    <td>{(c.wll * 0.866).toFixed(2)} t</td>
+                    <td>{(c.wll * 0.707).toFixed(2)} t</td>
+                    <td>{(c.wll * 0.5).toFixed(2)} t</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CROSBY MODELS -->
+<section id="models" class="py-20 lg:py-28">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHead kicker={t.models.kicker} title={t.models.title} sub={t.models.sub} />
+    <div class="grid md:grid-cols-3 gap-6">
+      {t.models.items.map((m, i) => (
+        <a href={p(lang, m.href)} class="panel panel-hover block p-6 group reveal" style={`transition-delay: ${i * 60}ms`}>
+          <div class="mono text-2xl font-bold text-[#f45500] group-hover:text-[#f27e40] transition-colors">{m.id}</div>
+          <div class="text-sm text-[#9d9d9d] mt-2">{m.desc}</div>
+          <div class="micro mt-4">{t.models.range}: <span class="text-white">{m.range}</span></div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="py-20 lg:py-28 bg-[#0d0d0d] border-y border-[#1e1e1e]">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHead kicker={t.faq.kicker} title={t.faq.title} sub={t.faq.sub} />
+    <div class="space-y-px border border-[#1e1e1e]">
+      {t.faq.items.map((f) => (
+        <details class="group bg-[#0a0a0a] p-6 reveal">
+          <summary class="flex items-center justify-between cursor-pointer list-none">
+            <span class="font-semibold text-white group-hover:text-[#f27e40] transition-colors pr-6">{f.q}</span>
+            <span class="faq-plus mono text-[#f45500] text-xl shrink-0" aria-hidden="true">+</span>
+          </summary>
+          <p class="mt-4 text-[#9d9d9d] leading-relaxed text-sm">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="relative py-20 lg:py-28 overflow-hidden no-print">
+  <div class="hazard h-2 w-full absolute top-0 left-0 opacity-80"></div>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
+    <div class="micro mb-4">RFQ / 24H</div>
+    <h2 class="display text-4xl md:text-5xl text-white mb-5">{t.cta.title}</h2>
+    <p class="text-[#9d9d9d] mb-10 max-w-xl mx-auto">{t.cta.sub}</p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <button class="btn-safety" data-rfq-open>{t.cta.btn}</button>
+      <a href={`mailto:${SITE.email}`} class="btn-ghost">{t.cta.mail}</a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,48 @@
+---
+import { getDict } from '../i18n/ui';
+import { p } from '../i18n/paths';
+import type { Locale } from '../config';
+
+interface Props {
+  lang: Locale;
+  kicker: string;
+  title: string;
+  sub: string;
+  note?: string;
+  /** middle breadcrumb label (defaults to nav.charts) */
+  crumb?: string;
+  /** middle breadcrumb href (defaults to home#charts) */
+  crumbHref?: string;
+}
+const { lang, kicker, title, sub, note, crumb, crumbHref } = Astro.props;
+const t = getDict(lang);
+const home = p(lang, '/');
+const midLabel = crumb ?? t.nav.charts;
+const midHref = crumbHref ?? `${home}#charts`;
+---
+
+<section class="relative overflow-hidden dotgrid border-b border-[#1e1e1e]">
+  <div class="absolute inset-0" style="background: radial-gradient(ellipse 70% 60% at 30% 10%, hsla(21,100%,48%,0.07), transparent 60%)"></div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-14">
+    <nav class="micro mb-8 flex items-center gap-2 no-print" aria-label="Breadcrumb">
+      <a href={home} class="hover:text-[#f27e40] transition-colors">{t.nav.home}</a>
+      <span aria-hidden="true">›</span>
+      <a href={midHref} class="hover:text-[#f27e40] transition-colors">{midLabel}</a>
+      <span aria-hidden="true">›</span>
+      <span class="!text-[#9d9d9d]">{title}</span>
+    </nav>
+    <div class="reveal max-w-3xl">
+      <div class="inline-flex items-center gap-2.5 border border-[#f45500]/40 bg-[#f45500]/10 rounded-full px-4 py-1.5 mb-6">
+        <span class="pulse-dot"></span>
+        <span class="micro !text-[#f27e40]">{kicker}</span>
+      </div>
+      <h1 class="display text-4xl sm:text-5xl text-white mb-5">{title}</h1>
+      <p class="text-lg text-[#9d9d9d] leading-relaxed">{sub}</p>
+      {note && (
+        <div class="mt-8 panel p-5 text-sm text-[#9d9d9d] leading-relaxed border-l-2 !border-l-[#f45500]">
+          {note}
+        </div>
+      )}
+    </div>
+  </div>
+</section>

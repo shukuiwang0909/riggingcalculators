@@ -1,0 +1,24 @@
+---
+// Root entry renders the English home page directly (no redirect).
+// Redirects can loop on static hosts with SPA fallback, so / serves the same
+// content as /en/ with canonical pointing at /en/.
+import Base from '../layouts/Base.astro';
+import HomePage from '../components/pages/HomePage.astro';
+import { getDict } from '../i18n/ui';
+import { p } from '../i18n/paths';
+import { webSite, faqPage } from '../lib/jsonld';
+
+const lang = 'en' as const;
+const t = getDict(lang);
+const path = p(lang, '/');
+
+const title = 'Rigging Calculators — Free Shackle, Sling Angle, Wire Rope & Crane Load Tools';
+const description =
+  'Free engineering-grade rigging calculators: shackle sizing, sling angle tension, wire rope capacity and crane load checks. ASME B30.9 / B30.26 / ISO 2408 based. No signup.';
+
+const jsonLd = [webSite(), faqPage(t.faq.items)];
+---
+
+<Base lang={lang} title={title} description={description} path={path} jsonLd={jsonLd}>
+  <HomePage lang={lang} />
+</Base>

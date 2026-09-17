@@ -1,0 +1,40 @@
+---
+import Base from '../../layouts/Base.astro';
+import SlingPage from '../../components/pages/SlingPage.astro';
+import { LOCALES, type Locale } from '../../config';
+import { getDict } from '../../i18n/ui';
+import { p, TOOL_PATHS } from '../../i18n/paths';
+import { softwareApp, faqPage, breadcrumb } from '../../lib/jsonld';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = p(lang, TOOL_PATHS.sling);
+
+const meta = {
+  en: {
+    title: 'Sling Angle Calculator — Multi-Leg Sling Tension (ASME B30.9)',
+    description: 'Calculate tension per sling leg at any angle, horizontal squeeze force, and recommended chain sling size. Free sling angle calculator based on ASME B30.9.',
+  },
+  zh: {
+    title: '吊装角度计算器 — 多肢吊索张力计算（ASME B30.9）',
+    description: '计算任意角度下每肢吊索张力、水平挤压分力，并推荐链条吊索规格。免费吊装角度计算器，基于 ASME B30.9。',
+  },
+} as const;
+
+const jsonLd = [
+  softwareApp(t.sling.title, meta[lang].description, path, lang),
+  faqPage(t.sling.faqItems),
+  breadcrumb([
+    { name: t.nav.home, path: p(lang, '/') },
+    { name: t.sling.title, path },
+  ]),
+];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <SlingPage lang={lang} />
+</Base>

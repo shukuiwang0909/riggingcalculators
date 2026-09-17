@@ -1,0 +1,115 @@
+---
+import { getDict } from '../i18n/ui';
+import { p, TOOL_PATHS } from '../i18n/paths';
+import { SITE } from '../config';
+import type { Locale } from '../config';
+
+interface Props {
+  lang: Locale;
+  section: 'hero' | 'faq' | 'related' | 'cta';
+  badge?: string;
+  title?: string;
+  sub?: string;
+  faqTitle?: string;
+  faqItems?: { q: string; a: string }[];
+  exclude?: string;
+  breadcrumb?: { name: string; path: string }[];
+}
+const { lang, section, badge, title, sub, faqTitle, faqItems = [], exclude = '' } = Astro.props;
+const t = getDict(lang);
+const home = p(lang, '/');
+
+const allTools = [
+  { href: p(lang, TOOL_PATHS.shackle), no: '01', ...t.tools.shackle },
+  { href: p(lang, TOOL_PATHS.sling), no: '02', ...t.tools.sling },
+  { href: p(lang, TOOL_PATHS.rope), no: '03', ...t.tools.rope },
+  { href: p(lang, TOOL_PATHS.crane), no: '04', ...t.tools.crane },
+].filter((x) => x.href !== exclude);
+---
+
+{section === 'hero' && (
+  <section class="relative overflow-hidden dotgrid">
+    <div class="absolute inset-0" style="background: radial-gradient(ellipse 70% 60% at 30% 10%, hsla(21,100%,48%,0.07), transparent 60%)"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 lg:pt-14 lg:pb-20">
+      <nav class="micro mb-8 flex items-center gap-2 no-print" aria-label="Breadcrumb">
+        <a href={home} class="hover:text-[#f27e40] transition-colors">{t.nav.home}</a>
+        <span aria-hidden="true">›</span>
+        <span class="!text-[#9d9d9d]">{title}</span>
+      </nav>
+      <div class="grid lg:grid-cols-2 gap-12 items-start">
+        <div class="reveal">
+          <div class="inline-flex items-center gap-2.5 border border-[#f45500]/40 bg-[#f45500]/10 rounded-full px-4 py-1.5 mb-6">
+            <span class="pulse-dot"></span>
+            <span class="micro !text-[#f27e40]">{badge}</span>
+          </div>
+          <h1 class="display text-4xl sm:text-5xl text-white mb-5">{title}</h1>
+          <p class="text-lg text-[#9d9d9d] leading-relaxed mb-8">{sub}</p>
+          <slot name="aside" />
+        </div>
+        <div class="reveal" style="transition-delay: 120ms">
+          <slot name="calc" />
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+{section === 'faq' && (
+  <section class="py-16 lg:py-20 bg-[#0d0d0d] border-y border-[#1e1e1e]">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal">
+        <div class="micro mb-3 flex items-center gap-3"><span class="text-[#f45500]">::</span> FAQ</div>
+        <h2 class="display text-3xl text-white mb-10">{faqTitle}</h2>
+      </div>
+      <div class="space-y-px border border-[#1e1e1e]">
+        {faqItems.map((f) => (
+          <details class="group bg-[#0a0a0a] p-6 reveal">
+            <summary class="flex items-center justify-between cursor-pointer list-none">
+              <span class="font-semibold text-white group-hover:text-[#f27e40] transition-colors pr-6">{f.q}</span>
+              <span class="faq-plus mono text-[#f45500] text-xl shrink-0" aria-hidden="true">+</span>
+            </summary>
+            <p class="mt-4 text-[#9d9d9d] leading-relaxed text-sm">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+{section === 'related' && (
+  <section class="py-16 lg:py-20 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal">
+        <div class="micro mb-3 flex items-center gap-3"><span class="text-[#f45500]">::</span> TOOLS</div>
+        <h2 class="display text-3xl text-white mb-3">{t.common.related}</h2>
+        <p class="text-[#9d9d9d] mb-10">{t.common.relatedSub}</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-px bg-[#1e1e1e] border border-[#1e1e1e] reveal">
+        {allTools.map((tool) => (
+          <a href={tool.href} class="panel-hover block bg-[#0a0a0a] p-8 group">
+            <div class="flex items-start justify-between mb-6">
+              <span class="mono text-[#333] text-sm">/{tool.no}</span>
+              <span class="mono text-[#f45500] text-lg transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
+            </div>
+            <h3 class="display text-xl text-white mb-2 group-hover:text-[#f27e40] transition-colors">{tool.name}</h3>
+            <p class="text-sm text-[#9d9d9d]">{tool.desc}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+{section === 'cta' && (
+  <section class="relative py-16 lg:py-24 overflow-hidden border-t border-[#1e1e1e] no-print">
+    <div class="hazard h-2 w-full absolute top-0 left-0 opacity-80"></div>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
+      <h2 class="display text-3xl md:text-4xl text-white mb-4">{t.cta.title}</h2>
+      <p class="text-[#9d9d9d] mb-8 max-w-xl mx-auto">{t.cta.sub}</p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <button class="btn-safety" data-rfq-open>{t.cta.btn}</button>
+        <a href={`mailto:${SITE.email}`} class="btn-ghost">{t.cta.mail}</a>
+      </div>
+    </div>
+  </section>
+)}

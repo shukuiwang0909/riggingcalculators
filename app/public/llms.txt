@@ -1,0 +1,43 @@
+# Rigging Calculators
+
+> Free engineering-grade rigging calculators for industrial lifting operations. Tools cover shackle selection (Crosby G-209/G-2130/S-209), sling angle tension analysis, wire rope working load limits, and crane load/moment calculations. Data sourced from Crosby Group specifications, ISO 2408 wire rope standard, and ASME B30.9/B30.26. No signup required. Available in English and Chinese (Simplified).
+
+## Calculators
+
+- [Shackle Size Calculator](https://riggingcalculators.com/en/shackle-size-calculator/): Select the correct Crosby shackle by working load in tonnes. Filters by type (screw pin / bolt type / any) and material (alloy steel / carbon steel). Returns matched WLL, pin diameter (mm), shackle size (fractional inches), and weight (kg). Warns if safety factor is too low (<1.1) or oversized (>5x).
+- [Sling Angle Calculator](https://riggingcalculators.com/en/sling-angle-calculator/): Calculate sling leg tension for 1–4 leg lifts at standard angles (30°/45°/60°/90°). Computes tension factor (1/sin θ), individual leg load, horizontal compression force, and recommended chain sling grade. Issues red warning below 30° per ASME B30.9.
+- [Wire Rope Capacity Calculator](https://riggingcalculators.com/en/wire-rope-capacity-calculator/): Find WLL and breaking load for 6×19 IWRC, 6×36 IWRC, and 6×7 FC wire rope constructions (ISO 2408, EIPS 1960 N/mm²), diameters 4–40 mm. Applies user-selected safety factor (3.5/5/10). Warns when safety factor falls below ASME B30.9 minimum of 5.
+- [Crane Load Calculator](https://riggingcalculators.com/en/crane-load-calculator/): Calculate operating radius, lifting moment, and load percentage. Input: boom length (m), boom angle or operating radius, lift weight (tonnes), optional rated capacity. Outputs: operating radius (m), lifting moment (t·m), load percentage. Color-coded warnings at >75%, >85%, and >100%.
+
+## Reference Charts
+
+- [Shackle Size Chart](https://riggingcalculators.com/en/charts/shackle-size-chart/): Complete capacity and dimension table for Crosby G-209, G-2130, and S-209 shackles. Covers WLL 0.5 t – 120 t across 19 sizes (1/4" – 4"). Includes pin diameter (mm) and approximate weight (kg).
+- [Wire Rope Size Chart](https://riggingcalculators.com/en/charts/wire-rope-size-chart/): Breaking load (tonnes) and weight per metre (kg/m) for 6×19 IWRC, 6×36 IWRC, and 6×7 FC wire rope in diameters 6–40 mm. Based on ISO 2408, EIPS grade 1960 N/mm².
+- [Sling Capacity Chart](https://riggingcalculators.com/en/charts/sling-capacity-chart/): EN 1492-1 colour-coded flat web sling WLL table (1 t – 10 t: violet/green/yellow/grey/red/brown/blue/orange) with tension factor multipliers at 4 standard angles.
+- [SWL Quick Reference Chart](https://riggingcalculators.com/en/charts/swl-chart/): Safe Working Load quick-reference for common rigging hardware including shackles, wire rope slings, chain slings, and web slings at key working angles.
+
+## Product References
+
+- [Crosby G-209 Shackle](https://riggingcalculators.com/en/crosby/g-209/): Alloy steel screw pin anchor shackle. 19 sizes, WLL 0.5 t – 120 t (1/4" – 4"). Commonly used in overhead lifting and rigging assemblies.
+- [Crosby G-2130 Shackle](https://riggingcalculators.com/en/crosby/g-2130/): Alloy steel bolt-type anchor shackle with nut and cotter pin. 19 sizes, WLL 0.5 t – 120 t. Preferred where pin rotation must be prevented.
+- [Crosby S-209 Shackle](https://riggingcalculators.com/en/crosby/s-209/): Carbon steel screw pin shackle. 13 sizes, WLL 0.5 t – 17 t. General-purpose, lower cost option.
+
+## Technical Standards Referenced
+
+- ASME B30.9 — Slings (safety factors, sling angle requirements)
+- ASME B30.26 — Rigging Hardware (shackle WLL markings)
+- ISO 2408 — Steel Wire Ropes (breaking load tables, EIPS classification)
+- EN 1492-1 — Textile Slings (web sling colour code and WLL)
+- Crosby Group — G-209, G-2130, S-209 product specifications
+
+## Key Concepts Covered
+
+Safe Working Load (SWL), Working Load Limit (WLL), Proof Load, Breaking Load, Safety Factor, Sling Angle Factor, Tension Factor, Horizontal Compression Force, Lifting Moment, Operating Radius, Boom Angle, EIPS Wire Rope, IWRC Core, Fibre Core (FC), Grade 80 Chain Sling, Web Sling Colour Code
+
+## About
+
+- Site: https://riggingcalculators.com
+- Contact: sales@riggingcalculators.com
+- Languages: English (default), Chinese Simplified (/zh/)
+- License: Free to use, no signup required
+- Last updated: 2026

@@ -1,0 +1,61 @@
+---
+import Base from '../../../layouts/Base.astro';
+import CrosbyModelPage from '../../../components/pages/CrosbyModelPage.astro';
+import { LOCALES, SITE, htmlLang, type Locale } from '../../../config';
+import { getDict } from '../../../i18n/ui';
+import { p } from '../../../i18n/paths';
+import { faqPage, breadcrumb } from '../../../lib/jsonld';
+import { SHACKLE_MODELS, SHACKLES, type ShackleModel } from '../../../data/rigging';
+
+export function getStaticPaths() {
+  return LOCALES.flatMap((lang) =>
+    SHACKLE_MODELS.map((model) => ({ params: { lang, model: model.toLowerCase() } })),
+  );
+}
+
+const lang = Astro.params.lang as Locale;
+const modelSlug = Astro.params.model;
+const model = SHACKLE_MODELS.find((m) => m.toLowerCase() === modelSlug) as ShackleModel;
+const t = getDict(lang);
+const modelKey = model === 'G-209' ? 'g209' : model === 'G-2130' ? 'g2130' : 's209';
+const info = t.crosby[modelKey];
+const path = p(lang, `/crosby/${modelSlug}/`);
+
+const rows = SHACKLES.filter((s) => s.model === model);
+const wllMin = Math.min(...rows.map((r) => r.wll));
+const wllMax = Math.max(...rows.map((r) => r.wll));
+
+const meta = {
+  en: {
+    title: `${info.name} — WLL ${wllMin}–${wllMax} t, Dimensions & Specs`,
+    description: `${info.desc} Complete WLL and dimensions table for all ${rows.length} sizes.`,
+  },
+  zh: {
+    title: `${info.name} — WLL ${wllMin}–${wllMax} 吨，尺寸与规格`,
+    description: `${info.desc} 含全部 ${rows.length} 个规格的完整 WLL 与尺寸表。`,
+  },
+} as const;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: info.name,
+    description: info.desc,
+    url: `${SITE.url}${path}`,
+    inLanguage: htmlLang(lang),
+    brand: { '@type': 'Brand', name: 'Crosby' },
+    category: 'Rigging Hardware > Shackles',
+  },
+  faqPage(t.shackle.faqItems),
+  breadcrumb([
+    { name: t.nav.home, path: p(lang, '/') },
+    { name: t.nav.models, path: `${p(lang, '/')}#models` },
+    { name: model, path },
+  ]),
+];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <CrosbyModelPage lang={lang} model={model} />
+</Base>

@@ -1,0 +1,66 @@
+---
+import { getDict } from '../../i18n/ui';
+import { p, TOOL_PATHS } from '../../i18n/paths';
+import { SHACKLES, fmtSize } from '../../data/rigging';
+import type { Locale } from '../../config';
+import ToolShell from '../ToolShell.astro';
+import ShackleCalc from '../ShackleCalc.astro';
+import SectionHead from '../SectionHead.astro';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const selfPath = p(lang, TOOL_PATHS.shackle);
+
+const groups = [
+  { id: 'G-209', rows: SHACKLES.filter((s) => s.model === 'G-209'), desc: t.crosby.g209.desc },
+  { id: 'G-2130', rows: SHACKLES.filter((s) => s.model === 'G-2130'), desc: t.crosby.g2130.desc },
+  { id: 'S-209', rows: SHACKLES.filter((s) => s.model === 'S-209'), desc: t.crosby.s209.desc },
+];
+---
+
+<ToolShell lang={lang} section="hero" badge={t.shackle.badge} title={t.shackle.title} sub={t.shackle.sub}>
+  <div slot="aside" class="panel p-5 text-sm text-[#9d9d9d] leading-relaxed">
+    <span class="micro block mb-2 !text-[#f45500]">⚠ {t.crosby.sideLoad}</span>
+    {t.crosby.sideLoadNote}
+  </div>
+  <ShackleCalc slot="calc" lang={lang} id="shackle-calc" />
+</ToolShell>
+
+<!-- FULL SPEC TABLES -->
+<section class="py-16 lg:py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHead kicker={t.charts.kicker} title={t.shackle.chartTitle} sub={t.shackle.chartSub} />
+    <div class="space-y-10">
+      {groups.map((g, gi) => (
+        <div class="panel overflow-hidden reveal" style={`transition-delay: ${gi * 60}ms`}>
+          <div class="p-6 pb-4 flex flex-wrap items-baseline justify-between gap-3">
+            <h3 class="mono text-xl font-bold text-[#f45500]">{g.id}</h3>
+            <a href={p(lang, `/crosby/${g.id.toLowerCase()}/`)} class="micro !text-[#f45500] no-print">
+              {t.charts.viewFull} →
+            </a>
+          </div>
+          <div class="overflow-x-auto max-h-[420px] overflow-y-auto">
+            <table class="spec-table">
+              <thead class="sticky top-0 bg-[#161616]">
+                <tr>
+                  <th>{t.charts.thWll}</th><th>{t.charts.thSize}</th>
+                  <th>{t.charts.thPin}</th><th>{t.charts.thWeight}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {g.rows.map((s) => (
+                  <tr><td>{s.wll} t</td><td>{fmtSize(s.size)}</td><td>{s.pin} mm</td><td>{s.weight} kg</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<ToolShell lang={lang} section="faq" faqTitle={t.shackle.faqTitle} faqItems={t.shackle.faqItems} />
+<ToolShell lang={lang} section="related" exclude={selfPath} />
+<ToolShell lang={lang} section="cta" />

@@ -1,0 +1,40 @@
+---
+import Base from '../../layouts/Base.astro';
+import ShacklePage from '../../components/pages/ShacklePage.astro';
+import { LOCALES, type Locale } from '../../config';
+import { getDict } from '../../i18n/ui';
+import { p, TOOL_PATHS } from '../../i18n/paths';
+import { softwareApp, faqPage, breadcrumb } from '../../lib/jsonld';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = p(lang, TOOL_PATHS.shackle);
+
+const meta = {
+  en: {
+    title: 'Shackle Size Calculator — Find the Right Crosby Shackle by Load',
+    description: 'Enter your working load, get the exact Crosby shackle (G-209 / G-2130 / S-209) with WLL, pin diameter and weight. Free, ASME B30.26 based.',
+  },
+  zh: {
+    title: '卸扣选型计算器 — 按载荷匹配 Crosby 卸扣型号',
+    description: '输入工作载荷，立即获得匹配的 Crosby 卸扣（G-209 / G-2130 / S-209）及 WLL、销轴直径与重量。免费工具，基于 ASME B30.26。',
+  },
+} as const;
+
+const jsonLd = [
+  softwareApp(t.shackle.title, meta[lang].description, path, lang),
+  faqPage(t.shackle.faqItems),
+  breadcrumb([
+    { name: t.nav.home, path: p(lang, '/') },
+    { name: t.shackle.title, path },
+  ]),
+];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <ShacklePage lang={lang} />
+</Base>

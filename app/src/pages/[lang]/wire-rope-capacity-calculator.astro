@@ -1,0 +1,40 @@
+---
+import Base from '../../layouts/Base.astro';
+import WireRopePage from '../../components/pages/WireRopePage.astro';
+import { LOCALES, type Locale } from '../../config';
+import { getDict } from '../../i18n/ui';
+import { p, TOOL_PATHS } from '../../i18n/paths';
+import { softwareApp, faqPage, breadcrumb } from '../../lib/jsonld';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = p(lang, TOOL_PATHS.rope);
+
+const meta = {
+  en: {
+    title: 'Wire Rope Capacity Calculator — Breaking Load & WLL (ISO 2408)',
+    description: 'Breaking load, working load limit and weight per meter for 6×19 IWRC, 6×36 IWRC and 6×7 FC wire rope. Free calculator with safety factor guide.',
+  },
+  zh: {
+    title: '钢丝绳载荷计算器 — 破断拉力与 WLL（ISO 2408）',
+    description: '查询 6×19 IWRC、6×36 IWRC、6×7 FC 钢丝绳的破断拉力、额定工作载荷与每米重量，附安全系数选用指南。免费工具。',
+  },
+} as const;
+
+const jsonLd = [
+  softwareApp(t.rope.title, meta[lang].description, path, lang),
+  faqPage(t.rope.faqItems),
+  breadcrumb([
+    { name: t.nav.home, path: p(lang, '/') },
+    { name: t.rope.title, path },
+  ]),
+];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <WireRopePage lang={lang} />
+</Base>

@@ -1,0 +1,77 @@
+---
+import { getDict } from '../../i18n/ui';
+import { p, CHART_PATHS } from '../../i18n/paths';
+import type { Locale } from '../../config';
+import ChartHead from '../ChartHead.astro';
+import ToolShell from '../ToolShell.astro';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const tp = t.chartPages.swl;
+
+const rows = [
+  {
+    component: lang === 'zh' ? '弓形卸扣 G-209 / G-2130（合金钢）' : 'Bow shackles G-209 / G-2130 (alloy)',
+    standard: 'ASME B30.26',
+    range: '0.5 – 120 t',
+    href: p(lang, CHART_PATHS.shackle),
+  },
+  {
+    component: lang === 'zh' ? '弓形卸扣 S-209（碳钢）' : 'Bow shackles S-209 (carbon)',
+    standard: 'ASME B30.26',
+    range: '0.5 – 17 t',
+    href: p(lang, CHART_PATHS.shackle),
+  },
+  {
+    component: lang === 'zh' ? '80 级链条吊索（单肢垂直）' : 'Grade 80 chain slings (single leg, vertical)',
+    standard: 'EN 818-2 / ASME B30.9',
+    range: '1.12 – 31.5 t',
+    href: p(lang, CHART_PATHS.sling),
+  },
+  {
+    component: lang === 'zh' ? '扁平吊带（EN 色标）' : 'Flat webbing slings (EN colour code)',
+    standard: 'EN 1492-1',
+    range: '1 – 10 t',
+    href: p(lang, CHART_PATHS.sling),
+  },
+  {
+    component: lang === 'zh' ? '钢丝绳 6×19 / 6×36 IWRC，6×7 FC（破断拉力）' : 'Wire rope 6×19 / 6×36 IWRC, 6×7 FC (breaking load)',
+    standard: 'ISO 2408',
+    range: '1.1 – 101 t MBL',
+    href: p(lang, CHART_PATHS.wire),
+  },
+];
+---
+
+<ChartHead lang={lang} kicker={tp.kicker} title={tp.title} sub={tp.sub} note={tp.note} />
+
+<section class="py-16 lg:py-20">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="panel overflow-hidden reveal">
+      <div class="overflow-x-auto">
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th>{tp.component}</th><th>{tp.standard}</th>
+              <th>{tp.range}</th><th>{tp.link}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr>
+                <td>{r.component}</td>
+                <td>{r.standard}</td>
+                <td>{r.range}</td>
+                <td><a href={r.href} class="!text-[#f45500] underline underline-offset-4">{t.charts.viewFull} →</a></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ToolShell lang={lang} section="faq" faqTitle={tp.faqTitle} faqItems={t.faq.items} />
+<ToolShell lang={lang} section="cta" />

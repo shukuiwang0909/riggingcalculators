@@ -1,0 +1,42 @@
+---
+import Base from '../../../layouts/Base.astro';
+import WireChartPage from '../../../components/pages/WireChartPage.astro';
+import { LOCALES, type Locale } from '../../../config';
+import { getDict } from '../../../i18n/ui';
+import { p, CHART_PATHS } from '../../../i18n/paths';
+import { collectionPage, faqPage, breadcrumb } from '../../../lib/jsonld';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const tp = t.chartPages.wire;
+const path = p(lang, CHART_PATHS.wire);
+
+const meta = {
+  en: {
+    title: 'Wire Rope Size Chart — Breaking Load & Weight (6×19 / 6×36 / 6×7)',
+    description: 'Minimum breaking loads and weights for 6×19 IWRC, 6×36 IWRC and 6×7 FC wire rope, 1960 N/mm² (EIPS) grade per ISO 2408.',
+  },
+  zh: {
+    title: '钢丝绳规格表 — 破断拉力与重量（6×19 / 6×36 / 6×7）',
+    description: '6×19 IWRC、6×36 IWRC 与 6×7 FC 钢丝绳的最小破断拉力与每米重量，1960 N/mm²（EIPS）级，依据 ISO 2408。',
+  },
+} as const;
+
+const jsonLd = [
+  collectionPage(tp.title, meta[lang].description, path, lang),
+  faqPage(t.rope.faqItems),
+  breadcrumb([
+    { name: t.nav.home, path: p(lang, '/') },
+    { name: t.nav.charts, path: `${p(lang, '/')}#charts` },
+    { name: tp.title, path },
+  ]),
+];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <WireChartPage lang={lang} />
+</Base>

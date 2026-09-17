@@ -1,0 +1,42 @@
+---
+import Base from '../../../layouts/Base.astro';
+import SlingChartPage from '../../../components/pages/SlingChartPage.astro';
+import { LOCALES, type Locale } from '../../../config';
+import { getDict } from '../../../i18n/ui';
+import { p, CHART_PATHS } from '../../../i18n/paths';
+import { collectionPage, faqPage, breadcrumb } from '../../../lib/jsonld';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const tp = t.chartPages.sling;
+const path = p(lang, CHART_PATHS.sling);
+
+const meta = {
+  en: {
+    title: 'Sling Capacity Chart — Chain, Webbing & Wire Rope Sling WLL',
+    description: 'Working load limits for Grade 80 chain slings and EN 1492-1 webbing slings at all hitch types and angles from 90° down to 30°.',
+  },
+  zh: {
+    title: '吊索额定载荷表 — 链条、扁平吊带与钢丝绳吊索 WLL',
+    description: '80 级链条吊索与 EN 1492-1 扁平吊带在各种拴挂方式及 90° 至 30° 角度下的额定工作载荷。',
+  },
+} as const;
+
+const jsonLd = [
+  collectionPage(tp.title, meta[lang].description, path, lang),
+  faqPage(t.sling.faqItems),
+  breadcrumb([
+    { name: t.nav.home, path: p(lang, '/') },
+    { name: t.nav.charts, path: `${p(lang, '/')}#charts` },
+    { name: tp.title, path },
+  ]),
+];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <SlingChartPage lang={lang} />
+</Base>

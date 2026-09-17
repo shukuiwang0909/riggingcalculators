@@ -1,0 +1,117 @@
+---
+import { getDict } from '../i18n/ui';
+import { SHACKLES, fmtSize } from '../data/rigging';
+import type { Locale } from '../config';
+
+interface Props { lang: Locale; compact?: boolean; id?: string; }
+const { lang, compact = false, id = 'shackle-calc' } = Astro.props;
+const t = getDict(lang);
+
+// Serialize data with pre-formatted sizes for the client script
+const data = SHACKLES.map((s) => ({ ...s, sizeFmt: fmtSize(s.size) }));
+const L = {
+  wll: t.shackle.wll, size: t.shackle.size, pin: t.shackle.pin, weight: t.shackle.weight,
+  resTitle: t.shackle.resTitle, quote: t.common.quote, recalc: t.common.recalc, print: t.common.print,
+  warnTight: t.shackle.warnTight, warnOver: t.shackle.warnOver, none: t.shackle.none,
+};
+---
+
+<div id={id} class="panel p-6 lg:p-8" style="box-shadow: 0 0 60px hsla(21,100%,48%,0.06)">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="display text-xl text-white">{t.shackle.formTitle}</h2>
+    <span class="micro">ASME B30.26</span>
+  </div>
+
+  <form class="calc-form space-y-4">
+    <div>
+      <label class="micro block mb-2">{t.common.loadT}</label>
+      <input type="number" name="load" class="field" placeholder="e.g. 10" min="0.5" max="120" step="0.5" required />
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="micro block mb-2">{t.common.type}</label>
+        <select name="type" class="field">
+          <option value="">{t.common.anyRec}</option>
+          <option value="screw-pin">{t.common.screwPin}</option>
+          <option value="bolt-type">{t.common.boltType}</option>
+        </select>
+      </div>
+      <div>
+        <label class="micro block mb-2">{t.common.material}</label>
+        <select name="material" class="field">
+          <option value="">{t.common.anyRec}</option>
+          <option value="alloy">{t.common.alloy}</option>
+          <option value="carbon">{t.common.carbon}</option>
+        </select>
+      </div>
+    </div>
+    <p class="text-xs text-[#5c5c5c]">{t.common.anyRecHint}</p>
+    <button type="submit" class="btn-safety w-full">{t.shackle.btn}</button>
+  </form>
+
+  <div class="calc-error hidden mt-4 p-3 rounded border border-[#ef4444]/40 bg-[#ef4444]/10 text-sm text-[#ef4444]" role="alert"></div>
+
+  <div class="calc-result hidden mt-6 result-panel p-5">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-bold text-[#f27e40]">{t.shackle.resTitle}</h3>
+      <span class="r-model mono text-sm bg-[#f45500]/15 text-[#f27e40] px-3 py-1 rounded-full"></span>
+    </div>
+    <div class="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+      <div><span class="text-[#5c5c5c]">{t.shackle.wll}:</span> <span class="r-wll mono font-bold text-white ml-1"></span></div>
+      <div><span class="text-[#5c5c5c]">{t.shackle.size}:</span> <span class="r-size mono text-white ml-1"></span></div>
+      <div><span class="text-[#5c5c5c]">{t.shackle.pin}:</span> <span class="r-pin mono text-white ml-1"></span></div>
+      <div><span class="text-[#5c5c5c]">{t.shackle.weight}:</span> <span class="r-weight mono text-white ml-1"></span></div>
+    </div>
+    <div class="r-warn hidden mt-4 p-3 rounded border border-[#facc15]/40 bg-[#facc15]/10 text-sm text-[#facc15]" role="alert"></div>
+    <div class="mt-5 flex flex-wrap gap-3 no-print">
+      <button type="button" class="btn-safety !py-2.5 !px-5 text-sm" data-rfq-open data-product="shackles">{t.common.quote}</button>
+      <button type="button" class="r-print btn-ghost !py-2.5 !px-5 text-sm">{t.common.print}</button>
+      <button type="button" class="r-recalc btn-ghost !py-2.5 !px-5 text-sm">{t.common.recalc}</button>
+    </div>
+  </div>
+
+  {!compact && <p class="text-xs text-[#5c5c5c] mt-4 pt-4 border-t border-[#262626]">{t.common.disclaimer}</p>}
+</div>
+
+<script is:inline define:vars={{ data, L, id }}>
+  (function () {
+    var root = document.getElementById(id);
+    if (!root) return;
+    var form = root.querySelector('.calc-form');
+    var errEl = root.querySelector('.calc-error');
+    var resEl = root.querySelector('.calc-result');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var load = parseFloat(form.load.value);
+      if (!load || load <= 0) return;
+      var filtered = data.filter(function (s) {
+        return (!form.type.value || s.type === form.type.value) &&
+               (!form.material.value || s.material === form.material.value);
+      }).sort(function (a, b) { return a.wll - b.wll; });
+      var s = filtered.find(function (x) { return x.wll >= load; });
+      if (!s) {
+        errEl.textContent = L.none;
+        errEl.classList.remove('hidden');
+        resEl.classList.add('hidden');
+        return;
+      }
+      errEl.classList.add('hidden');
+      root.querySelector('.r-model').textContent = s.model;
+      root.querySelector('.r-wll').textContent = s.wll + ' t';
+      root.querySelector('.r-size').textContent = s.sizeFmt;
+      root.querySelector('.r-pin').textContent = s.pin + ' mm';
+      root.querySelector('.r-weight').textContent = s.weight + ' kg';
+      var warn = root.querySelector('.r-warn');
+      var sf = s.wll / load;
+      if (sf < 1.1) { warn.textContent = L.warnTight; warn.classList.remove('hidden'); }
+      else if (sf > 5) { warn.textContent = L.warnOver; warn.classList.remove('hidden'); }
+      else warn.classList.add('hidden');
+      resEl.classList.remove('hidden');
+      if (typeof gtag !== 'undefined') gtag('event', 'tool_complete', { tool_name: 'shackle_size_calculator', result_value: s.wll, page: location.pathname });
+    });
+
+    root.querySelector('.r-recalc').addEventListener('click', function () { resEl.classList.add('hidden'); });
+    root.querySelector('.r-print').addEventListener('click', function () { window.print(); });
+  })();
+</script>

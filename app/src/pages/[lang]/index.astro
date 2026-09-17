@@ -1,0 +1,33 @@
+---
+import Base from '../../layouts/Base.astro';
+import HomePage from '../../components/pages/HomePage.astro';
+import { LOCALES, type Locale } from '../../config';
+import { getDict } from '../../i18n/ui';
+import { p } from '../../i18n/paths';
+import { webSiteWithSearch, faqPage } from '../../lib/jsonld';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = p(lang, '/');
+
+const meta = {
+  en: {
+    title: 'Rigging Calculators — Free Shackle, Sling Angle, Wire Rope & Crane Load Tools',
+    description: 'Free engineering-grade rigging calculators: shackle sizing, sling angle tension, wire rope capacity and crane load checks. ASME B30.9 / B30.26 / ISO 2408 based. No signup.',
+  },
+  zh: {
+    title: '吊装索具计算器 — 免费卸扣选型、吊装角度、钢丝绳载荷与吊车负荷工具',
+    description: '免费工程级吊装计算器：卸扣选型、吊索角度张力、钢丝绳载荷与吊车负荷校核，基于 ASME B30.9 / B30.26 / ISO 2408 标准，无需注册。',
+  },
+} as const;
+
+const jsonLd = [webSiteWithSearch(), faqPage(t.faq.items)];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <HomePage lang={lang} />
+</Base>

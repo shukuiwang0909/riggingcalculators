@@ -1,0 +1,12 @@
+---
+interface Props { text: string; duration?: number; }
+const { text, duration = 26 } = Astro.props;
+const chunk = text.repeat(3);
+---
+
+<div class="overflow-hidden border-y border-[#1c1c1c] py-6 select-none no-print" aria-hidden="true">
+  <div class="marquee-track" style={`animation-duration: ${duration}s`}>
+    <span class="display whitespace-nowrap text-4xl md:text-6xl tracking-tight text-[#1a1a1a]">{chunk}</span>
+    <span class="display whitespace-nowrap text-4xl md:text-6xl tracking-tight text-[#1a1a1a]">{chunk}</span>
+  </div>
+</div>

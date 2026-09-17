@@ -1,0 +1,99 @@
+---
+import { getDict } from '../../i18n/ui';
+import { p, TOOL_PATHS, CHART_PATHS } from '../../i18n/paths';
+import { CHAIN_WLL, TENSION_FACTORS } from '../../data/rigging';
+import type { Locale } from '../../config';
+import ToolShell from '../ToolShell.astro';
+import SlingCalc from '../SlingCalc.astro';
+import SectionHead from '../SectionHead.astro';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const selfPath = p(lang, TOOL_PATHS.sling);
+
+const factorNotes = [t.sling.notes.n90, t.sling.notes.n60, t.sling.notes.n45, t.sling.notes.n30];
+---
+
+<ToolShell lang={lang} section="hero" badge={t.sling.badge} title={t.sling.title} sub={t.sling.sub}>
+  <div slot="aside" class="panel p-5" aria-hidden="true">
+    <svg viewBox="0 0 300 190" class="w-full h-auto" fill="none">
+      <!-- hook -->
+      <circle cx="150" cy="24" r="7" stroke="#f45500" stroke-width="2.5" />
+      <line x1="150" y1="31" x2="150" y2="44" stroke="#f45500" stroke-width="2.5" />
+      <!-- legs -->
+      <line x1="150" y1="44" x2="58" y2="128" stroke="#9d9d9d" stroke-width="2" />
+      <line x1="150" y1="44" x2="242" y2="128" stroke="#9d9d9d" stroke-width="2" />
+      <!-- load -->
+      <rect x="46" y="128" width="208" height="42" fill="#161616" stroke="#2c2c2c" stroke-width="1.5" />
+      <text x="150" y="154" text-anchor="middle" fill="#5c5c5c" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2">LOAD</text>
+      <!-- angle arc -->
+      <path d="M 92 128 A 70 70 0 0 1 108 97" stroke="#f45500" stroke-width="1.5" stroke-dasharray="3 3" />
+      <text x="70" y="112" fill="#f45500" font-family="JetBrains Mono, monospace" font-size="12">θ</text>
+      <!-- tension arrows -->
+      <path d="M 104 86 L 117 73" stroke="#f27e40" stroke-width="1.5" />
+      <path d="M 117 73 l -8 1 M 117 73 l -1 -8" stroke="#f27e40" stroke-width="1.5" />
+      <text x="86" y="72" fill="#f27e40" font-family="JetBrains Mono, monospace" font-size="10">T</text>
+    </svg>
+    <p class="micro mt-3 text-center">T = (W / n) ÷ sin θ</p>
+  </div>
+  <SlingCalc slot="calc" lang={lang} id="sling-calc" />
+</ToolShell>
+
+<!-- TENSION FACTOR TABLE -->
+<section class="py-16 lg:py-20">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHead kicker={t.charts.kicker} title={t.sling.factorTitle} sub={t.sling.factorSub} />
+    <div class="panel overflow-hidden reveal">
+      <table class="spec-table">
+        <thead>
+          <tr><th>{t.sling.thAngle}</th><th>{t.sling.thCap}</th><th>{t.sling.thMult}</th><th class="hidden sm:table-cell"></th></tr>
+        </thead>
+        <tbody>
+          {TENSION_FACTORS.map((f, i) => (
+            <tr>
+              <td>{f.angle}°</td>
+              <td>{(f.factor * 100).toFixed(1)}%</td>
+              <td>×{(1 / f.factor).toFixed(3)}</td>
+              <td class="hidden sm:table-cell text-[#9d9d9d]">{factorNotes[i]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CHAIN WLL CHART -->
+<section class="py-16 lg:py-20 bg-[#0d0d0d] border-y border-[#1e1e1e]">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHead kicker={t.charts.kicker} title={t.sling.chartTitle} sub={t.sling.chartSub} />
+    <div class="panel overflow-hidden reveal">
+      <div class="overflow-x-auto">
+        <table class="spec-table">
+          <thead>
+            <tr><th>{t.charts.thChain}</th><th>{t.charts.th90}</th><th>{t.charts.th60}</th><th>{t.charts.th45}</th><th>{t.charts.th30}</th></tr>
+          </thead>
+          <tbody>
+            {CHAIN_WLL.map((c) => (
+              <tr>
+                <td>{c.dia}</td>
+                <td>{c.wll.toFixed(2)} t</td>
+                <td>{(c.wll * 0.866).toFixed(2)} t</td>
+                <td>{(c.wll * 0.707).toFixed(2)} t</td>
+                <td>{(c.wll * 0.5).toFixed(2)} t</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="p-5 border-t border-[#1e1e1e] no-print">
+        <a href={p(lang, CHART_PATHS.sling)} class="micro !text-[#f45500]">{t.charts.viewFull} →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ToolShell lang={lang} section="faq" faqTitle={t.sling.faqTitle} faqItems={t.sling.faqItems} />
+<ToolShell lang={lang} section="related" exclude={selfPath} />
+<ToolShell lang={lang} section="cta" />

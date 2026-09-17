@@ -1,0 +1,127 @@
+---
+import '../styles/global.css';
+import { SITE, htmlLang, altLocalePath, type Locale } from '../config';
+import { getDict } from '../i18n/ui';
+import { organization } from '../lib/jsonld';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import RfqModal from '../components/RfqModal.astro';
+
+interface Props {
+  lang: Locale;
+  title: string;
+  description: string;
+  /** locale-prefixed canonical path, e.g. /en/shackle-size-calculator/ */
+  path: string;
+  jsonLd?: Record<string, unknown>[];
+}
+
+const { lang, title, description, path, jsonLd = [] } = Astro.props;
+const t = getDict(lang);
+const canonical = `${SITE.url}${path}`;
+const enPath = altLocalePath(path, 'en');
+const zhPath = altLocalePath(path, 'zh');
+const otherLang: Locale = lang === 'en' ? 'zh' : 'en';
+const ogImage = `${SITE.url}/og-image.png`;
+const allSchemas = [organization(), ...jsonLd];
+---
+
+<!doctype html>
+<html lang={htmlLang(lang)}>
+  <head>
+    <meta charset="UTF-8" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={`${SITE.url}${enPath}`} />
+    <link rel="alternate" hreflang="zh-CN" href={`${SITE.url}${zhPath}`} />
+    <link rel="alternate" hreflang="x-default" href={`${SITE.url}${enPath}`} />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'zh' ? 'zh_CN' : 'en_US'} />
+    <meta property="og:locale:alternate" content={lang === 'zh' ? 'en_US' : 'zh_CN'} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Rigging Calculators — Free Shackle, Sling Angle, Wire Rope & Crane Load Tools" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+    {SITE.gaId && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${SITE.gaId}`}></script>
+        <script is:inline define:vars={{ gaId: SITE.gaId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', gaId);
+        </script>
+      </>
+    )}
+    {allSchemas.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
+  </head>
+  <body class="noise min-h-screen flex flex-col">
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:z-[200] focus:p-4 focus:bg-[#f45500] focus:text-black">{t.common.skip}</a>
+    <Header lang={lang} currentPath={path} otherLangPath={altLocalePath(path, otherLang)} otherLang={otherLang} />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <RfqModal lang={lang} />
+    <script is:inline>
+      // Scroll reveal
+      (function () {
+        var els = document.querySelectorAll('.reveal');
+        if (!('IntersectionObserver' in window) || !els.length) {
+          els.forEach(function (el) { el.classList.add('is-in'); });
+          return;
+        }
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+          });
+        }, { threshold: 0.12 });
+        els.forEach(function (el) { io.observe(el); });
+      })();
+
+      // RFQ modal open/close (event delegation, works on every page)
+      (function () {
+        var modal = document.getElementById('rfq-modal');
+        if (!modal) return;
+        function openModal(product) {
+          modal.classList.remove('hidden');
+          document.documentElement.style.overflow = 'hidden';
+          if (product) {
+            var sel = modal.querySelector('select[name="product"]');
+            if (sel) sel.value = product;
+          }
+        }
+        function closeModal() {
+          modal.classList.add('hidden');
+          document.documentElement.style.overflow = '';
+        }
+        document.addEventListener('click', function (e) {
+          var opener = e.target.closest('[data-rfq-open]');
+          if (opener) { e.preventDefault(); openModal(opener.getAttribute('data-product') || ''); return; }
+          if (e.target.closest('[data-rfq-close]') || e.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+        });
+      })();
+    </script>
+  </body>
+</html>

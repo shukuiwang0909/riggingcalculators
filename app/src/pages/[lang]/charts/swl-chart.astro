@@ -1,0 +1,42 @@
+---
+import Base from '../../../layouts/Base.astro';
+import SwlChartPage from '../../../components/pages/SwlChartPage.astro';
+import { LOCALES, type Locale } from '../../../config';
+import { getDict } from '../../../i18n/ui';
+import { p, CHART_PATHS } from '../../../i18n/paths';
+import { collectionPage, faqPage, breadcrumb } from '../../../lib/jsonld';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const tp = t.chartPages.swl;
+const path = p(lang, CHART_PATHS.swl);
+
+const meta = {
+  en: {
+    title: 'SWL Chart — Safe Working Load Reference for Rigging Components',
+    description: 'SWL / WLL quick reference for shackles, chain slings, webbing slings and wire rope, with links to detailed specification charts. Per ASME B30.9.',
+  },
+  zh: {
+    title: 'SWL 表 — 索具安全工作载荷速查',
+    description: '卸扣、链条吊索、扁平吊带与钢丝绳的 SWL / WLL 速查索引，附详细规格表链接。依据 ASME B30.9。',
+  },
+} as const;
+
+const jsonLd = [
+  collectionPage(tp.title, meta[lang].description, path, lang),
+  faqPage(t.faq.items),
+  breadcrumb([
+    { name: t.nav.home, path: p(lang, '/') },
+    { name: t.nav.charts, path: `${p(lang, '/')}#charts` },
+    { name: tp.title, path },
+  ]),
+];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <SwlChartPage lang={lang} />
+</Base>

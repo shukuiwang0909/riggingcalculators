@@ -1,0 +1,115 @@
+---
+import { getDict } from '../i18n/ui';
+import { SITE } from '../config';
+import type { Locale } from '../config';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = getDict(lang);
+---
+
+<div id="rfq-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm no-print" role="dialog" aria-modal="true" aria-label={t.rfq.title}>
+  <div class="panel max-w-lg w-full p-6 md:p-8 max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between mb-2">
+      <div class="micro">RFQ / INQUIRY</div>
+      <button data-rfq-close class="text-[#5c5c5c] hover:text-white text-2xl leading-none transition-colors" aria-label="Close">×</button>
+    </div>
+    <h3 class="display text-2xl text-white mb-6">{t.rfq.title}</h3>
+
+    <form id="rfq-form" class="space-y-4" data-endpoint={SITE.rfqEndpoint} data-email={SITE.email}>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="micro block mb-2" for="rfq-name">{t.rfq.name}</label>
+          <input id="rfq-name" name="name" type="text" class="field" required placeholder={t.rfq.namePh} />
+        </div>
+        <div>
+          <label class="micro block mb-2" for="rfq-company">{t.rfq.company}</label>
+          <input id="rfq-company" name="company" type="text" class="field" required placeholder={t.rfq.companyPh} />
+        </div>
+      </div>
+      <div>
+        <label class="micro block mb-2" for="rfq-email">{t.rfq.email}</label>
+        <input id="rfq-email" name="email" type="email" class="field" required placeholder={t.rfq.emailPh} />
+      </div>
+      <div>
+        <label class="micro block mb-2" for="rfq-product">{t.rfq.product}</label>
+        <select id="rfq-product" name="product" class="field" required>
+          <option value="" disabled selected>{t.rfq.select}</option>
+          <option value="shackles">{t.rfq.products.shackles}</option>
+          <option value="slings">{t.rfq.products.slings}</option>
+          <option value="wire-rope">{t.rfq.products.rope}</option>
+          <option value="chain">{t.rfq.products.chain}</option>
+          <option value="crane-services">{t.rfq.products.crane}</option>
+          <option value="other">{t.rfq.products.other}</option>
+        </select>
+      </div>
+      <div>
+        <label class="micro block mb-2" for="rfq-qty">{t.rfq.qty}</label>
+        <input id="rfq-qty" name="quantity" type="number" class="field" min="1" placeholder={t.rfq.qtyPh} />
+      </div>
+      <div>
+        <label class="micro block mb-2" for="rfq-req">{t.rfq.req}</label>
+        <textarea id="rfq-req" name="requirements" class="field" rows="3" placeholder={t.rfq.reqPh}></textarea>
+      </div>
+      <!-- honeypot -->
+      <input type="text" name="website" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <button type="submit" class="btn-safety w-full">{t.rfq.submit}</button>
+      <p id="rfq-status" class="text-xs text-center text-[#9d9d9d] hidden" role="status" aria-live="polite"></p>
+    </form>
+    <p class="text-xs text-[#5c5c5c] mt-4 pt-4 border-t border-[#262626] text-center">{t.rfq.note}</p>
+  </div>
+</div>
+
+<script is:inline define:vars={{ doneT: t.rfq.doneT, doneP: t.rfq.doneP, mailFallback: t.rfq.mailFallback }}>
+  (function () {
+    var form = document.getElementById('rfq-form');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (form.website && form.website.value) return; // honeypot
+
+      var endpoint = form.getAttribute('data-endpoint');
+      var fallbackEmail = form.getAttribute('data-email');
+      var status = document.getElementById('rfq-status');
+
+      function track() {
+        if (typeof gtag !== 'undefined') gtag('event', 'rfq_submit', { page: location.pathname });
+      }
+      function showDone() {
+        track();
+        form.innerHTML = '<div class="text-center py-10"><div class="mono text-4xl text-[#f27e40] mb-4">[ OK ]</div><h4 class="text-xl font-bold text-white mb-2">' + doneT + '</h4><p class="text-[#9d9d9d]">' + doneP + '</p></div>';
+      }
+
+      if (endpoint) {
+        var data = new FormData(form);
+        fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
+          .then(function (r) { if (r.ok) showDone(); else throw new Error('submit failed'); })
+          .catch(function () {
+            status.textContent = mailFallback;
+            status.classList.remove('hidden');
+            window.location.href = buildMailto(fallbackEmail, form);
+            track();
+          });
+      } else {
+        status.textContent = mailFallback;
+        status.classList.remove('hidden');
+        window.location.href = buildMailto(fallbackEmail, form);
+        track();
+      }
+    });
+
+    function buildMailto(email, form) {
+      var lines = [
+        'Name: ' + (form.name ? form.name.value : ''),
+        'Company: ' + (form.company ? form.company.value : ''),
+        'Email: ' + (form.email ? form.email.value : ''),
+        'Product: ' + (form.product ? form.product.value : ''),
+        'Quantity: ' + (form.quantity ? form.quantity.value : ''),
+        '',
+        'Requirements:',
+        form.requirements ? form.requirements.value : '',
+      ];
+      return 'mailto:' + email + '?subject=' + encodeURIComponent('RFQ from riggingcalculators.com') + '&body=' + encodeURIComponent(lines.join('\n'));
+    }
+  })();
+</script>

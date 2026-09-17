@@ -1,0 +1,73 @@
+---
+import { getDict } from '../i18n/ui';
+import { p } from '../i18n/paths';
+import type { Locale } from '../config';
+
+interface Props {
+  lang: Locale;
+  currentPath: string;
+  otherLangPath: string;
+  otherLang: Locale;
+}
+
+const { lang, currentPath, otherLangPath, otherLang } = Astro.props;
+const t = getDict(lang);
+const home = p(lang, '/');
+const isHome = /^\/(en|zh)\/?$/.test(currentPath);
+
+const navItems = [
+  { label: t.nav.tools, href: `${home}#tools` },
+  { label: t.nav.charts, href: `${home}#charts` },
+  { label: t.nav.models, href: `${home}#models` },
+  { label: t.nav.faq, href: `${home}#faq` },
+];
+---
+
+<header class="sticky top-0 z-50 border-b border-[#262626] no-print" style="background: linear-gradient(180deg, rgba(10,10,10,0.92), rgba(10,10,10,0.85)); backdrop-filter: blur(12px);">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <a href={home} class="flex items-center gap-2.5" aria-label={t.nav.home}>
+        <span class="w-2.5 h-2.5 rounded-full bg-[#f45500]" style="box-shadow: 0 0 12px hsla(21,100%,48%,0.9)"></span>
+        <span class="display text-lg text-white tracking-tight">RIGGING<span class="text-[#f45500]">CALCULATORS</span></span>
+      </a>
+      <nav class="hidden md:flex items-center gap-8" aria-label="Main">
+        {navItems.map((n) => (
+          <a href={n.href} class="text-sm text-[#9d9d9d] hover:text-[#f27e40] transition-colors">{n.label}</a>
+        ))}
+      </nav>
+      <div class="flex items-center gap-3">
+        <a
+          href={otherLangPath}
+          hreflang={otherLang === 'zh' ? 'zh-CN' : 'en'}
+          class="mono text-[11px] tracking-widest border border-[#262626] rounded-full px-3.5 py-1.5 text-[#9d9d9d] hover:text-[#f27e40] hover:border-[#f45500] transition-colors"
+        >
+          {otherLang === 'zh' ? '中文' : 'EN'}
+        </a>
+        <button class="btn-safety hidden sm:inline-flex !py-2.5 !px-5 text-sm" data-rfq-open>
+          {t.nav.cta}
+        </button>
+        <button id="menu-btn" class="md:hidden text-[#9d9d9d] text-2xl leading-none" aria-label="menu" aria-expanded="false">≡</button>
+      </div>
+    </div>
+    <nav id="mobile-menu" class="hidden md:hidden pb-4 flex-col gap-3 border-t border-[#1e1e1e] pt-4" aria-label="Mobile">
+      {navItems.map((n) => (
+        <a href={n.href} class="text-sm text-[#9d9d9d] hover:text-[#f27e40]">{n.label}</a>
+      ))}
+      <button class="btn-safety text-sm" data-rfq-open>{t.nav.cta}</button>
+    </nav>
+  </div>
+</header>
+
+<script is:inline>
+  (function () {
+    var btn = document.getElementById('menu-btn');
+    var menu = document.getElementById('mobile-menu');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', function () {
+      var open = menu.classList.toggle('hidden');
+      menu.classList.toggle('flex', !open);
+      btn.textContent = open ? '≡' : '×';
+      btn.setAttribute('aria-expanded', String(!open));
+    });
+  })();
+</script>

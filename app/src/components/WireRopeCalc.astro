@@ -1,0 +1,113 @@
+---
+import { getDict } from '../i18n/ui';
+import { WIRE_ROPES } from '../data/rigging';
+import type { Locale } from '../config';
+
+interface Props { lang: Locale; id?: string; }
+const { lang, id = 'rope-calc' } = Astro.props;
+const t = getDict(lang);
+
+const L = {
+  quote: t.common.quote, recalc: t.common.recalc, print: t.common.print,
+  warnSfA: t.rope.warnSfA, warnSfB: t.rope.warnSfB,
+  noDataA: t.rope.noDataA, noDataB: t.rope.noDataB, noDataC: t.rope.noDataC,
+};
+---
+
+<div id={id} class="panel p-6 lg:p-8">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="display text-xl text-white">{t.rope.formTitle}</h2>
+    <span class="micro">ISO 2408</span>
+  </div>
+
+  <form class="calc-form space-y-4">
+    <div>
+      <label class="micro block mb-2">{t.rope.dia}</label>
+      <input type="number" name="diameter" class="field" placeholder="e.g. 16" min="4" max="40" step="1" required />
+    </div>
+    <div>
+      <label class="micro block mb-2">{t.rope.construction}</label>
+      <select name="construction" class="field">
+        <option value="6x19">{t.rope.c1}</option>
+        <option value="6x36">{t.rope.c2}</option>
+        <option value="6x7">{t.rope.c3}</option>
+      </select>
+    </div>
+    <div>
+      <label class="micro block mb-2">{t.rope.sf}</label>
+      <select name="sf" class="field">
+        <option value="3.5">{t.rope.sf1}</option>
+        <option value="5" selected>{t.rope.sf2}</option>
+        <option value="10">{t.rope.sf3}</option>
+      </select>
+    </div>
+    <button type="submit" class="btn-safety w-full">{t.rope.btn}</button>
+  </form>
+
+  <div class="calc-error hidden mt-4 p-3 rounded border border-[#ef4444]/40 bg-[#ef4444]/10 text-sm text-[#ef4444]" role="alert"></div>
+
+  <div class="calc-result hidden mt-6 result-panel p-5">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-bold text-[#f27e40]">{t.rope.resTitle}</h3>
+      <span class="r-spec mono text-sm bg-[#f45500]/15 text-[#f27e40] px-3 py-1 rounded-full"></span>
+    </div>
+    <div class="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+      <div><span class="text-[#5c5c5c]">{t.rope.breaking}:</span> <span class="r-break mono font-bold text-white ml-1"></span></div>
+      <div><span class="text-[#5c5c5c]">{t.rope.wll}:</span> <span class="r-wll mono font-bold text-[#f27e40] ml-1"></span></div>
+      <div><span class="text-[#5c5c5c]">{t.rope.wpm}:</span> <span class="r-wpm mono text-white ml-1"></span></div>
+      <div><span class="text-[#5c5c5c]">{t.rope.sfLabel}:</span> <span class="r-sf mono text-white ml-1"></span></div>
+    </div>
+    <div class="r-warn hidden mt-4 p-3 rounded border border-[#facc15]/40 bg-[#facc15]/10 text-sm text-[#facc15]" role="alert"></div>
+    <div class="mt-5 flex flex-wrap gap-3 no-print">
+      <button type="button" class="btn-safety !py-2.5 !px-5 text-sm" data-rfq-open data-product="wire-rope">{t.common.quote}</button>
+      <button type="button" class="r-print btn-ghost !py-2.5 !px-5 text-sm">{t.common.print}</button>
+      <button type="button" class="r-recalc btn-ghost !py-2.5 !px-5 text-sm">{t.common.recalc}</button>
+    </div>
+  </div>
+  <p class="text-xs text-[#5c5c5c] mt-4 pt-4 border-t border-[#262626]">{t.common.disclaimer}</p>
+</div>
+
+<script is:inline define:vars={{ WIRE_ROPES, L, id }}>
+  (function () {
+    var root = document.getElementById(id);
+    if (!root) return;
+    var form = root.querySelector('.calc-form');
+    var errEl = root.querySelector('.calc-error');
+    var resEl = root.querySelector('.calc-result');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var d = parseFloat(form.diameter.value);
+      if (!d || d <= 0) return;
+      var construction = form.construction.value;
+      var sf = parseFloat(form.sf.value);
+      var rope = WIRE_ROPES.find(function (r) { return r.diameter_mm === d && r.construction === construction; });
+      if (!rope) {
+        var avail = [...new Set(WIRE_ROPES.filter(function (r) { return r.construction === construction; }).map(function (r) { return r.diameter_mm; }))].sort(function (a, b) { return a - b; });
+        errEl.textContent = L.noDataA + construction + L.noDataB + d + L.noDataC + avail.join(', ') + ' mm';
+        errEl.classList.remove('hidden');
+        resEl.classList.add('hidden');
+        return;
+      }
+      errEl.classList.add('hidden');
+      var wll = rope.breaking_load_tonnes / sf;
+      root.querySelector('.r-spec').textContent = rope.diameter_mm + 'mm ' + rope.construction + ' ' + rope.core;
+      root.querySelector('.r-break').textContent = rope.breaking_load_tonnes.toFixed(1) + ' t';
+      root.querySelector('.r-wll').textContent = wll.toFixed(2) + ' t';
+      root.querySelector('.r-wpm').textContent = rope.weight_kg_per_m.toFixed(2) + ' kg/m';
+      root.querySelector('.r-sf').textContent = sf + ':1';
+      var warn = root.querySelector('.r-warn');
+      if (sf < 5) {
+        warn.textContent = L.warnSfA + sf + L.warnSfB;
+        warn.classList.remove('hidden');
+      } else {
+        warn.classList.add('hidden');
+      }
+      resEl.classList.remove('hidden');
+      if (typeof gtag !== 'undefined') gtag('event', 'tool_complete', { tool_name: 'wire_rope_capacity_calculator', result_value: rope.breaking_load_tonnes, construction: construction, diameter_mm: d, page: location.pathname });
+    });
+
+    root.querySelector('.r-recalc').addEventListener('click', function () { resEl.classList.add('hidden'); });
+    root.querySelector('.r-print').addEventListener('click', function () { window.print(); });
+  })();
+</script>

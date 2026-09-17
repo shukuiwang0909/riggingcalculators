@@ -1,0 +1,107 @@
+---
+import { getDict } from '../../i18n/ui';
+import { p, TOOL_PATHS } from '../../i18n/paths';
+import { CHAIN_WLL, WEB_SLINGS } from '../../data/rigging';
+import type { Locale } from '../../config';
+import ChartHead from '../ChartHead.astro';
+import ToolShell from '../ToolShell.astro';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = getDict(lang);
+const tp = t.chartPages.sling;
+
+const colorNames: Record<string, { en: string; zh: string; hex: string }> = {
+  violet: { en: 'Violet', zh: '紫色', hex: '#8b5cf6' },
+  green: { en: 'Green', zh: '绿色', hex: '#22c55e' },
+  yellow: { en: 'Yellow', zh: '黄色', hex: '#eab308' },
+  grey: { en: 'Grey', zh: '灰色', hex: '#9ca3af' },
+  red: { en: 'Red', zh: '红色', hex: '#ef4444' },
+  brown: { en: 'Brown', zh: '棕色', hex: '#92400e' },
+  blue: { en: 'Blue', zh: '蓝色', hex: '#3b82f6' },
+  orange: { en: 'Orange', zh: '橙色', hex: '#f97316' },
+};
+---
+
+<ChartHead lang={lang} kicker={tp.kicker} title={tp.title} sub={tp.sub} />
+
+<section class="py-16 lg:py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+
+    <!-- CHAIN SLINGS -->
+    <div class="reveal">
+      <div class="mb-4">
+        <h2 class="display text-2xl text-white">{tp.chainTitle}</h2>
+        <p class="text-sm text-[#5c5c5c] mt-2 max-w-2xl">{tp.chainNote}</p>
+      </div>
+      <div class="panel overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>{t.charts.thChain}</th>
+                <th>{tp.thLegs1} 90°</th>
+                <th>{tp.thLegs2}</th>
+                <th>{tp.thLegs34}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {CHAIN_WLL.map((c) => (
+                <tr>
+                  <td>{c.dia}</td>
+                  <td>{c.wll.toFixed(2)} t</td>
+                  <td>{(c.wll * 1.4).toFixed(2)} t</td>
+                  <td>{(c.wll * 2.1).toFixed(2)} t</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEB SLINGS -->
+    <div class="reveal">
+      <div class="mb-4">
+        <h2 class="display text-2xl text-white">{tp.webTitle}</h2>
+        <p class="text-sm text-[#5c5c5c] mt-2 max-w-2xl">{tp.webNote}</p>
+      </div>
+      <div class="panel overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>{tp.thColor}</th><th>WLL</th>
+                <th>{tp.thStraight}</th><th>{tp.thChoker}</th><th>{tp.thBasket}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {WEB_SLINGS.map((w) => (
+                <tr>
+                  <td>
+                    <span class="inline-flex items-center gap-2">
+                      <span class="inline-block w-3.5 h-3.5 rounded-full border border-white/20" style={`background:${colorNames[w.color].hex}`}></span>
+                      {lang === 'zh' ? colorNames[w.color].zh : colorNames[w.color].en}
+                    </span>
+                  </td>
+                  <td>{w.wll.toFixed(1)} t</td>
+                  <td>{w.wll.toFixed(1)} t</td>
+                  <td>{(w.wll * 0.8).toFixed(1)} t</td>
+                  <td>{(w.wll * 2).toFixed(1)} t</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel p-6 reveal no-print flex flex-wrap items-center justify-between gap-4">
+      <p class="text-sm text-[#9d9d9d]">{t.sling.sub}</p>
+      <a href={p(lang, TOOL_PATHS.sling)} class="btn-safety">{t.tools.sling.name} →</a>
+    </div>
+  </div>
+</section>
+
+<ToolShell lang={lang} section="faq" faqTitle={tp.faqTitle} faqItems={t.sling.faqItems} />
+<ToolShell lang={lang} section="cta" />
