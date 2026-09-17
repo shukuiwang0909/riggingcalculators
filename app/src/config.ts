@@ -3,13 +3,13 @@ export const SITE = {
   name: 'Rigging Calculators',
   email: 'sales@riggingcalculators.com',
   /** Google Analytics 4 measurement ID. Leave empty to disable. Replace with your real ID, e.g. 'G-ABC123DEF'. */
-  gaId: '',
+  gaId: 'G-ML37SZQEZN',
   /**
    * RFQ form endpoint. Set to a Formspree / Web3Forms endpoint URL to enable direct submission.
    * When empty, the form falls back to opening a pre-filled email to SITE.email.
    * Example: 'https://formspree.io/f/xxxxxxx'
    */
-  rfqEndpoint: '',
+  rfqEndpoint: 'https://formspree.io/f/xaenyjzq',
 };
 
 export const LOCALES = ['en', 'zh'] as const;
