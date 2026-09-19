@@ -1,0 +1,185 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { LOCALES, type Locale } from '../../../config';
+import { getDict } from '../../../i18n/ui';
+import { p, TOOL_PATHS } from '../../../i18n/paths';
+import { article, faqPage, breadcrumb } from '../../../lib/jsonld';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = p(lang, '/blog/wire-rope-wll-vs-breaking-strength/');
+const DATE = '2026-09-19';
+const isZh = lang === 'zh';
+
+const meta = {
+  en: {
+    title: 'Wire Rope WLL vs Breaking Strength: The 5:1 Safety Factor Explained',
+    description: 'Understand the difference between wire rope WLL and breaking strength, why ASME B30.2 requires a 5:1 design factor, and which construction to choose for your crane.',
+  },
+  zh: {
+    title: '钢丝绳 WLL 与破断力：5:1 安全系数详解',
+    description: '详细解释钢丝绳工作载荷限制（WLL）与破断力的区别、ASME B30.2 规定的 5:1 设计系数及典型 6×19 钢丝绳规格表。',
+  },
+};
+
+const ropeRows = [
+  ['6 mm (1/4")',   '6×19 IWRC', '29',  '5.8'],
+  ['8 mm (5/16")',  '6×19 IWRC', '46',  '9.2'],
+  ['10 mm (3/8")',  '6×19 IWRC', '65',  '13'],
+  ['13 mm (1/2")',  '6×19 IWRC', '118', '23.7'],
+  ['16 mm (5/8")',  '6×19 IWRC', '186', '37.2'],
+  ['19 mm (3/4")',  '6×19 IWRC', '266', '53.3'],
+  ['22 mm (7/8")',  '6×19 IWRC', '360', '72'],
+  ['25 mm (1")',    '6×19 IWRC', '463', '92.6'],
+  ['32 mm (1-1/4")', '6×19 IWRC', '721', '144'],
+  ['38 mm (1-1/2")', '6×19 IWRC', '1032', '206'],
+];
+
+const faqItems = isZh ? [
+  { q: 'WLL 和破断力有什么区别？', a: 'WLL（工作载荷限制）= 破断力 ÷ 设计系数。ASME B30.2 要求设计系数 ≥ 5:1。例如破断力 100 kN 的钢丝绳 WLL = 20 kN。绝对不能把破断力当作工作载荷使用。' },
+  { q: '为什么安全系数是 5:1 而不是 2:1？', a: '5:1 覆盖了：动载（起重机启停约 2×）、疲劳磨损（长期使用后承载力可降至原始值 60%）、滑轮弯曲损耗（D/d 比不足时）和制造偏差。实际上一根已磨损的绳索，5:1 的真实安全余量约为 3:1。' },
+  { q: '6×19 和 6×37 钢丝绳有什么区别？', a: '6×19（15–26 根子线）：起重机吊绳行业标准，耐磨与柔韧性平衡最佳。6×37（27–49 根子线）：更柔软，绕滑轮弯曲损耗较小，但疲劳寿命短于 6×19。' },
+  { q: 'ASME B30.2 对 D/d 比有何要求？', a: 'ASME B30.2 要求起重机吊绳卷筒和滑轮 D/d（滑轮直径/绳径）≥ 16:1，推荐 ≥ 18:1。D/d 过小会加速弯曲疲劳，显著缩短绳索寿命。' },
+  { q: '钢丝绳什么时候需要报废？', a: 'ASME B30.2 报废判据：一个捻距内断丝 6 根（随机分布）或一股内断丝 3 根；腐蚀坑、绳芯损坏外露；打结、压扁、笼状变形、热色变；外层钢丝直径磨损超 1/3；绳端配件过度磨损。' },
+] : [
+  { q: 'What is the difference between WLL and breaking strength?', a: 'WLL (Working Load Limit) = Breaking Strength ÷ Design Factor. ASME B30.2 requires a minimum design factor of 5:1. A rope with 100 kN breaking strength has a WLL of 20 kN. Never load a rope to its breaking strength.' },
+  { q: 'Why is the safety factor 5:1 and not 2:1?', a: 'The 5:1 factor covers: dynamic loads (crane starts/stops up to 2×), fatigue degradation (a worn rope in service may retain only 60% of original strength), sheave bending losses, and manufacturing variation. A worn in-service rope with 5:1 design factor still has roughly 3:1 real margin.' },
+  { q: 'What is the difference between 6×19 and 6×37 wire rope?', a: '6×19 (15–26 wires per strand): the overhead crane industry standard — best balance of abrasion resistance and flexibility. 6×37 (27–49 wires): more flexible with lower bending losses but shorter fatigue life. For general hoisting, 6×19 IWRC is the default choice.' },
+  { q: 'What D/d ratio does ASME B30.2 require?', a: 'ASME B30.2 requires drum and sheave D/d (sheave diameter ÷ rope diameter) ≥ 16:1 for crane hoisting ropes, with 18:1 recommended. Operating below 16:1 accelerates bending fatigue and dramatically reduces rope life.' },
+  { q: 'When should I retire a wire rope?', a: 'ASME B30.2 retirement criteria: 6 randomly distributed broken wires per lay or 3 in one strand; corrosion pitting; visible core damage; kinking, bird-caging, or heat marks; more than 1/3 reduction in outer wire diameter; severely worn end fittings.' },
+];
+
+const jsonLd = [
+  article(meta[lang].title, meta[lang].description, path, lang, DATE),
+  faqPage(faqItems),
+  breadcrumb([
+    { name: t.nav.home, path: p(lang, '/') },
+    { name: isZh ? '知识库' : 'Blog', path: p(lang, '/blog/') },
+    { name: isZh ? 'WLL 与破断力' : 'WLL vs Breaking Strength', path },
+  ]),
+];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+
+    <nav class="micro mb-8 flex items-center gap-2 no-print">
+      <a href={p(lang, '/')} class="hover:text-[#f27e40] transition-colors">{t.nav.home}</a>
+      <span>›</span>
+      <a href={p(lang, '/blog/')} class="hover:text-[#f27e40] transition-colors">{isZh ? '知识库' : 'Blog'}</a>
+      <span>›</span>
+      <span class="!text-[#9d9d9d] truncate">{isZh ? 'WLL 与破断力' : 'WLL vs Breaking Strength'}</span>
+    </nav>
+
+    <header class="mb-10 reveal">
+      <div class="inline-flex items-center gap-2.5 border border-[#f45500]/40 bg-[#f45500]/10 rounded-full px-4 py-1.5 mb-6">
+        <span class="pulse-dot"></span>
+        <span class="micro !text-[#f27e40]">{isZh ? 'ASME B30.2 · 钢丝绳' : 'ASME B30.2 · WIRE ROPE'}</span>
+      </div>
+      <h1 class="display text-4xl sm:text-5xl text-white mb-5">{meta[lang].title}</h1>
+      <div class="flex items-center gap-4 text-sm text-[#5c5c5c]">
+        <time datetime={DATE}>{DATE}</time>
+        <span>·</span>
+        <span>{isZh ? '约 6 分钟阅读' : '6 min read'}</span>
+        <span>·</span>
+        <span>ASME B30.2 / ISO 2408</span>
+      </div>
+    </header>
+
+    <div class="panel border-l-4 border-[#f45500] p-6 mb-10 reveal">
+      <div class="micro text-[#f27e40] mb-2">{isZh ? '核心结论' : 'KEY ANSWER'}</div>
+      {isZh ? (
+        <p class="text-white font-semibold leading-relaxed">
+          WLL = 破断力 ÷ 5。破断力是实验室条件下绳索断裂的载荷，WLL 是现场允许承受的最大载荷。两者差 5 倍——永远不能以破断力为工作载荷。
+        </p>
+      ) : (
+        <p class="text-white font-semibold leading-relaxed">
+          WLL = Breaking Strength ÷ 5. Breaking strength is the load at which a new rope fails in a lab. WLL is the maximum load it may carry in service. The two values differ by a factor of 5 — never use breaking strength as a working load.
+        </p>
+      )}
+    </div>
+
+    <div class="prose-article space-y-10 reveal">
+
+      <section>
+        <h2 class="display text-2xl text-white mb-4">{isZh ? '6×19 IWRC 钢丝绳规格表（ISO 2408 / 1960 N/mm²）' : '6×19 IWRC Wire Rope Specs (ISO 2408 / 1960 N/mm²)'}</h2>
+        {isZh ? (
+          <p class="text-[#9d9d9d] leading-relaxed mb-4">IPS/EIPS 级，IWRC（独立钢芯），右捻规则捻。WLL 按 5:1 设计系数。</p>
+        ) : (
+          <p class="text-[#9d9d9d] leading-relaxed mb-4">Improved plow steel (IPS/EIPS) grade, independent wire rope core (IWRC), right regular lay. WLL at 5:1 design factor.</p>
+        )}
+        <div class="panel overflow-hidden">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>{isZh ? '绳径' : 'DIAMETER'}</th>
+                <th>{isZh ? '结构' : 'CONSTRUCTION'}</th>
+                <th>{isZh ? '破断力 (kN)' : 'BREAKING (kN)'}</th>
+                <th>{isZh ? 'WLL (kN)' : 'WLL (kN)'}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ropeRows.map(([dia, constr, brk, wll]) => (
+                <tr>
+                  <td class="mono text-[#f45500]">{dia}</td>
+                  <td class="text-[#5c5c5c] text-xs">{constr}</td>
+                  <td>{brk}</td>
+                  <td class="text-white font-semibold">{wll}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-[#5c5c5c] mt-3">{isZh ? '参考值，以钢丝绳厂商产品检测书为准，使用前核实。' : 'Reference values. Verify against rope manufacturer test certificate before use.'}</p>
+      </section>
+
+      <section>
+        <h2 class="display text-2xl text-white mb-4">{isZh ? '5:1 安全系数涵盖哪些因素？' : 'What Does the 5:1 Safety Factor Cover?'}</h2>
+        <div class="panel overflow-hidden">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>{isZh ? '因素' : 'FACTOR'}</th>
+                <th>{isZh ? '等效影响（约）' : 'APPROXIMATE IMPACT'}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>{isZh ? '起重机启停动载' : 'Crane start/stop dynamic load'}</td><td>{isZh ? '最大可达静载的 2×' : 'Up to 2× static load'}</td></tr>
+              <tr><td>{isZh ? '弯曲疲劳（滑轮/卷筒）' : 'Bending fatigue (sheaves/drum)'}</td><td>{isZh ? 'D/d 不足时强度损失 20–40%' : '20–40% strength loss at low D/d ratios'}</td></tr>
+              <tr><td>{isZh ? '磨损与腐蚀' : 'Abrasion & corrosion'}</td><td>{isZh ? '使用中承载力可降至 60%' : 'In-service capacity can fall to 60%'}</td></tr>
+              <tr><td>{isZh ? '制造偏差' : 'Manufacturing variation'}</td><td>{isZh ? '破断力有一定统计分散' : 'Statistical scatter in breaking load'}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="panel border border-[#f45500]/30 p-6 text-center">
+        <p class="text-[#9d9d9d] mb-4">{isZh ? '查询钢丝绳 WLL 与破断力' : 'Look up wire rope WLL and breaking load'}</p>
+        <a href={p(lang, TOOL_PATHS.rope)} class="btn-safety inline-block">
+          {isZh ? '钢丝绳容量计算器 →' : 'Wire Rope Capacity Calculator →'}
+        </a>
+      </div>
+
+      <section>
+        <h2 class="display text-2xl text-white mb-6">{isZh ? '常见问题' : 'Frequently Asked Questions'}</h2>
+        <div class="space-y-px border border-[#1e1e1e]">
+          {faqItems.map((f) => (
+            <details class="group bg-[#0a0a0a] p-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none">
+                <span class="font-semibold text-white group-hover:text-[#f27e40] transition-colors pr-6">{f.q}</span>
+                <span class="faq-plus mono text-[#f45500] text-xl shrink-0" aria-hidden="true">+</span>
+              </summary>
+              <p class="mt-4 text-[#9d9d9d] leading-relaxed text-sm">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <p class="text-xs text-[#5c5c5c] border-t border-[#1e1e1e] pt-6">{t.common.disclaimer}</p>
+    </div>
+  </article>
+</Base>

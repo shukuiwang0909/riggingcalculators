@@ -1,0 +1,192 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { LOCALES, type Locale } from '../../../config';
+import { getDict } from '../../../i18n/ui';
+import { p, TOOL_PATHS } from '../../../i18n/paths';
+import { article, faqPage, breadcrumb } from '../../../lib/jsonld';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = p(lang, '/blog/shackle-inspection-guide/');
+const DATE = '2026-09-19';
+const isZh = lang === 'zh';
+
+const meta = {
+  en: {
+    title: 'Shackle Inspection Guide: ASME B30.26 Pre-Use & Periodic Checks',
+    description: 'Step-by-step shackle inspection checklist per ASME B30.26: pre-use visual checks, periodic inspection criteria, and concrete rejection standards for riggers.',
+  },
+  zh: {
+    title: '卸扣检验指南：ASME B30.26 使用前检查与定期检验清单',
+    description: '依据 ASME B30.26 的完整卸扣检验清单，涵盖使用前目视检查、定期检验标准，以及明确的报废判据，适用于现场起重人员。',
+  },
+};
+
+const faqItems = isZh ? [
+  { q: '卸扣应该多久检查一次？', a: 'ASME B30.26 要求每次使用前进行目视检查；频繁作业环境（每班使用）需每月进行一次更详细的定期检验；特殊环境（腐蚀、冲击）或有迹象显示损坏时随时检验。' },
+  { q: '卸扣有裂纹怎么办？', a: '立即停用。任何目视可见的裂纹都是直接报废判据（ASME B30.26）。不得对卸扣进行焊接、磨削修复或加热整形——损坏的卸扣必须直接废弃。' },
+  { q: '销轴弯曲多少度需要报废？', a: 'ASME B30.26 规定，销轴或卸扣体弯曲变形超过 10°，应从服役中移除。实际操作中，任何肉眼可见的弯曲均视为不合格。' },
+  { q: '卸扣缺少 WLL 标记还能用吗？', a: '不能。ASME B30.26 明确要求卸扣体上必须有清晰的 WLL 标记。无法读取 WLL 的卸扣必须从吊装作业中移除，不得使用。' },
+  { q: '腐蚀的卸扣能继续使用吗？', a: '表面锈蚀经清洁后，若无可见点蚀或截面减薄，通常可继续使用。若腐蚀坑深度超过 1 mm，或截面积减少超过 10%，则应报废。海洋环境建议使用不锈钢或热镀锌卸扣并缩短检验周期。' },
+] : [
+  { q: 'How often should shackles be inspected?', a: 'ASME B30.26 requires a pre-use visual check before every lift. Frequent-service equipment (used every shift) needs a more thorough periodic inspection monthly. Inspect immediately after any event involving shock loading, exposure to corrosive agents, or suspected damage.' },
+  { q: 'What do I do if I find a crack in a shackle?', a: 'Remove it from service immediately. Any visible crack is a direct rejection criterion under ASME B30.26. Do not attempt to repair shackles by welding, grinding, or heat straightening — a cracked shackle must be discarded.' },
+  { q: 'How much pin bend is acceptable before rejection?', a: 'ASME B30.26 states that a shackle should be removed from service if the pin or bow shows a bend or distortion greater than 10° from its original axis. In practice, any visually apparent deformation warrants rejection.' },
+  { q: 'Can I use a shackle with no WLL marking?', a: 'No. ASME B30.26 explicitly requires shackles to be marked with their WLL. A shackle whose WLL marking has become illegible must be removed from rigging service and not returned until re-marked by the manufacturer or retired.' },
+  { q: 'Is a corroded shackle still safe to use?', a: 'Surface rust that cleans off with no visible pitting or cross-section reduction is generally acceptable. Reject any shackle with corrosion pits deeper than approximately 1 mm, or where more than 10% of the cross-section appears reduced. Use stainless or hot-dip galvanized shackles in marine or chemical environments.' },
+];
+
+const preUseChecks = isZh ? [
+  { item: 'WLL 标记', pass: '清晰可读，完整无缺', fail: '磨损不可读、无标记' },
+  { item: '卸扣体', pass: '表面无裂纹、无变形', fail: '可见裂纹、弯曲、腐蚀坑' },
+  { item: '销轴', pass: '直、无弯曲、螺纹完好', fail: '弯曲 > 10°、螺纹损坏' },
+  { item: '销轴固定', pass: '完全旋入体内、防退丝到位或螺母+开口销锁紧', fail: '未完全旋入、未防退' },
+  { item: '截面积', pass: '无明显磨损（<5% 减薄）', fail: '磨损 > 10% 截面积' },
+  { item: '热损伤', pass: '无热色变（蓝/黑色变）', fail: '可见热色变或碳化迹象' },
+] : [
+  { item: 'WLL marking', pass: 'Legible, complete, matches lift plan', fail: 'Worn off, missing, or illegible' },
+  { item: 'Bow / body', pass: 'No cracks, no visible deformation', fail: 'Any crack, bend, or corrosion pit' },
+  { item: 'Pin', pass: 'Straight, threads intact', fail: 'Bent > 10°, damaged threads' },
+  { item: 'Pin security', pass: 'Fully seated and moused / nut + cotter fitted', fail: 'Not fully threaded in, no mousing' },
+  { item: 'Cross-section', pass: 'No significant wear (< 5% reduction)', fail: 'Wear exceeds 10% of cross-section' },
+  { item: 'Heat damage', pass: 'No heat discoloration (blue/black)', fail: 'Any visible discoloration or charring' },
+];
+
+const jsonLd = [
+  article(meta[lang].title, meta[lang].description, path, lang, DATE),
+  faqPage(faqItems),
+  breadcrumb([
+    { name: t.nav.home, path: p(lang, '/') },
+    { name: isZh ? '知识库' : 'Blog', path: p(lang, '/blog/') },
+    { name: isZh ? '卸扣检验指南' : 'Shackle Inspection Guide', path },
+  ]),
+];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+
+    <nav class="micro mb-8 flex items-center gap-2 no-print">
+      <a href={p(lang, '/')} class="hover:text-[#f27e40] transition-colors">{t.nav.home}</a>
+      <span>›</span>
+      <a href={p(lang, '/blog/')} class="hover:text-[#f27e40] transition-colors">{isZh ? '知识库' : 'Blog'}</a>
+      <span>›</span>
+      <span class="!text-[#9d9d9d] truncate">{isZh ? '卸扣检验指南' : 'Shackle Inspection Guide'}</span>
+    </nav>
+
+    <header class="mb-10 reveal">
+      <div class="inline-flex items-center gap-2.5 border border-[#f45500]/40 bg-[#f45500]/10 rounded-full px-4 py-1.5 mb-6">
+        <span class="pulse-dot"></span>
+        <span class="micro !text-[#f27e40]">{isZh ? 'ASME B30.26 · 安全检验' : 'ASME B30.26 · SAFETY INSPECTION'}</span>
+      </div>
+      <h1 class="display text-4xl sm:text-5xl text-white mb-5">{meta[lang].title}</h1>
+      <div class="flex items-center gap-4 text-sm text-[#5c5c5c]">
+        <time datetime={DATE}>{DATE}</time>
+        <span>·</span>
+        <span>{isZh ? '约 6 分钟阅读' : '6 min read'}</span>
+        <span>·</span>
+        <span>ASME B30.26</span>
+      </div>
+    </header>
+
+    <div class="panel border-l-4 border-[#f45500] p-6 mb-10 reveal">
+      <div class="micro text-[#f27e40] mb-2">{isZh ? '核心结论' : 'KEY ANSWER'}</div>
+      {isZh ? (
+        <p class="text-white font-semibold leading-relaxed">
+          每次起吊前目视检查：WLL 标记清晰、销轴完全旋入且防退、无裂纹/变形/热色变/腐蚀坑。任何一项不合格立即停用。
+        </p>
+      ) : (
+        <p class="text-white font-semibold leading-relaxed">
+          Before every lift: check that the WLL marking is legible, the pin is fully seated and secured, and there are no cracks, deformation, heat marks, or deep corrosion pits. Fail on any one criterion — remove from service immediately.
+        </p>
+      )}
+    </div>
+
+    <div class="prose-article space-y-10 reveal">
+
+      <section>
+        <h2 class="display text-2xl text-white mb-4">{isZh ? '使用前检查清单（每次起吊前）' : 'Pre-Use Inspection Checklist (Before Every Lift)'}</h2>
+        <div class="panel overflow-hidden">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>{isZh ? '检查项目' : 'CHECK ITEM'}</th>
+                <th class="text-green-400">{isZh ? '合格' : 'PASS'}</th>
+                <th class="text-[#f45500]">{isZh ? '报废/停用' : 'REJECT'}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {preUseChecks.map(({ item, pass, fail }) => (
+                <tr>
+                  <td class="text-white font-medium">{item}</td>
+                  <td class="text-[#9d9d9d] text-sm">{pass}</td>
+                  <td class="text-[#f45500] text-sm">{fail}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="display text-2xl text-white mb-4">{isZh ? '定期检验（每月/定期）' : 'Periodic Inspection (Monthly / Scheduled)'}</h2>
+        {isZh ? (
+          <p class="text-[#9d9d9d] leading-relaxed mb-4">除使用前目视检查外，ASME B30.26 要求对频繁服役的吊具进行更深入的定期检验，频率取决于服役强度和环境条件。</p>
+        ) : (
+          <p class="text-[#9d9d9d] leading-relaxed mb-4">Beyond the pre-use visual, ASME B30.26 requires a more thorough periodic inspection for frequently used hardware. Frequency depends on service intensity and environment.</p>
+        )}
+        <ol class="space-y-4">
+          {(isZh ? [
+            { n: '1', title: '清洁检查', body: '彻底清除污垢、油脂和腐蚀产物，确保检查不被遮蔽。' },
+            { n: '2', title: '尺寸检查', body: '用卡钳测量销轴和弓形体圆截面的关键截面积，与新件尺寸比对。截面减少 > 10% 报废。' },
+            { n: '3', title: '螺纹检查', body: '检查销轴和体内螺纹的磨损、乱牙或腐蚀。无法完全旋入的销轴必须更换。' },
+            { n: '4', title: '功能测试', body: '手工旋转销轴，确认顺滑、无卡涩、无异响，旋至底时无过大间隙。' },
+            { n: '5', title: '记录', body: '记录检验日期、检验人员、发现的问题及处理结果。保存至少 12 个月。' },
+          ] : [
+            { n: '1', title: 'Clean thoroughly', body: 'Remove all dirt, grease, and corrosion products before inspection — debris can conceal cracks and pitting.' },
+            { n: '2', title: 'Measure critical sections', body: 'Use calipers to measure pin diameter and bow cross-sections at wear points. Compare to manufacturer specs. Reject if reduced > 10%.' },
+            { n: '3', title: 'Inspect threads', body: 'Check pin and body threads for wear, cross-threading, or corrosion. A pin that will not seat fully must be replaced.' },
+            { n: '4', title: 'Functional test', body: 'Manually thread pin in and out. It should turn smoothly with no binding or rough spots. No excessive play when fully seated.' },
+            { n: '5', title: 'Document', body: 'Record inspection date, inspector, findings, and disposition. Retain records for at least 12 months or per applicable safety management system.' },
+          ]).map((step) => (
+            <li class="flex gap-5">
+              <span class="mono text-[#f45500] text-2xl font-bold shrink-0 w-8">{step.n}</span>
+              <div>
+                <div class="font-semibold text-white mb-1">{step.title}</div>
+                <p class="text-[#9d9d9d] text-sm leading-relaxed">{step.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <div class="panel border border-[#f45500]/30 p-6 text-center">
+        <p class="text-[#9d9d9d] mb-4">{isZh ? '计算吊装所需卸扣 WLL' : 'Calculate the shackle WLL you need for your lift'}</p>
+        <a href={p(lang, TOOL_PATHS.shackle)} class="btn-safety inline-block">
+          {isZh ? '卸扣尺寸计算器 →' : 'Shackle Size Calculator →'}
+        </a>
+      </div>
+
+      <section>
+        <h2 class="display text-2xl text-white mb-6">{isZh ? '常见问题' : 'Frequently Asked Questions'}</h2>
+        <div class="space-y-px border border-[#1e1e1e]">
+          {faqItems.map((f) => (
+            <details class="group bg-[#0a0a0a] p-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none">
+                <span class="font-semibold text-white group-hover:text-[#f27e40] transition-colors pr-6">{f.q}</span>
+                <span class="faq-plus mono text-[#f45500] text-xl shrink-0" aria-hidden="true">+</span>
+              </summary>
+              <p class="mt-4 text-[#9d9d9d] leading-relaxed text-sm">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <p class="text-xs text-[#5c5c5c] border-t border-[#1e1e1e] pt-6">{t.common.disclaimer}</p>
+    </div>
+  </article>
+</Base>

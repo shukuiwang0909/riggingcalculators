@@ -1,0 +1,197 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { LOCALES, type Locale } from '../../../config';
+import { getDict } from '../../../i18n/ui';
+import { p, TOOL_PATHS } from '../../../i18n/paths';
+import { article, faqPage, breadcrumb } from '../../../lib/jsonld';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = getDict(lang);
+const path = p(lang, '/blog/shackle-size-selection-guide/');
+const DATE = '2026-09-19';
+const isZh = lang === 'zh';
+
+const meta = {
+  en: {
+    title: 'How to Select the Right Shackle Size: WLL Chart & 6-Step Guide',
+    description: 'Complete shackle sizing guide with WLL table from 3/16" to 2", ASME B30.26 safety factors, bow vs dee shackle selection, and pre-lift inspection checklist.',
+  },
+  zh: {
+    title: '卸扣尺寸选型指南：WLL 参数表与六步选型流程',
+    description: '完整卸扣选型指南，含 5 mm–50 mm 规格 WLL 表、ASME B30.26 安全系数说明、弓形卸扣与 D 形卸扣对比，以及起吊前检查清单。',
+  },
+};
+
+const wllRows = [
+  ['5 mm (3/16")',  '0.33',  '0.15', '0.75'],
+  ['6 mm (1/4")',   '0.50',  '0.23', '1.14'],
+  ['8 mm (5/16")',  '0.75',  '0.34', '1.71'],
+  ['10 mm (3/8")',  '1.00',  '0.45', '2.27'],
+  ['11 mm (7/16")', '1.50',  '0.68', '3.41'],
+  ['13 mm (1/2")',  '2.00',  '0.91', '4.54'],
+  ['16 mm (5/8")',  '3.25',  '1.47', '7.35'],
+  ['19 mm (3/4")',  '4.75',  '2.16', '10.8'],
+  ['22 mm (7/8")',  '6.50',  '2.95', '14.7'],
+  ['25 mm (1")',    '8.50',  '3.86', '19.3'],
+  ['32 mm (1-1/4")', '13.5', '6.12', '30.6'],
+  ['38 mm (1-1/2")', '17.0', '7.71', '38.6'],
+  ['50 mm (2")',    '35.0',  '15.9', '79.4'],
+];
+
+const faqItems = isZh ? [
+  { q: '起吊 5 吨需要多大的卸扣？', a: '单腿垂直起吊 5 吨，至少选用 WLL 5 t 的卸扣（16 mm 销轴，WLL 3.25 US 短吨/1.47 t），考虑 1.25× 安全余量时，推荐选 WLL ≥ 6.25 t（19 mm 销轴）。有吊索角度时还需额外放大。' },
+  { q: '弓形卸扣与 D 形卸扣有什么区别？', a: '弓形卸扣（Omega 型）卸扣环体为圆弧形，可承受多方向载荷，适合多腿吊索和吊钩连接。D 形卸扣体形细窄，仅适合直线受力。侧向施力于 D 形卸扣可使 WLL 降低 50%。' },
+  { q: 'ASME B30.26 对卸扣的安全系数要求是多少？', a: 'ASME B30.26 要求卸扣设计系数为 5:1（破断力 ≥ 5× WLL）。出厂时已按此系数标注 WLL，现场选型无需再除以 5。' },
+  { q: '螺旋销是否需要打安全丝？', a: '是的。在振动、旋转或长时间吊装中，螺旋销容易松退，必须用 2–3 mm 铁丝穿过销孔穿过卸扣体进行防退固定。长期固定吊装建议使用锁紧销（bolt type）。' },
+  { q: '卸扣销应该装在哪个方向？', a: '载荷应施加在卸扣弓形体上，销轴仅起关闭作用，不承受主载荷。切勿将销轴穿入吊索或链环，也不可让销轴承受弯矩。' },
+] : [
+  { q: 'What size shackle do I need for a 5-tonne lift?', a: 'For a single-leg vertical pick, select a shackle with WLL ≥ 5 t. With a 1.25× working margin, choose WLL ≥ 6.25 t (19 mm / 3/4" pin, rated 4.75 US tons / 2.16 t). Add an angle factor if sling legs are not vertical.' },
+  { q: 'What is the difference between a bow shackle and a dee shackle?', a: 'A bow (anchor/omega) shackle has a rounded body rated for multi-directional loads — use it for multi-leg slings and crane hooks. A dee shackle has a narrow D-body for straight in-line loads only; side-loading can reduce WLL by 50%.' },
+  { q: 'What safety factor do ASME B30.26 shackles use?', a: 'ASME B30.26 requires a 5:1 design factor — the breaking load is at least 5× WLL. This is already baked into published WLL ratings; do not divide the WLL again at the jobsite.' },
+  { q: 'Should I mouse a screw-pin shackle?', a: 'Yes, whenever vibration, load rotation, or duration could unscrew the pin. Thread 2–3 mm wire through the pin hole and around the shackle body. For overhead crane service, use bolt-type (nut + cotter) instead.' },
+  { q: 'Which way should the shackle pin face?', a: 'The load goes on the bow — the pin only closes the gate. Never thread a sling through the pin hole or apply load directly to the pin.' },
+];
+
+const jsonLd = [
+  article(meta[lang].title, meta[lang].description, path, lang, DATE),
+  faqPage(faqItems),
+  breadcrumb([
+    { name: t.nav.home, path: p(lang, '/') },
+    { name: isZh ? '知识库' : 'Blog', path: p(lang, '/blog/') },
+    { name: isZh ? '卸扣选型指南' : 'Shackle Size Selection Guide', path },
+  ]),
+];
+---
+
+<Base lang={lang} title={meta[lang].title} description={meta[lang].description} path={path} jsonLd={jsonLd}>
+  <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+
+    <nav class="micro mb-8 flex items-center gap-2 no-print" aria-label="Breadcrumb">
+      <a href={p(lang, '/')} class="hover:text-[#f27e40] transition-colors">{t.nav.home}</a>
+      <span>›</span>
+      <a href={p(lang, '/blog/')} class="hover:text-[#f27e40] transition-colors">{isZh ? '知识库' : 'Blog'}</a>
+      <span>›</span>
+      <span class="!text-[#9d9d9d] truncate">{isZh ? '卸扣选型指南' : 'Shackle Size Selection Guide'}</span>
+    </nav>
+
+    <header class="mb-10 reveal">
+      <div class="inline-flex items-center gap-2.5 border border-[#f45500]/40 bg-[#f45500]/10 rounded-full px-4 py-1.5 mb-6">
+        <span class="pulse-dot"></span>
+        <span class="micro !text-[#f27e40]">{isZh ? 'ASME B30.26 · 吊具选型' : 'ASME B30.26 · RIGGING HARDWARE'}</span>
+      </div>
+      <h1 class="display text-4xl sm:text-5xl text-white mb-5">{meta[lang].title}</h1>
+      <div class="flex items-center gap-4 text-sm text-[#5c5c5c]">
+        <time datetime={DATE}>{DATE}</time>
+        <span>·</span>
+        <span>{isZh ? '约 7 分钟阅读' : '7 min read'}</span>
+        <span>·</span>
+        <span>ASME B30.26</span>
+      </div>
+    </header>
+
+    <div class="panel border-l-4 border-[#f45500] p-6 mb-10 reveal">
+      <div class="micro text-[#f27e40] mb-2">{isZh ? '核心结论' : 'KEY ANSWER'}</div>
+      {isZh ? (
+        <p class="text-white font-semibold leading-relaxed">
+          选用 WLL ≥ 实际吊索腿力的卸扣，腿力 = （总载荷 ÷ 吊腿数）÷ sin(θ)。弓形体承受载荷，D 形仅用于直线吊装，弧形多向受力必须用弓形卸扣。
+        </p>
+      ) : (
+        <p class="text-white font-semibold leading-relaxed">
+          Select a shackle where WLL ≥ leg tension, where leg tension = (gross load ÷ number of legs) ÷ sin(θ). Use a bow shackle for multi-directional loads; dee shackles for straight in-line pulls only.
+        </p>
+      )}
+    </div>
+
+    <div class="prose-article space-y-10 reveal">
+
+      <section>
+        <h2 class="display text-2xl text-white mb-4">{isZh ? '卸扣 WLL 尺寸表（ASME B30.26）' : 'Shackle WLL Size Chart (ASME B30.26)'}</h2>
+        {isZh ? (
+          <p class="text-[#9d9d9d] leading-relaxed mb-4">下表为碳钢弓形螺旋销卸扣 WLL，设计系数 5:1，破断力 = 5 × WLL。</p>
+        ) : (
+          <p class="text-[#9d9d9d] leading-relaxed mb-4">Carbon steel screw-pin anchor shackles, 5:1 design factor. Breaking load ≈ 5 × WLL.</p>
+        )}
+        <div class="panel overflow-hidden">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>{isZh ? '销轴直径' : 'PIN DIAMETER'}</th>
+                <th>{isZh ? 'WLL (美短吨)' : 'WLL (US TONS)'}</th>
+                <th>{isZh ? 'WLL (公吨)' : 'WLL (TONNES)'}</th>
+                <th>{isZh ? '破断力 (公吨)' : 'BREAK LOAD (T)'}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {wllRows.map(([pin, wll_us, wll_t, bl]) => (
+                <tr>
+                  <td class="mono text-[#f45500]">{pin}</td>
+                  <td>{wll_us}</td>
+                  <td class="text-white font-semibold">{wll_t}</td>
+                  <td class="text-[#5c5c5c]">{bl}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-[#5c5c5c] mt-3">{isZh ? '数据源：ASME B30.26 / Crosby/CM 产品目录。合金卸扣参数不同，以厂商数据为准。' : 'Source: ASME B30.26 / Crosby & CM catalogs. Alloy shackles differ — verify manufacturer data.'}</p>
+      </section>
+
+      <section>
+        <h2 class="display text-2xl text-white mb-4">{isZh ? '六步选型流程' : '6-Step Selection Process'}</h2>
+        <ol class="space-y-5">
+          {(isZh ? [
+            { n: '1', title: '确定总载荷', body: '取起吊物件的总重量，动态起吊（起重机启停）加计 15–25% 动载系数；海洋环境加计 50%。' },
+            { n: '2', title: '计算每腿腿力', body: '腿力 T = （总载荷 ÷ 吊腿数）÷ sin(θ)，θ 为吊索与水平面夹角。垂直吊时 sin(90°) = 1，腿力最小。' },
+            { n: '3', title: '施加设计余量', body: 'ASME B30.26 的 WLL 已含 5:1 系数，不需再除以 5。对重复作业或关键吊装，选用 WLL ≥ 1.25 × T 的卸扣。' },
+            { n: '4', title: '选弓形或 D 形', body: '多腿吊索、吊钩、旋转吊环 → 弓形卸扣。直线单腿，偏角 < 5° → D 形卸扣。有侧向力时必须用弓形。' },
+            { n: '5', title: '选螺旋销或锁紧销', body: '螺旋销快速拆装，振动场合需打安全丝。锁紧销（螺母 + 开口销）用于起重机悬挂、长期吊装、振动环境。' },
+            { n: '6', title: '起吊前检查', body: 'WLL 标记清晰、销轴完全旋入并固定、无裂纹/变形/腐蚀坑/热色变、销轴位置正确（载荷在弓形体上）。' },
+          ] : [
+            { n: '1', title: 'Determine the gross load', body: 'Start with the lifted weight. Add 15–25% dynamic allowance for crane starts/stops, or 50% for marine/shock loading.' },
+            { n: '2', title: 'Calculate each leg tension', body: 'T = (gross load ÷ legs) ÷ sin(θ), where θ is the sling angle from horizontal. At 90° (vertical) sin = 1.0 — minimum tension.' },
+            { n: '3', title: 'Apply a design margin', body: 'WLL already reflects the 5:1 factor — do not divide again. For critical or repetitive lifts, select shackle where WLL ≥ 1.25 × T.' },
+            { n: '4', title: 'Choose bow vs dee', body: 'Multi-leg slings, crane hooks, swivel eyes → bow shackle. Straight in-line pull, <5° off-axis → dee shackle. Any angular load requires bow.' },
+            { n: '5', title: 'Choose screw pin vs bolt type', body: 'Screw pin: fast, mouse it in vibration. Bolt type (nut + cotter): required for overhead crane service and anywhere pin rotation is possible.' },
+            { n: '6', title: 'Pre-lift check', body: 'WLL marking legible, pin fully seated and secured, no cracks / deformation / pitting / heat marks, load on bow not pin.' },
+          ]).map((step) => (
+            <li class="flex gap-5">
+              <span class="mono text-[#f45500] text-2xl font-bold shrink-0 w-8">{step.n}</span>
+              <div>
+                <div class="font-semibold text-white mb-1">{step.title}</div>
+                <p class="text-[#9d9d9d] text-sm leading-relaxed">{step.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <div class="panel border border-[#f45500]/30 p-6 text-center">
+        <p class="text-[#9d9d9d] mb-4">{isZh ? '按载荷和吊索角度计算所需卸扣 WLL' : 'Calculate required shackle WLL from load and sling angle'}</p>
+        <a href={p(lang, TOOL_PATHS.shackle)} class="btn-safety inline-block">
+          {isZh ? '卸扣尺寸计算器 →' : 'Shackle Size Calculator →'}
+        </a>
+      </div>
+
+      <section>
+        <h2 class="display text-2xl text-white mb-6">{isZh ? '常见问题' : 'Frequently Asked Questions'}</h2>
+        <div class="space-y-px border border-[#1e1e1e]">
+          {faqItems.map((f) => (
+            <details class="group bg-[#0a0a0a] p-6">
+              <summary class="flex items-center justify-between cursor-pointer list-none">
+                <span class="font-semibold text-white group-hover:text-[#f27e40] transition-colors pr-6">{f.q}</span>
+                <span class="faq-plus mono text-[#f45500] text-xl shrink-0" aria-hidden="true">+</span>
+              </summary>
+              <p class="mt-4 text-[#9d9d9d] leading-relaxed text-sm">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <p class="text-xs text-[#5c5c5c] border-t border-[#1e1e1e] pt-6">{t.common.disclaimer}</p>
+    </div>
+  </article>
+</Base>

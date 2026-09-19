@@ -24,6 +24,9 @@ export const BLOG_PATHS = {
   index: '/blog/',
   slingSpreader: '/blog/sling-angle-vs-spreader-beam/',
   chainInspection: '/blog/chain-sling-inspection-checklist/',
+  shackleGuide: '/blog/shackle-size-selection-guide/',
+  wireRopeWll: '/blog/wire-rope-wll-vs-breaking-strength/',
+  shackleInspection: '/blog/shackle-inspection-guide/',
 } as const;
 
 export const LEGAL_PATHS = {
