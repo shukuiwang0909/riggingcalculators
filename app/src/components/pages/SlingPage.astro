@@ -1,6 +1,6 @@
 ---
 import { getDict } from '../../i18n/ui';
-import { p, TOOL_PATHS, CHART_PATHS } from '../../i18n/paths';
+import { p, TOOL_PATHS, CHART_PATHS, BLOG_PATHS } from '../../i18n/paths';
 import { CHAIN_WLL, TENSION_FACTORS } from '../../data/rigging';
 import type { Locale } from '../../config';
 import ToolShell from '../ToolShell.astro';
@@ -11,6 +11,7 @@ interface Props { lang: Locale; }
 const { lang } = Astro.props;
 const t = getDict(lang);
 const selfPath = p(lang, TOOL_PATHS.sling);
+const isZh = lang === 'zh';
 
 const factorNotes = [t.sling.notes.n90, t.sling.notes.n60, t.sling.notes.n45, t.sling.notes.n30];
 ---
@@ -96,4 +97,17 @@ const factorNotes = [t.sling.notes.n90, t.sling.notes.n60, t.sling.notes.n45, t.
 
 <ToolShell lang={lang} section="faq" faqTitle={t.sling.faqTitle} faqItems={t.sling.faqItems} />
 <ToolShell lang={lang} section="related" exclude={selfPath} />
+
+<section class="py-12 border-t border-[#1e1e1e] no-print">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="micro mb-6 flex items-center gap-3"><span class="text-[#f45500]">::</span> {isZh ? '延伸阅读' : 'FURTHER READING'}</div>
+    <div class="grid md:grid-cols-2 gap-4">
+      <a href={p(lang, BLOG_PATHS.slingSpreader)} class="block bg-[#0a0a0a] border border-[#1e1e1e] p-6 group hover:border-[#f45500]/40 transition-colors">
+        <div class="micro !text-[#5c5c5c] mb-2">ASME B30.9</div>
+        <div class="display text-base text-white group-hover:text-[#f27e40] transition-colors">{isZh ? '吊索角度与展开梁：如何选择？ →' : 'Sling Angle vs Spreader Beam →'}</div>
+      </a>
+    </div>
+  </div>
+</section>
+
 <ToolShell lang={lang} section="cta" />
