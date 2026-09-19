@@ -1,0 +1,212 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogType?: "website" | "article";
+  pubDate?: string;
+  jsonLd?: unknown | unknown[];
+  breadcrumbItems?: Array<{ name: string; url: string }>;
+}
+
+const { title, description, canonical, ogType = "website", pubDate, jsonLd, breadcrumbItems } = Astro.props;
+
+const siteUrl = "https://riggingcalculators.com";
+const GA_ID = "G-D5MHRLH0JL";
+const fullCanonical = canonical ? `${siteUrl}${canonical}` : undefined;
+
+const schemas: unknown[] = [];
+if (breadcrumbItems && breadcrumbItems.length > 0) {
+  schemas.push({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: breadcrumbItems.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: `${siteUrl}${item.url}`,
+    })),
+  });
+}
+if (jsonLd) {
+  if (Array.isArray(jsonLd)) schemas.push(...jsonLd);
+  else schemas.push(jsonLd);
+}
+
+const toolLinks = [
+  { href: "/shackle-size-calculator", label: "Shackle Size Calculator" },
+  { href: "/sling-angle-calculator", label: "Sling Angle Calculator" },
+  { href: "/wire-rope-capacity-calculator", label: "Wire Rope Calculator" },
+  { href: "/crane-load-calculator", label: "Crane Load Calculator" },
+];
+
+const brandLinks = [
+  { href: "/brands/crosby-g-2150/", label: "Crosby G-2150" },
+  { href: "/brands/gunnebo/", label: "Gunnebo" },
+  { href: "/brands/cm-shackles/", label: "CM / Columbus McKinnon" },
+  { href: "/brands/yoke-lifting-points/", label: "YOKE Lifting Points" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={fullCanonical || siteUrl} />
+  {ogType === "article" && pubDate && <meta property="article:published_time" content={pubDate} />}
+  <meta property="og:type" content={ogType} />
+  <meta property="og:url" content={fullCanonical || siteUrl} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:site_name" content="Rigging Calculators" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script is:inline>
+    (function() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+    })();
+  </script>
+  <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
+  <script is:inline define:vars={{ GA_ID }}>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', GA_ID);
+  </script>
+  {schemas.length > 0 && (
+    <script type="application/ld+json" set:html={JSON.stringify(schemas)} />
+  )}
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <style>
+    :root { --amber: #f59e0b; --ink-950: #0a0b0f; --ink-900: #0f1117; --ink-800: #161821; --ink-700: #1e2030; --ink-600: #2a2d3e; }
+    body { background: var(--ink-950); color: #e2e8f0; font-family: 'Inter', sans-serif; }
+    .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); }
+    .accent-btn { background: var(--amber); color: #000; font-weight: 600; padding: 0.5rem 1.25rem; border-radius: 0.5rem; text-decoration: none; transition: opacity 0.15s; display: inline-block; }
+    .accent-btn:hover { opacity: 0.9; }
+    .prose-rc h2 { font-size: 1.375rem; font-weight: 700; color: #f1f5f9; margin: 2rem 0 0.75rem; }
+    .prose-rc h3 { font-size: 1.125rem; font-weight: 600; color: #e2e8f0; margin: 1.5rem 0 0.5rem; }
+    .prose-rc p { color: #94a3b8; line-height: 1.75; margin-bottom: 1rem; }
+    .prose-rc strong { color: #f1f5f9; }
+    .prose-rc table { width: 100%; border-collapse: collapse; font-size: 0.875rem; margin: 1.5rem 0; }
+    .prose-rc th { background: #1e2030; color: #f59e0b; padding: 0.6rem 0.75rem; text-align: left; font-weight: 600; border-bottom: 2px solid #2a2d3e; }
+    .prose-rc td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #1e2030; color: #94a3b8; }
+    .prose-rc tr:hover td { background: #0f1117; }
+    .prose-rc ul { list-style: disc; padding-left: 1.5rem; color: #94a3b8; line-height: 1.75; margin-bottom: 1rem; }
+    .prose-rc li { margin-bottom: 0.25rem; }
+    .prose-rc code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: #1e2030; padding: 0.1em 0.4em; border-radius: 0.25rem; color: #f59e0b; }
+    .cta-box { background: linear-gradient(135deg, #1e2030, #161821); border: 1px solid #2a2d3e; border-radius: 0.75rem; padding: 1.5rem; margin: 2rem 0; }
+    .answer-box { background: #0f1117; border-left: 3px solid #f59e0b; padding: 1rem 1.25rem; border-radius: 0 0.5rem 0.5rem 0; margin-bottom: 1.5rem; }
+    .answer-box p { margin: 0; color: #e2e8f0; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<!-- Header -->
+<header class="sticky top-0 z-50 glass-card border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <a href="/" class="flex items-center gap-2">
+        <span class="text-xl">⚓</span>
+        <span class="font-bold text-lg text-white">Rigging<span style="color:#f59e0b">Calculators</span></span>
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <!-- Tools dropdown -->
+        <div class="relative group">
+          <button class={`flex items-center gap-1 transition-colors py-1 ${currentPath.startsWith('/shackle') || currentPath.startsWith('/sling') || currentPath.startsWith('/wire') || currentPath.startsWith('/crane') ? 'text-amber-400 font-semibold' : 'text-gray-400 hover:text-white'}`}>
+            Tools
+            <svg class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-150" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="absolute top-full left-0 mt-1.5 w-52 rounded-xl border border-white/5 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 py-1.5 z-50" style="background:#161821">
+            {toolLinks.map(l => (
+              <a href={l.href} class={`flex items-center px-4 py-2 text-sm transition-colors hover:bg-white/5 rounded-lg mx-1 ${currentPath.startsWith(l.href) ? 'text-amber-400 font-medium' : 'text-gray-400 hover:text-white'}`}>{l.label}</a>
+            ))}
+          </div>
+        </div>
+
+        <a href="/blog/" class={`transition-colors ${currentPath.startsWith('/blog') ? 'text-amber-400 font-semibold' : 'text-gray-400 hover:text-white'}`}>Blog</a>
+
+        <!-- Brands dropdown -->
+        <div class="relative group">
+          <button class={`flex items-center gap-1 transition-colors py-1 ${currentPath.startsWith('/brands') ? 'text-amber-400 font-semibold' : 'text-gray-400 hover:text-white'}`}>
+            Brands
+            <svg class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-150" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="absolute top-full left-0 mt-1.5 w-56 rounded-xl border border-white/5 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 py-1.5 z-50" style="background:#161821">
+            {brandLinks.map(l => (
+              <a href={l.href} class={`flex items-center px-4 py-2 text-sm transition-colors hover:bg-white/5 rounded-lg mx-1 ${currentPath === l.href ? 'text-amber-400 font-medium' : 'text-gray-400 hover:text-white'}`}>{l.label}</a>
+            ))}
+          </div>
+        </div>
+      </nav>
+
+      <a href="/shackle-size-calculator" class="accent-btn text-sm">Calculate Now</a>
+    </div>
+  </div>
+</header>
+
+<!-- Breadcrumb -->
+{breadcrumbItems && breadcrumbItems.length > 1 && (
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+    <nav class="flex items-center gap-2 text-sm text-gray-500">
+      {breadcrumbItems.map((crumb, i) => (
+        <>
+          {i > 0 && <span>›</span>}
+          {i < breadcrumbItems.length - 1 ? (
+            <a href={crumb.url} class="hover:text-amber-400 transition-colors">{crumb.name}</a>
+          ) : (
+            <span class="text-gray-400">{crumb.name}</span>
+          )}
+        </>
+      ))}
+    </nav>
+  </div>
+)}
+
+<main class="flex-1">
+  <slot />
+</main>
+
+<!-- Footer -->
+<footer class="border-t mt-16" style="border-color:#1e2030; background:#0f1117">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-3 gap-8 text-sm text-gray-500">
+    <div>
+      <p class="text-white font-semibold mb-2">⚓ RiggingCalculators</p>
+      <p>Free ASME B30.9 / B30.26 compliant rigging calculators. No signup, no PDF.</p>
+    </div>
+    <div>
+      <p class="text-gray-400 font-semibold mb-2">Calculators</p>
+      <ul class="space-y-1">
+        {toolLinks.map(l => <li><a href={l.href} class="hover:text-amber-400 transition-colors">{l.label}</a></li>)}
+      </ul>
+    </div>
+    <div>
+      <p class="text-gray-400 font-semibold mb-2">Resources</p>
+      <ul class="space-y-1">
+        <li><a href="/blog/" class="hover:text-amber-400 transition-colors">Blog</a></li>
+        {brandLinks.map(l => <li><a href={l.href} class="hover:text-amber-400 transition-colors">{l.label}</a></li>)}
+      </ul>
+    </div>
+  </div>
+  <div class="border-t py-4 text-center text-xs text-gray-600" style="border-color:#1e2030">
+    <p>© {new Date().getFullYear()} RiggingCalculators.com — Engineering data for reference only. Verify with qualified rigging engineer before use.</p>
+  </div>
+</footer>
+
+</body>
+</html>

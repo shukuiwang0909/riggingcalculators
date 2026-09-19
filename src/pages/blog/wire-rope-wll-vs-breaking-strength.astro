@@ -1,0 +1,190 @@
+---
+import BlogBase from "../../layouts/BlogBase.astro";
+
+const pubDate = "2026-09-12";
+
+const faqItems = [
+  {
+    q: "What is the difference between wire rope WLL and breaking strength?",
+    a: "Breaking strength (also called Minimum Breaking Force or MBF) is the load at which a new wire rope will fail under laboratory conditions. WLL (Working Load Limit) is the maximum load the rope should carry in service, calculated by dividing breaking strength by the design factor (typically 5). For example, a rope with 100 kN breaking strength has a WLL of 20 kN.",
+  },
+  {
+    q: "Why is the wire rope safety factor 5:1 and not 2:1?",
+    a: "The 5:1 design factor in ASME B30.2 accounts for: dynamic shock loads during crane starts/stops (up to 2×), wear and fatigue in service (up to 1.5×), sheave and drum bending effects (~1.3×), and manufacturing variation. In practice, a used rope in service may have only 60% of its original breaking strength — the 5:1 factor provides a real margin of ~3× on a worn rope.",
+  },
+  {
+    q: "What wire rope construction is best for overhead crane use?",
+    a: "6×19 IWRC (Independent Wire Rope Core) is the most common construction for overhead crane hoist ropes. It offers a good balance of flexibility, fatigue life, and crush resistance. 6×37 is more flexible but has lower fatigue life. 6×7 is stiffer — used for standing rigging, not hoisting. For high-cycle crane applications, rotation-resistant ropes (18×7 or 35×7) prevent load spinning.",
+  },
+  {
+    q: "How do sheaves reduce wire rope capacity?",
+    a: "Bending a wire rope over a sheave causes fatigue damage proportional to the rope-to-sheave diameter ratio (D/d). ASME B30.2 requires a minimum D/d of 16:1 for crane hoist ropes (18:1 recommended). Each sheave in a block-and-tackle system also introduces ~2% friction loss per sheave, reducing system efficiency and the actual load lifted.",
+  },
+  {
+    q: "Can I use the same wire rope WLL for vertical, choker, and basket configurations?",
+    a: "No. Wire rope rigging slings (ASME B30.9) have different efficiency factors by configuration: vertical = 100% of WLL; basket (0° from vertical) = 200%; choker (without angle factor) = 75-80%. These factors are already built into ASME B30.9 sling WLL charts — do not apply the efficiency factor again on top of a sling's published WLL.",
+  },
+  {
+    q: "What is the breaking strength of 1/2-inch 6×19 IWRC wire rope?",
+    a: "A standard 1/2\" (13 mm) 6×19 IWRC improved plow steel (IPS) wire rope has a breaking strength of approximately 26,600 lb (119 kN). Higher grades (EPS, XIP) are 10-15% stronger. WLL at 5:1 design factor = 5,320 lb (23.8 kN).",
+  },
+  {
+    q: "When should I retire a wire rope?",
+    a: "ASME B30.2 retire-from-service criteria: six randomly distributed broken wires in one rope lay, or three broken wires in one strand per lay; corrosion pitting; visible core damage or protrusion; kinking, crushing, bird-caging, or heat damage; more than 1/3 reduction in outer wire diameter; evidence of severe abrasion or hook wear on drum.",
+  },
+  {
+    q: "Does wire rope have a WLL for angular loads like shackles?",
+    a: "Wire rope slings do, but bare wire rope as a hoist line does not — it's rated for the vertical load on the hook. If you're rigging with wire rope slings in a bridle configuration, use the sling angle factor (sin θ) to calculate the tension in each leg, then verify each leg and its sling WLL can carry that tension.",
+  },
+];
+
+const ropeRows = [
+  ["1/4\" (6 mm)", "6×19 IWRC", "6,560", "29.2", "1,312", "5.8"],
+  ["5/16\" (8 mm)", "6×19 IWRC", "10,300", "45.8", "2,060", "9.2"],
+  ["3/8\" (10 mm)", "6×19 IWRC", "14,500", "64.5", "2,900", "12.9"],
+  ["1/2\" (13 mm)", "6×19 IWRC", "26,600", "118", "5,320", "23.7"],
+  ["9/16\" (14 mm)", "6×19 IWRC", "33,600", "149", "6,720", "29.9"],
+  ["5/8\" (16 mm)", "6×19 IWRC", "41,800", "186", "8,360", "37.2"],
+  ["3/4\" (19 mm)", "6×19 IWRC", "59,700", "266", "11,940", "53.1"],
+  ["7/8\" (22 mm)", "6×19 IWRC", "80,900", "360", "16,180", "72.0"],
+  ["1\" (25 mm)", "6×19 IWRC", "104,000", "463", "20,800", "92.5"],
+  ["1-1/4\" (32 mm)", "6×19 IWRC", "162,000", "721", "32,400", "144"],
+  ["1-1/2\" (38 mm)", "6×19 IWRC", "232,000", "1,032", "46,400", "206"],
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: "Wire Rope WLL vs Breaking Strength: Safety Factors Explained",
+    datePublished: pubDate,
+    publisher: { "@type": "Organization", name: "RiggingCalculators.com", url: "https://riggingcalculators.com" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  },
+];
+---
+<BlogBase
+  title="Wire Rope WLL vs Breaking Strength: Safety Factors Explained"
+  description="Understand the difference between wire rope WLL and breaking strength, how the 5:1 safety factor is applied, and which wire rope construction to choose for overhead cranes."
+  canonical="/blog/wire-rope-wll-vs-breaking-strength/"
+  ogType="article"
+  pubDate={pubDate}
+  jsonLd={jsonLd}
+  breadcrumbItems={[
+    { name: "Home", url: "/" },
+    { name: "Blog", url: "/blog/" },
+    { name: "Wire Rope WLL vs Breaking Strength", url: "/blog/wire-rope-wll-vs-breaking-strength/" },
+  ]}
+>
+  <div class="max-w-3xl mx-auto px-4 py-10">
+    <div class="flex flex-wrap gap-2 mb-4">
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Wire Rope</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Safety Factor</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">ASME B30.2</span>
+    </div>
+
+    <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">Wire Rope WLL vs Breaking Strength: Safety Factors Explained</h1>
+    <p class="text-gray-500 text-sm mb-8">{new Date(pubDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} · 7 min read</p>
+
+    <div class="answer-box mb-8">
+      <p><strong>Short answer:</strong> WLL = Breaking Strength ÷ Design Factor. ASME B30.2 requires a 5:1 design factor for overhead crane hoist ropes, so a rope that fails at 100 kN has a WLL of 20 kN. Never confuse the two — loading a rope to its breaking strength will cause it to fail.</p>
+    </div>
+
+    <div class="prose-rc">
+
+      <h2>Wire Rope Breaking Strength & WLL Chart (6×19 IWRC, IPS Grade)</h2>
+      <p>Values for improved plow steel (IPS) grade, independent wire rope core (IWRC), right-regular lay. WLL at 5:1 design factor per ASME B30.2.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Diameter</th>
+            <th>Construction</th>
+            <th>Breaking Str. (lb)</th>
+            <th>Breaking Str. (kN)</th>
+            <th>WLL (lb)</th>
+            <th>WLL (kN)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ropeRows.map(([dia, constr, bslb, bskn, wlllb, wllkn]) => (
+            <tr>
+              <td style="font-family:'JetBrains Mono',monospace; color:#f59e0b;">{dia}</td>
+              <td style="color:#64748b; font-size:0.8rem;">{constr}</td>
+              <td>{bslb}</td>
+              <td>{bskn}</td>
+              <td style="font-weight:600; color:#f1f5f9;">{wlllb}</td>
+              <td style="font-weight:600; color:#f1f5f9;">{wllkn}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p style="font-size:0.75rem; color:#475569;">Per ASME B30.2 and wire rope manufacturer catalogs. EPS/XIP grade is approx. 10–15% stronger. Verify with rope manufacturer certificate before use.</p>
+
+      <h2>Understanding the 5:1 Safety Factor</h2>
+
+      <h3>What it accounts for</h3>
+      <p>The 5:1 design factor in ASME B30.2 is not a blanket "5× makes it safe." It breaks down roughly as:</p>
+      <ul>
+        <li><strong>Dynamic loading (hoist starts/stops):</strong> up to 2× static load</li>
+        <li><strong>Accumulated fatigue from bending cycles:</strong> reduces effective strength over time</li>
+        <li><strong>Sheave/drum bending loss:</strong> bending over a sheave degrades strength, especially below D/d = 16:1</li>
+        <li><strong>Rope degradation in service:</strong> abrasion, corrosion, and internal wear reduce breaking strength</li>
+      </ul>
+
+      <h3>5:1 doesn't mean you load to WLL every time</h3>
+      <p>WLL is the <em>maximum</em> load in normal service — not a target. For picks near the WLL, re-inspect the rope before every lift. For high-cycle or critical lifts, many engineers select rope with WLL = 2× the maximum expected lift load as additional margin.</p>
+
+      <h2>Wire Rope Construction Comparison</h2>
+
+      <table>
+        <thead>
+          <tr><th>Construction</th><th>Strands × Wires</th><th>Best for</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>6×7</td><td>6 strands, 7 wires</td><td>Standing rigging, low-flex</td><td>High abrasion resistance, poor fatigue</td></tr>
+          <tr><td>6×19</td><td>6 strands, 15–26 wires</td><td>Crane hoisting, general rigging</td><td>Best balance — industry standard for hoists</td></tr>
+          <tr><td>6×37</td><td>6 strands, 27–49 wires</td><td>High-flex sheave systems</td><td>More flexible, shorter fatigue life than 6×19</td></tr>
+          <tr><td>18×7 / 35×7</td><td>Rotation-resistant</td><td>Single-part hoist lines, deep excavation</td><td>Won't spin the load; ASME requires special handling</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Frequently Asked Questions</h2>
+      {faqItems.map(({ q, a }) => (
+        <details style="border:1px solid #1e2030; border-radius:0.5rem; padding:0.75rem 1rem; margin-bottom:0.75rem; cursor:pointer;">
+          <summary style="font-weight:600; color:#f1f5f9; list-style:none;">{q}</summary>
+          <p style="margin-top:0.5rem; font-size:0.9rem;">{a}</p>
+        </details>
+      ))}
+
+    </div>
+
+    <div class="cta-box my-8">
+      <p class="text-white font-bold text-base mb-1">⚡ Wire Rope Capacity Calculator</p>
+      <p class="text-gray-400 text-sm mb-3">Select rope diameter and construction — get WLL, breaking strength, and fleet angle corrections instantly.</p>
+      <a href="/wire-rope-capacity-calculator" class="accent-btn">Open Calculator</a>
+    </div>
+
+    <div class="mt-8 pt-8" style="border-top:1px solid #1e2030;">
+      <p class="text-gray-500 text-sm font-semibold mb-3">Related articles</p>
+      <div class="grid sm:grid-cols-2 gap-3 text-sm">
+        <a href="/blog/shackle-size-selection-guide/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Shackle Size Selection Guide</p>
+          <p class="text-gray-500 text-xs mt-0.5">WLL chart & step-by-step sizing</p>
+        </a>
+        <a href="/blog/sling-angle-factor-explained/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Sling Angle Factor Explained</p>
+          <p class="text-gray-500 text-xs mt-0.5">Why 30° can halve sling capacity</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</BlogBase>

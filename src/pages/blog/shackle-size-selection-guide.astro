@@ -1,0 +1,205 @@
+---
+import BlogBase from "../../layouts/BlogBase.astro";
+
+const pubDate = "2026-09-10";
+
+const faqItems = [
+  {
+    q: "What WLL shackle do I need for a 5-tonne lift?",
+    a: "Use a 6.5-tonne (6500 kg) WLL shackle at minimum for a single-leg straight pull on a 5 t load — this maintains the 1.25× minimum design margin above the rated WLL. If sling angle or dynamic loading is involved, go up to an 8.5 t WLL shackle.",
+  },
+  {
+    q: "What is the difference between a bow shackle and a dee shackle?",
+    a: "A bow (omega) shackle has a rounded body that accepts loads from multiple angles — ideal for multileg slings and lifting hooks. A dee shackle has a narrow D-shaped body best suited for straight in-line loads only. Using a dee shackle in a side-loaded application can reduce WLL by up to 50%.",
+  },
+  {
+    q: "Can I use a bolt-type shackle pin in any orientation?",
+    a: "No. Bolt-type pins must be positively secured with a nut and cotter pin. For applications where the pin may rotate or be pulled sideways, use a screw-pin with moused or wire-secured nut, and ensure the pin is not cross-loaded.",
+  },
+  {
+    q: "What safety factor do rigging shackles use?",
+    a: "ASME B30.26 requires a design factor of 5:1 (5× breaking load) for most rigging hardware including shackles. This means a 3¼-tonne WLL shackle has a breaking load of approximately 16.25 tonnes.",
+  },
+  {
+    q: "How do I read the WLL marking on a shackle?",
+    a: "Shackles conforming to ASME B30.26 are embossed with the WLL in short tons (US) or tonnes. Crosby and CM shackles typically show WLL in tons. Always verify units — a marking of '4.75' may mean 4.75 US tons (4.3 t metric) not 4.75 metric tonnes.",
+  },
+  {
+    q: "Should the shackle pin thread into the body or through the sling?",
+    a: "The shackle pin threads into the body only — never through a sling, chain link, or rope. The load goes on the body (the bow or dee), and the pin closes the gate. Passing a sling through the pin hole or leaving the pin partially threaded reduces WLL significantly.",
+  },
+  {
+    q: "What ASME standard covers shackle inspection and use?",
+    a: "ASME B30.26 (Rigging Hardware) covers shackle design, marking, inspection, and use. Sling rigging that uses shackles is also governed by ASME B30.9 (Slings). For overhead crane applications, ASME B30.2 applies to the crane itself.",
+  },
+  {
+    q: "When should I retire a shackle?",
+    a: "Retire a shackle if you find: cracks or fractures; deformation (pin or body bent > 10°); more than 10% reduction in cross-sectional area from wear; missing or illegible WLL marking; corrosion pitting deeper than 1 mm; or evidence of heat damage (discoloration, hardness change).",
+  },
+];
+
+const wllRows = [
+  ["3/16\" (5 mm)", "1/3", "0.15", "0.75"],
+  ["1/4\" (6 mm)", "1/2", "0.23", "1.15"],
+  ["5/16\" (8 mm)", "3/4", "0.34", "1.7"],
+  ["3/8\" (10 mm)", "1", "0.45", "2.25"],
+  ["7/16\" (11 mm)", "1-1/2", "0.68", "3.4"],
+  ["1/2\" (13 mm)", "2", "0.9", "4.5"],
+  ["5/8\" (16 mm)", "3-1/4", "1.5", "7.5"],
+  ["3/4\" (19 mm)", "4-3/4", "2.2", "11"],
+  ["7/8\" (22 mm)", "6-1/2", "3.0", "15"],
+  ["1\" (25 mm)", "8-1/2", "3.9", "19.5"],
+  ["1-1/4\" (32 mm)", "13-1/2", "6.1", "30.5"],
+  ["1-1/2\" (38 mm)", "17", "7.7", "38.5"],
+  ["2\" (50 mm)", "35", "16", "80"],
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: "How to Select the Right Shackle Size: WLL Chart & Step-by-Step Guide",
+    description: "Complete shackle sizing guide covering WLL ratings from 3/16\" to 2\" with ASME B30.26 safety factors, bow vs dee shackle selection, and pin type comparison.",
+    datePublished: pubDate,
+    publisher: { "@type": "Organization", name: "RiggingCalculators.com", url: "https://riggingcalculators.com" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  },
+];
+---
+<BlogBase
+  title="How to Select the Right Shackle Size: WLL Chart & Step-by-Step Guide"
+  description="Complete shackle sizing guide covering WLL ratings from 3/16\" to 2\" with ASME B30.26 safety factors, bow vs dee shackle selection, and pin type comparison."
+  canonical="/blog/shackle-size-selection-guide/"
+  ogType="article"
+  pubDate={pubDate}
+  jsonLd={jsonLd}
+  breadcrumbItems={[
+    { name: "Home", url: "/" },
+    { name: "Blog", url: "/blog/" },
+    { name: "Shackle Size Selection Guide", url: "/blog/shackle-size-selection-guide/" },
+  ]}
+>
+  <div class="max-w-3xl mx-auto px-4 py-10">
+    <div class="flex flex-wrap gap-2 mb-4">
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Shackles</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">ASME B30.26</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Safety</span>
+    </div>
+
+    <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">How to Select the Right Shackle Size</h1>
+    <p class="text-gray-500 text-sm mb-8">{new Date(pubDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} · 8 min read</p>
+
+    <div class="answer-box mb-8">
+      <p><strong>Short answer:</strong> Select a shackle with a WLL greater than or equal to the maximum load it will bear — including any sling angle factor, dynamic load allowance, and a minimum 1.25× safety margin above the calculated rigging load. Use a bow shackle for multi-leg arrangements; use a dee shackle only for straight in-line pulls.</p>
+    </div>
+
+    <div class="prose-rc">
+
+      <h2>Shackle WLL Size Chart (ASME B30.26)</h2>
+      <p>The table below lists Working Load Limits for standard carbon steel screw-pin and bolt-type anchor shackles conforming to ASME B30.26. All values at 5:1 design factor.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Pin Diameter</th>
+            <th>WLL (US tons)</th>
+            <th>WLL (metric t)</th>
+            <th>Breaking Load (t)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {wllRows.map(([pin, us, mt, bl]) => (
+            <tr>
+              <td style="font-family:'JetBrains Mono',monospace; color:#f59e0b;">{pin}</td>
+              <td>{us}</td>
+              <td>{mt}</td>
+              <td style="color:#64748b;">{bl}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p style="font-size:0.75rem; color:#475569;">Source: ASME B30.26 Table 26-0.2.1. Carbon steel, screw-pin anchor shackle. Breaking loads are approximate (5× WLL). Alloy shackles rated differently — always check manufacturer load rating.</p>
+
+    </div>
+
+    <div class="cta-box my-8">
+      <p class="text-white font-bold text-base mb-1">⚡ Shackle Size Calculator</p>
+      <p class="text-gray-400 text-sm mb-3">Enter your load, sling angle, and number of legs — get the minimum required shackle WLL instantly.</p>
+      <a href="/shackle-size-calculator" class="accent-btn">Open Calculator</a>
+    </div>
+
+    <div class="prose-rc">
+
+      <h2>Step-by-Step Shackle Selection Process</h2>
+
+      <h3>Step 1 — Determine the rigging load</h3>
+      <p>Start with the gross weight of the load being lifted. Add a dynamic load allowance of 15–25% for crane starts/stops or 50% for shock loading in marine environments.</p>
+
+      <h3>Step 2 — Account for sling geometry</h3>
+      <p>If the shackle connects two or more sling legs at an angle, each leg carries more than its proportional share of the load. The sling angle factor (H/L) reduces the effective capacity of each leg. At 45°, each leg must support 1.41× its proportional load; at 30°, it's 2×.</p>
+      <p>Calculate leg tension: <strong>T = (Gross Load / No. legs) × (1 / sin θ)</strong></p>
+
+      <h3>Step 3 — Apply a design margin</h3>
+      <p>ASME B30.26 already builds a 5:1 design factor into published WLL ratings — you don't double-count it. However, for repetitive or critical lifts, many lift supervisors apply an additional 1.25× working margin, meaning they select the shackle where <em>WLL ≥ 1.25 × calculated leg tension</em>.</p>
+
+      <h3>Step 4 — Choose bow vs dee shackle</h3>
+      <table>
+        <thead>
+          <tr><th>Type</th><th>Body shape</th><th>Best for</th><th>Side-load OK?</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Bow (Omega)</td><td>Round</td><td>Multi-leg slings, lifting hooks, swivel blocks</td><td>Yes — rated for angular loads</td></tr>
+          <tr><td>Dee (D)</td><td>Narrow D</td><td>Straight in-line pulls, single-leg connections</td><td>No — use only with <5° off-axis</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Step 5 — Select pin type</h3>
+      <p><strong>Screw pin:</strong> Fast to rig and un-rig; susceptible to unscrewing under vibration. Mouse the pin with wire for long-duration lifts.</p>
+      <p><strong>Bolt type (nut + cotter):</strong> Positive locking — required for permanent or semi-permanent rigging and any application where the pin may rotate in service.</p>
+
+      <h3>Step 6 — Pre-lift inspection</h3>
+      <ul>
+        <li>WLL marking legible on shackle body</li>
+        <li>Pin fully seated and secured (nut tight, cotter through hole, or wire mouse)</li>
+        <li>No cracks, gouges, heat marks, or excessive corrosion</li>
+        <li>No deformation — body or pin must be straight</li>
+        <li>Shackle oriented so load is on the bow, not the pin</li>
+      </ul>
+
+      <h2>Frequently Asked Questions</h2>
+      {faqItems.map(({ q, a }) => (
+        <details style="border:1px solid #1e2030; border-radius:0.5rem; padding:0.75rem 1rem; margin-bottom:0.75rem; cursor:pointer;">
+          <summary style="font-weight:600; color:#f1f5f9; list-style:none;">{q}</summary>
+          <p style="margin-top:0.5rem; font-size:0.9rem;">{a}</p>
+        </details>
+      ))}
+
+    </div>
+
+    <div class="mt-10 pt-8" style="border-top:1px solid #1e2030;">
+      <p class="text-gray-500 text-sm font-semibold mb-3">Related calculators</p>
+      <div class="grid sm:grid-cols-3 gap-3 text-sm">
+        <a href="/shackle-size-calculator" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Shackle Size Calculator</p>
+          <p class="text-gray-500 text-xs mt-0.5">WLL by load & sling angle</p>
+        </a>
+        <a href="/sling-angle-calculator" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Sling Angle Calculator</p>
+          <p class="text-gray-500 text-xs mt-0.5">Leg tension at any angle</p>
+        </a>
+        <a href="/blog/sling-angle-factor-explained/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Sling Angle Factor Guide</p>
+          <p class="text-gray-500 text-xs mt-0.5">Why 30° halves capacity</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</BlogBase>

@@ -1,0 +1,183 @@
+---
+import BlogBase from "../../layouts/BlogBase.astro";
+
+const pubDate = "2026-09-14";
+
+const angleRows = [
+  ["90°", "1.000", "100%", "0%"],
+  ["75°", "0.966", "97%", "-3%"],
+  ["60°", "0.866", "87%", "-13%"],
+  ["45°", "0.707", "71%", "-29%"],
+  ["30°", "0.500", "50%", "-50%"],
+  ["15°", "0.259", "26%", "-74%"],
+];
+
+const faqItems = [
+  {
+    q: "What is the sling angle factor?",
+    a: "The sling angle factor (also called the sling reduction factor or horizontal sling angle factor) is a multiplier that accounts for the increased tension in each sling leg when the legs are not vertical. It equals sin(θ), where θ is the angle between the sling leg and the horizontal. At 45°, each leg must carry 1.41× its proportional share of the load.",
+  },
+  {
+    q: "Why does a smaller sling angle reduce capacity?",
+    a: "When sling legs are angled outward from vertical, the horizontal components of each leg's tension cancel out, but the vertical components must sum to the full load weight. As the angle decreases (more horizontal), more total tension is needed in each leg to produce the same vertical lifting force. At 30°, each leg carries 2× the vertical load component it would carry if vertical.",
+  },
+  {
+    q: "What is the minimum sling angle allowed by ASME B30.9?",
+    a: "ASME B30.9 does not specify a hard minimum angle, but most engineers and lift procedures treat 30° as the practical minimum. Below 30°, the sling angle factor drops below 0.5, meaning each leg must carry more than 2× the proportional load — which rapidly exceeds sling WLL unless massively over-rated slings are used. Some procedures specify 45° as a conservative minimum.",
+  },
+  {
+    q: "How do I calculate leg tension in a two-leg bridle?",
+    a: "For a two-leg bridle with equal leg lengths supporting load W at sling angle θ (measured from horizontal): Leg tension T = (W / 2) × (1 / sin θ). At 45°: T = (W/2) × 1.414. At 60°: T = (W/2) × 1.155. Each sling WLL must be ≥ T. For unequal leg lengths or asymmetric loads, use vector resolution.",
+  },
+  {
+    q: "Does the number of sling legs affect the sling angle factor?",
+    a: "The sling angle factor applies per leg regardless of the number of legs. For a four-leg bridle, each leg carries 25% of the load in the vertical component — but each leg's tension is still increased by 1/sin(θ) due to the angle. Note that ASME B30.9 assumes only 3 of 4 legs are sharing load in a 4-leg sling (accounting for uneven rigging), so the per-leg WLL calculation uses 3 legs, not 4.",
+  },
+  {
+    q: "What is the included angle vs the sling angle?",
+    a: "The sling angle (θ) is measured from the horizontal to the sling leg — it appears in the formula T = W × (1/sin θ). The included angle (2α) is measured between the two sling legs at the top fitting — it equals 180° − 2θ. A 60° sling angle = 60° included angle. At 30° sling angle, included angle = 120°. Some older charts use included angle — make sure you're using the right reference.",
+  },
+  {
+    q: "How does a spreader bar change the sling angle calculation?",
+    a: "A spreader bar (compression strut) separates the sling attachment points horizontally, allowing vertical sling legs (90° sling angle) even for wide loads. This eliminates the sling angle penalty entirely and allows use of slings at full rated WLL. Spreader bars introduce a compressive load — the bar must be rated for that compressive force.",
+  },
+  {
+    q: "Can I use the sling angle calculator for round slings and chain slings?",
+    a: "Yes. The sling angle factor (sin θ) applies to all sling types: wire rope, chain, round (polyester), and flat-web slings. The geometry is the same regardless of material. The starting WLL values differ by sling type, grade, and construction, but the angle reduction factor is identical.",
+  },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: "Sling Angle Factor Explained: Why 30° Can Halve Your Sling Capacity",
+    datePublished: pubDate,
+    publisher: { "@type": "Organization", name: "RiggingCalculators.com", url: "https://riggingcalculators.com" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  },
+];
+---
+<BlogBase
+  title="Sling Angle Factor Explained: Why 30° Can Halve Your Sling Capacity"
+  description="Learn how sling angle reduces rated capacity in bridle lifts. Includes angle factor table, leg tension formula, worked examples, and the minimum 45° rule from ASME B30.9."
+  canonical="/blog/sling-angle-factor-explained/"
+  ogType="article"
+  pubDate={pubDate}
+  jsonLd={jsonLd}
+  breadcrumbItems={[
+    { name: "Home", url: "/" },
+    { name: "Blog", url: "/blog/" },
+    { name: "Sling Angle Factor Explained", url: "/blog/sling-angle-factor-explained/" },
+  ]}
+>
+  <div class="max-w-3xl mx-auto px-4 py-10">
+    <div class="flex flex-wrap gap-2 mb-4">
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Slings</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Rigging</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">ASME B30.9</span>
+    </div>
+
+    <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">Sling Angle Factor Explained: Why 30° Can Halve Your Sling Capacity</h1>
+    <p class="text-gray-500 text-sm mb-8">{new Date(pubDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} · 6 min read</p>
+
+    <div class="answer-box mb-8">
+      <p><strong>Short answer:</strong> The sling angle factor = sin(θ), where θ is the angle between the sling leg and the horizontal. At 30°, sin(30°) = 0.5 — so each sling leg must carry <em>twice</em> its share of the load, cutting effective capacity in half. Always choose slings with WLL ≥ (load/n) ÷ sin(θ), where n = number of supporting legs.</p>
+    </div>
+
+    <div class="prose-rc">
+
+      <h2>Sling Angle Factor Table</h2>
+      <p>Angle θ measured from horizontal to the sling leg. Leg tension multiplier = 1 ÷ sin(θ). For a two-leg bridle lifting load W, each leg tension = (W/2) × multiplier.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Sling Angle (θ from horiz.)</th>
+            <th>sin(θ)</th>
+            <th>Effective Capacity</th>
+            <th>Capacity Reduction</th>
+          </tr>
+        </thead>
+        <tbody>
+          {angleRows.map(([angle, sin, cap, red]) => (
+            <tr style={angle === "30°" ? "background:#1e0a0a;" : angle === "45°" ? "background:#0a1a0a;" : ""}>
+              <td style="font-family:'JetBrains Mono',monospace; color:#f59e0b; font-weight:600;">{angle}</td>
+              <td style="font-family:'JetBrains Mono',monospace;">{sin}</td>
+              <td style={angle === "30°" ? "color:#f87171; font-weight:700;" : angle === "45°" ? "color:#86efac;" : ""}>{cap}</td>
+              <td style={angle === "30°" ? "color:#f87171;" : angle === "45°" ? "color:#86efac;" : "color:#64748b;"}>{red}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p style="font-size:0.75rem; color:#475569;">Red row (30°): each leg must carry 2× its proportional share — sling capacity halved. Green row (45°): ASME B30.9 practical minimum for most lifts.</p>
+
+      <h2>The Formula</h2>
+
+      <h3>Two-leg bridle lift</h3>
+      <p>For a balanced two-leg bridle (equal leg lengths, symmetric load center) lifting gross weight <code>W</code>:</p>
+      <p><strong>T (per leg) = (W ÷ 2) ÷ sin(θ)</strong></p>
+      <p>Each sling must have WLL ≥ T. If using a design margin of 1.25×, select sling with WLL ≥ 1.25T.</p>
+
+      <h3>Four-leg bridle lift (ASME B30.9 method)</h3>
+      <p>ASME B30.9 assumes only 3 of 4 legs share load simultaneously (due to rigging geometry and flexibility). Therefore:</p>
+      <p><strong>T (per leg) = (W ÷ 3) ÷ sin(θ)</strong> — for each of the 4 slings</p>
+
+      <h2>Worked Example</h2>
+
+      <h3>Scenario</h3>
+      <p>Lift a 10-tonne steel vessel using a two-leg wire rope sling bridle. The sling attachment points on the vessel are 3 m apart horizontally. The crane hook is 2 m above the attachments vertically.</p>
+
+      <h3>Step 1 — Find the sling angle</h3>
+      <p>Each sling leg runs from the attachment point (3/2 = 1.5 m out from center) to the hook (2 m above). Horizontal run = 1.5 m, vertical rise = 2 m.</p>
+      <p><code>θ = arctan(vertical / horizontal) = arctan(2 / 1.5) = 53.1°</code></p>
+
+      <h3>Step 2 — Calculate leg tension</h3>
+      <p><code>T = (10,000 kg ÷ 2) ÷ sin(53.1°) = 5,000 ÷ 0.800 = 6,250 kg = 6.25 t per leg</code></p>
+
+      <h3>Step 3 — Select sling WLL</h3>
+      <p>Each sling must have WLL ≥ 6.25 t. With a 1.25× margin: WLL ≥ 7.8 t. Select 8-tonne WLL wire rope slings.</p>
+
+      <h3>What if the hook were only 1 m above (θ = 33.7°)?</h3>
+      <p><code>T = 5,000 ÷ sin(33.7°) = 5,000 ÷ 0.555 = 9,009 kg ≈ 9 t per leg</code></p>
+      <p>Now you need at least 9 t WLL slings — nearly 50% more than at 53°. Same load, same vessel width, very different sling requirement.</p>
+
+      <h2>Frequently Asked Questions</h2>
+      {faqItems.map(({ q, a }) => (
+        <details style="border:1px solid #1e2030; border-radius:0.5rem; padding:0.75rem 1rem; margin-bottom:0.75rem; cursor:pointer;">
+          <summary style="font-weight:600; color:#f1f5f9; list-style:none;">{q}</summary>
+          <p style="margin-top:0.5rem; font-size:0.9rem;">{a}</p>
+        </details>
+      ))}
+
+    </div>
+
+    <div class="cta-box my-8">
+      <p class="text-white font-bold text-base mb-1">⚡ Sling Angle Calculator</p>
+      <p class="text-gray-400 text-sm mb-3">Enter load weight, number of legs, and sling angle — get leg tension and required WLL instantly.</p>
+      <a href="/sling-angle-calculator" class="accent-btn">Open Calculator</a>
+    </div>
+
+    <div class="mt-8 pt-8" style="border-top:1px solid #1e2030;">
+      <p class="text-gray-500 text-sm font-semibold mb-3">Related articles</p>
+      <div class="grid sm:grid-cols-2 gap-3 text-sm">
+        <a href="/blog/shackle-size-selection-guide/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Shackle Size Selection Guide</p>
+          <p class="text-gray-500 text-xs mt-0.5">WLL chart for shackles 3/16\" – 2\"</p>
+        </a>
+        <a href="/blog/wire-rope-wll-vs-breaking-strength/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Wire Rope WLL vs Breaking Strength</p>
+          <p class="text-gray-500 text-xs mt-0.5">5:1 safety factor explained</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</BlogBase>

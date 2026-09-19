@@ -1,0 +1,74 @@
+---
+import BlogBase from "../../layouts/BlogBase.astro";
+
+const posts = [
+  {
+    slug: "shackle-size-selection-guide",
+    title: "How to Select the Right Shackle Size: WLL Chart & Step-by-Step Guide",
+    description: "Complete shackle sizing guide covering WLL ratings from 3/16\" to 2\" with ASME B30.26 safety factors, bow vs dee shackle selection, and pin type comparison.",
+    pubDate: "2026-09-10",
+    readMin: 8,
+    tags: ["Shackles", "Safety", "ASME B30.26"],
+  },
+  {
+    slug: "wire-rope-wll-vs-breaking-strength",
+    title: "Wire Rope WLL vs Breaking Strength: Safety Factors Explained",
+    description: "Understand the difference between wire rope WLL and breaking strength, how the 5:1 safety factor is applied, and which wire rope construction to choose.",
+    pubDate: "2026-09-12",
+    readMin: 7,
+    tags: ["Wire Rope", "Safety Factor", "ASME B30.2"],
+  },
+  {
+    slug: "sling-angle-factor-explained",
+    title: "Sling Angle Factor Explained: Why 30° Can Halve Your Sling Capacity",
+    description: "Learn how sling angle reduces rated capacity in bridle lifts. Includes angle factor table, worked examples, and the minimum 45° rule from ASME B30.9.",
+    pubDate: "2026-09-14",
+    readMin: 6,
+    tags: ["Slings", "Rigging", "ASME B30.9"],
+  },
+];
+---
+<BlogBase
+  title="Rigging Engineering Blog — Calculators, Standards & Safety Guides"
+  description="Practical guides on shackle sizing, wire rope selection, sling angle factors, and ASME B30 standards. Written for rigging engineers and lift supervisors."
+  canonical="/blog/"
+  breadcrumbItems={[
+    { name: "Home", url: "/" },
+    { name: "Blog", url: "/blog/" },
+  ]}
+>
+  <div class="max-w-4xl mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold text-white mb-2">Rigging Engineering Blog</h1>
+    <p class="text-gray-400 mb-10">Practical reference guides for rigging engineers, lift supervisors, and safety professionals.</p>
+
+    <div class="space-y-6">
+      {posts.map((post) => (
+        <article class="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-amber-500/40 transition-colors">
+          <div class="flex flex-wrap gap-2 mb-3">
+            {post.tags.map((tag) => (
+              <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">{tag}</span>
+            ))}
+          </div>
+          <a href={`/blog/${post.slug}/`} class="block group">
+            <h2 class="text-lg font-bold text-white group-hover:text-amber-400 transition-colors mb-2">{post.title}</h2>
+            <p class="text-gray-400 text-sm leading-relaxed mb-4">{post.description}</p>
+          </a>
+          <div class="flex items-center justify-between text-xs text-gray-500">
+            <span>{new Date(post.pubDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</span>
+            <span>{post.readMin} min read</span>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="mt-12 cta-box">
+      <p class="text-white font-bold text-lg mb-1">Free Rigging Calculators</p>
+      <p class="text-gray-400 text-sm mb-4">Put the theory to work — ASME B30-compliant tools, no signup required.</p>
+      <div class="flex flex-wrap gap-3 text-sm">
+        <a href="/shackle-size-calculator" class="accent-btn">Shackle Size Calculator</a>
+        <a href="/sling-angle-calculator" style="background:#1e2030; color:#f1f5f9; font-weight:600; padding:0.5rem 1.25rem; border-radius:0.5rem; text-decoration:none; border:1px solid #2a2d3e; display:inline-block;">Sling Angle Calculator</a>
+        <a href="/wire-rope-capacity-calculator" style="background:#1e2030; color:#f1f5f9; font-weight:600; padding:0.5rem 1.25rem; border-radius:0.5rem; text-decoration:none; border:1px solid #2a2d3e; display:inline-block;">Wire Rope Calculator</a>
+      </div>
+    </div>
+  </div>
+</BlogBase>

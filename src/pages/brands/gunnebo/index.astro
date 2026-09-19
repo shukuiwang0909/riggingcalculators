@@ -1,0 +1,171 @@
+---
+import BlogBase from "../../../layouts/BlogBase.astro";
+
+const faqItems = [
+  {
+    q: "What shackle range does Gunnebo offer?",
+    a: "Gunnebo Industries manufactures the Viking and Titan shackle series. Viking shackles are forged carbon steel, WLL from 0.5 t to 50 t, conforming to EN 13889 and ASME B30.26. Titan shackles are high-strength alloy steel for demanding lifting applications. Both series are available in screw-pin and bolt-type configurations.",
+  },
+  {
+    q: "Are Gunnebo shackles compatible with Crosby shackles in the same rigging set?",
+    a: "Yes — both are ASME B30.26 / EN 13889 compliant forged shackles with the same standard geometries for given WLL ratings. Mixing brands in a rigging set is acceptable provided each component is individually rated for the loads it will carry. Never mix WLL ratings or assume compatibility based on physical fit alone.",
+  },
+  {
+    q: "What is the design factor for Gunnebo Viking shackles?",
+    a: "Gunnebo Viking shackles carry a 5:1 design factor (minimum breaking force = 5× WLL) per EN 13889 and ASME B30.26. This is the same design factor used by Crosby and CM shackles.",
+  },
+  {
+    q: "Where are Gunnebo shackles manufactured?",
+    a: "Gunnebo Industries is headquartered in Gothenburg, Sweden. Manufacturing is performed at their facilities in Europe. Gunnebo shackles are CE marked (EN 13889) and sold globally through authorized distributors.",
+  },
+  {
+    q: "What markings should I look for on a genuine Gunnebo shackle?",
+    a: "Genuine Gunnebo shackles are embossed or stamped with: the Gunnebo brand mark or logo, the WLL in metric tonnes, a batch/heat traceability code, the CE mark (for EN 13889 versions), and the design factor indicator. Shackles without legible WLL markings should be removed from service immediately.",
+  },
+  {
+    q: "What is the difference between Gunnebo Viking and Titan shackles?",
+    a: "Viking shackles are standard-grade carbon steel, suitable for general industrial lifting. Titan shackles use high-tensile alloy steel, offering higher WLL-to-weight ratios and suitability for more demanding applications such as offshore or crane runway use. Titan shackles are typically 30–40% lighter than Viking for the same WLL.",
+  },
+];
+
+const wllRows = [
+  ["M06", "6 mm", "0.5", "0.5", "2.5"],
+  ["M08", "8 mm", "1.0", "1.0", "5.0"],
+  ["M10", "10 mm", "1.5", "1.5", "7.5"],
+  ["M13", "13 mm", "2.0", "2.0", "10.0"],
+  ["M16", "16 mm", "3.25", "3.25", "16.3"],
+  ["M19", "19 mm", "4.75", "4.75", "23.8"],
+  ["M22", "22 mm", "6.5", "6.5", "32.5"],
+  ["M25", "25 mm", "8.5", "8.5", "42.5"],
+  ["M32", "32 mm", "13.5", "13.5", "67.5"],
+  ["M38", "38 mm", "17.0", "17.0", "85.0"],
+  ["M50", "50 mm", "35.0", "35.0", "175"],
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: "Gunnebo Viking Bow Shackle",
+    description: "Forged carbon steel shackle by Gunnebo Industries, EN 13889 / ASME B30.26 compliant, WLL 0.5 to 50 tonnes at 5:1 design factor.",
+    brand: { "@type": "Brand", name: "Gunnebo" },
+    manufacturer: { "@type": "Organization", name: "Gunnebo Industries" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  },
+];
+---
+<BlogBase
+  title="Gunnebo Shackles: Viking & Titan WLL Chart, Specs & Comparison"
+  description="Gunnebo Viking and Titan shackle specifications: WLL from 0.5 t to 50 t, EN 13889 / ASME B30.26 compliance, design factor, and selection guide for industrial lifting."
+  canonical="/brands/gunnebo/"
+  jsonLd={jsonLd}
+  breadcrumbItems={[
+    { name: "Home", url: "/" },
+    { name: "Brands", url: "/brands/" },
+    { name: "Gunnebo Shackles", url: "/brands/gunnebo/" },
+  ]}
+>
+  <div class="max-w-3xl mx-auto px-4 py-10">
+    <div class="flex flex-wrap gap-2 mb-4">
+      <span class="text-xs px-2 py-0.5 rounded-full" style="background:#1e2030; color:#94a3b8; border:1px solid #2a2d3e;">Brand Reference</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Gunnebo</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Shackles</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">EN 13889</span>
+    </div>
+
+    <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">Gunnebo Shackles: Viking & Titan WLL Chart, Specs & Comparison</h1>
+    <p class="text-gray-400 text-lg mb-8 leading-relaxed">Gunnebo Industries (Sweden) produces the Viking and Titan shackle lines — widely used in European and global industrial lifting, offshore rigging, and load securing applications. Both series meet EN 13889 and ASME B30.26.</p>
+
+    <div class="prose-rc">
+
+      <h2>Gunnebo Viking Bow Shackle WLL Chart</h2>
+      <p>Carbon steel, screw-pin and bolt-type bow shackles. WLL at 5:1 design factor per EN 13889 / ASME B30.26.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Size Code</th>
+            <th>Pin Diameter</th>
+            <th>WLL (t)</th>
+            <th>WLL (kN)</th>
+            <th>Breaking Force (t)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {wllRows.map(([code, pin, wll_t, wll_kn_approx, bf]) => (
+            <tr>
+              <td style="font-family:'JetBrains Mono',monospace; color:#f59e0b; font-weight:600;">{code}</td>
+              <td style="color:#64748b;">{pin}</td>
+              <td style="font-weight:600;">{wll_t}</td>
+              <td>{(parseFloat(wll_t) * 9.81).toFixed(1)}</td>
+              <td style="color:#64748b;">{bf}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p style="font-size:0.75rem; color:#475569;">Reference data. Verify against Gunnebo official product catalog. WLL values in metric tonnes. Breaking force = 5× WLL.</p>
+
+      <h2>Viking vs Titan: Which Gunnebo Shackle to Use?</h2>
+
+      <table>
+        <thead><tr><th>Feature</th><th>Viking</th><th>Titan</th></tr></thead>
+        <tbody>
+          <tr><td>Steel grade</td><td>Carbon steel, Q&T</td><td>High-tensile alloy steel</td></tr>
+          <tr><td>Weight vs WLL</td><td>Standard</td><td>~30–40% lighter per WLL</td></tr>
+          <tr><td>Temperature range</td><td>−20°C to +200°C</td><td>−40°C to +200°C</td></tr>
+          <tr><td>Offshore use</td><td>With galvanized finish</td><td>Preferred — higher strength-to-weight</td></tr>
+          <tr><td>Design factor</td><td>5:1</td><td>5:1</td></tr>
+          <tr><td>Standards</td><td>EN 13889, ASME B30.26</td><td>EN 13889, ASME B30.26</td></tr>
+        </tbody>
+      </table>
+
+      <h2>CE Marking and EN 13889</h2>
+      <p>All Gunnebo shackles sold in Europe are CE marked to EN 13889 (Forged Steel Shackles for General Lifting Purposes). EN 13889 specifies material properties, proof load testing (2× WLL), and marking requirements. This is equivalent in safety level to ASME B30.26 for the same WLL range.</p>
+
+    </div>
+
+    <div class="cta-box my-8">
+      <p class="text-white font-bold text-base mb-2">Calculate required shackle WLL for your lift</p>
+      <p class="text-gray-400 text-sm mb-4">Enter load, sling angle, and number of legs — get minimum WLL instantly. Cross-reference with the Gunnebo chart above.</p>
+      <a href="/shackle-size-calculator" class="accent-btn">Shackle Size Calculator</a>
+    </div>
+
+    <div class="prose-rc">
+      <h2>Frequently Asked Questions</h2>
+      {faqItems.map(({ q, a }) => (
+        <details style="border:1px solid #1e2030; border-radius:0.5rem; padding:0.75rem 1rem; margin-bottom:0.75rem; cursor:pointer;">
+          <summary style="font-weight:600; color:#f1f5f9; list-style:none;">{q}</summary>
+          <p style="margin-top:0.5rem; font-size:0.9rem;">{a}</p>
+        </details>
+      ))}
+    </div>
+
+    <div class="mt-10 pt-8" style="border-top:1px solid #1e2030;">
+      <p class="text-gray-500 text-sm font-semibold mb-3">Other brand references</p>
+      <div class="grid sm:grid-cols-3 gap-3 text-sm">
+        <a href="/brands/crosby-g-2150/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Crosby G-2150</p>
+          <p class="text-gray-500 text-xs mt-0.5">Industry-standard bow shackle</p>
+        </a>
+        <a href="/brands/cm-shackles/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">CM / Columbus McKinnon</p>
+          <p class="text-gray-500 text-xs mt-0.5">Shackle WLL chart</p>
+        </a>
+        <a href="/brands/yoke-lifting-points/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">YOKE Lifting Points</p>
+          <p class="text-gray-500 text-xs mt-0.5">Swivel eye bolt ratings</p>
+        </a>
+      </div>
+    </div>
+
+    <p class="mt-8 text-xs text-gray-600">Disclaimer: Independent engineering reference. RiggingCalculators.com is not affiliated with Gunnebo Industries. Verify against manufacturer's current catalog before use.</p>
+  </div>
+</BlogBase>
