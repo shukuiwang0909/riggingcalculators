@@ -1,0 +1,116 @@
+---
+import BlogBase from "../../layouts/BlogBase.astro";
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Rigging Brand References",
+    description: "WLL charts and specification guides for leading rigging hardware brands: Crosby shackles, CM, Gunnebo, and YOKE lifting points.",
+    url: "https://riggingcalculators.com/brands/",
+  },
+];
+
+const brandCards = [
+  {
+    href: "/brands/crosby-g-209/",
+    name: "Crosby G-209",
+    subtitle: "Alloy Screw Pin Anchor Shackle",
+    detail: "WLL 0.5 – 120 t · ASME B30.26",
+    badge: "Most popular",
+  },
+  {
+    href: "/brands/crosby-g-2130/",
+    name: "Crosby G-2130",
+    subtitle: "Bolt Type Anchor Shackle",
+    detail: "WLL 0.5 – 120 t · Overhead crane approved",
+    badge: "Bolt type",
+  },
+  {
+    href: "/brands/crosby-g-2150/",
+    name: "Crosby G-2150",
+    subtitle: "Screw Pin Chain Shackle",
+    detail: "WLL 2 – 27 t · Straight-pull optimised",
+    badge: "Chain shackle",
+  },
+  {
+    href: "/brands/crosby-s-209/",
+    name: "Crosby S-209",
+    subtitle: "Carbon Steel Screw Pin Anchor Shackle",
+    detail: "WLL 0.5 – 17 t · Carbon steel",
+    badge: "Carbon steel",
+  },
+  {
+    href: "/brands/cm-shackles/",
+    name: "CM / Columbus McKinnon",
+    subtitle: "Shackle WLL Chart",
+    detail: "CM alloy & carbon shackle specs",
+    badge: "CM",
+  },
+  {
+    href: "/brands/gunnebo/",
+    name: "Gunnebo Shackles",
+    subtitle: "Viking & Titan Series Specs",
+    detail: "EN 13889 certified lifting shackles",
+    badge: "Gunnebo",
+  },
+  {
+    href: "/brands/yoke-lifting-points/",
+    name: "YOKE Lifting Points",
+    subtitle: "Swivel Eye Bolt WLL Ratings",
+    detail: "360° rotation, angular load charts",
+    badge: "YOKE",
+  },
+];
+---
+<BlogBase
+  title="Rigging Brand References: Crosby, CM, Gunnebo & More"
+  description="WLL charts and specification guides for leading rigging hardware brands: Crosby shackles, CM, Gunnebo, and YOKE lifting points. Independent reference — not affiliated with any manufacturer."
+  canonical="/brands/"
+  jsonLd={jsonLd}
+  breadcrumbItems={[
+    { name: "Home", url: "/" },
+    { name: "Brands", url: "/brands/" },
+  ]}
+>
+  <div class="max-w-4xl mx-auto px-4 py-10">
+    <div class="flex flex-wrap gap-2 mb-4">
+      <span class="text-xs px-2 py-0.5 rounded-full" style="background:#1e2030; color:#94a3b8; border:1px solid #2a2d3e;">Independent Reference</span>
+    </div>
+
+    <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">Rigging Brand References</h1>
+    <p class="text-gray-400 text-lg mb-8 leading-relaxed">WLL charts and specification guides for leading rigging hardware brands. All data sourced from manufacturer catalogs. This is an independent reference — not affiliated with any manufacturer.</p>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+      {brandCards.map(card => (
+        <a
+          href={card.href}
+          class="cta-box block hover:border-amber-500/40 transition-colors"
+          style="padding:1.25rem; margin:0; text-decoration:none;"
+        >
+          <div class="flex items-start justify-between gap-2 mb-2">
+            <p class="text-white font-semibold leading-snug">{card.name}</p>
+            <span class="text-xs px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 whitespace-nowrap shrink-0">{card.badge}</span>
+          </div>
+          <p class="text-gray-300 text-sm mb-1">{card.subtitle}</p>
+          <p class="text-gray-500 text-xs">{card.detail}</p>
+        </a>
+      ))}
+    </div>
+
+    <div class="prose-rc">
+      <h2>About These References</h2>
+      <p>Each brand page provides a WLL size chart, key specifications, application guidance, and selection comparisons. Data is sourced from manufacturer catalogs and is provided for reference only — always verify current ratings with the manufacturer before use in safety-critical applications.</p>
+      <p>These pages do not represent, endorse, or substitute for the manufacturer's own documentation. RiggingCalculators.com is not affiliated with The Crosby Group, CM, Gunnebo, or YOKE.</p>
+    </div>
+
+    <div class="cta-box mt-8">
+      <p class="text-white font-bold text-base mb-2">Need to size a shackle for a specific lift?</p>
+      <p class="text-gray-400 text-sm mb-4">Use our calculators to determine the minimum WLL required — then cross-reference the brand charts to select the right model and size.</p>
+      <div class="flex flex-wrap gap-3">
+        <a href="/shackle-size-calculator" class="accent-btn">Shackle Size Calculator</a>
+        <a href="/sling-angle-calculator" style="background:#1e2030; color:#f1f5f9; font-weight:600; padding:0.5rem 1.25rem; border-radius:0.5rem; text-decoration:none; border:1px solid #2a2d3e; display:inline-block;">Sling Angle Calculator</a>
+      </div>
+    </div>
+  </div>
+</BlogBase>

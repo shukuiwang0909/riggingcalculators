@@ -1,0 +1,208 @@
+---
+import BlogBase from "../../../layouts/BlogBase.astro";
+import { CROSBY_SHACKLES } from "../../../data/shackles.ts";
+
+const FRACTIONS: Record<string, string> = {
+  "0.25":   '1/4"',
+  "0.3125": '5/16"',
+  "0.375":  '3/8"',
+  "0.4375": '7/16"',
+  "0.5":    '1/2"',
+  "0.625":  '5/8"',
+  "0.75":   '3/4"',
+  "0.875":  '7/8"',
+  "1":      '1"',
+  "1.125":  '1-1/8"',
+  "1.25":   '1-1/4"',
+  "1.375":  '1-3/8"',
+  "1.5":    '1-1/2"',
+  "1.75":   '1-3/4"',
+  "2":      '2"',
+  "2.5":    '2-1/2"',
+  "3":      '3"',
+  "3.5":    '3-1/2"',
+  "4":      '4"',
+};
+
+function fmt(n: number): string {
+  if (n >= 100) return n.toFixed(0);
+  if (n >= 10)  return n.toFixed(1);
+  return n.toFixed(2);
+}
+
+const g209 = CROSBY_SHACKLES.filter(s => s.model === "G-209");
+
+const wllRows = g209.map(s => {
+  const pinIn  = FRACTIONS[String(s.size_inch)] ?? `${s.size_inch}"`;
+  const pinMm  = `${Math.round(s.size_inch * 25.4)} mm`;
+  const wllMt  = s.wll_tonnes;
+  const wllUs  = wllMt * 1.1023;
+  const blUs   = wllUs * 5;
+  const blMt   = wllMt * 5;
+  return [pinIn, pinMm, fmt(wllUs), fmt(wllMt), fmt(blUs), fmt(blMt)];
+});
+
+const faqItems = [
+  {
+    q: "What is the Crosby G-209 shackle?",
+    a: "The G-209 is The Crosby Group's alloy steel screw-pin anchor (bow) shackle. It conforms to ASME B30.26 with a 5:1 design factor. The distinctive orange pin distinguishes it from carbon steel S-series shackles. The G-209 is the most widely used anchor shackle for general industrial rigging.",
+  },
+  {
+    q: 'What is the WLL of a Crosby G-209 1" shackle?',
+    a: 'The G-209 in 1" pin size has a WLL of 8.5 metric tonnes (9.4 US tons). The 5:1 design factor gives a minimum breaking load of 42.5 metric tonnes. Always verify against the current Crosby catalog.',
+  },
+  {
+    q: "What is the difference between G-209 and G-2130?",
+    a: "The G-209 has a screw pin — quick to rig and un-rig, but requires mousing (safety wire) in vibrating or rotating applications to prevent the pin backing out. The G-2130 uses a bolt, nut, and cotter pin for positive locking — required for overhead crane service per ASME B30.26 and preferred for any application where pin rotation is possible.",
+  },
+  {
+    q: "What is the difference between G-209 and S-209?",
+    a: "The G-209 is alloy steel (orange pin); the S-209 is carbon steel. Both are ASME B30.26 rated, but the alloy G-209 is generally preferred for demanding applications. Verify WLL ratings against the current Crosby catalog before substituting one for the other.",
+  },
+  {
+    q: "When should I mouse a G-209 screw-pin shackle?",
+    a: "Any time vibration, rotation, or sustained movement could cause the pin to unscrew. Pass a 2–3 mm wire through the hole in the pin tip, loop it around the shackle body, and twist tight. For permanent or overhead rigging, use the G-2130 bolt-type instead.",
+  },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: "Crosby G-209 Screw Pin Anchor Shackle",
+    description: "Complete Crosby G-209 alloy screw-pin anchor shackle reference: WLL from 0.5 to 120 metric tonnes, size chart, ASME B30.26 compliance, and comparison with G-2130 bolt-type.",
+    brand: { "@type": "Brand", name: "Crosby" },
+    manufacturer: { "@type": "Organization", name: "The Crosby Group" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  },
+];
+---
+<BlogBase
+  title="Crosby G-209 Shackle: WLL Chart, Specs & Selection Guide"
+  description="Complete Crosby G-209 alloy screw-pin anchor shackle reference: WLL from 0.5 to 120 metric tonnes, size chart, ASME B30.26 compliance, and comparison with G-2130 bolt-type."
+  canonical="/brands/crosby-g-209/"
+  jsonLd={jsonLd}
+  breadcrumbItems={[
+    { name: "Home", url: "/" },
+    { name: "Brands", url: "/brands/" },
+    { name: "Crosby G-209", url: "/brands/crosby-g-209/" },
+  ]}
+>
+  <div class="max-w-3xl mx-auto px-4 py-10">
+    <div class="flex flex-wrap gap-2 mb-4">
+      <span class="text-xs px-2 py-0.5 rounded-full" style="background:#1e2030; color:#94a3b8; border:1px solid #2a2d3e;">Brand Reference</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Crosby</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Shackles</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">ASME B30.26</span>
+    </div>
+
+    <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">Crosby G-209 Shackle: WLL Chart, Specs & Selection Guide</h1>
+    <p class="text-gray-400 text-lg mb-8 leading-relaxed">The G-209 is The Crosby Group's alloy steel screw-pin anchor (bow) shackle — the most widely used anchor shackle in general industrial rigging, identifiable by its distinctive orange pin.</p>
+
+    <div class="prose-rc">
+
+      <h2>Crosby G-209 WLL Size Chart</h2>
+      <p>All values derived from The Crosby Group catalog data. WLL in US short tons and metric tonnes. Design factor 5:1 per ASME B30.26.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Pin Dia (in)</th>
+            <th>Pin Dia (mm)</th>
+            <th>WLL (US tons)</th>
+            <th>WLL (metric t)</th>
+            <th>Break Load (US tons)</th>
+            <th>Break Load (t)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {wllRows.map(([pin_in, pin_mm, wll_us, wll_mt, bl_us, bl_mt]) => (
+            <tr>
+              <td style="font-family:'JetBrains Mono',monospace; color:#f59e0b; font-weight:600;">{pin_in}</td>
+              <td style="color:#64748b;">{pin_mm}</td>
+              <td style="font-weight:600;">{wll_us}</td>
+              <td>{wll_mt}</td>
+              <td style="color:#64748b;">{bl_us}</td>
+              <td style="color:#64748b;">{bl_mt}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p style="font-size:0.75rem; color:#475569;">Reference data only. Verify current ratings against The Crosby Group official catalog before use in safety-critical applications. Carbon steel S-209 shackles have different ratings.</p>
+
+      <h2>G-209 Key Specifications</h2>
+      <table>
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Type</td><td>Screw-pin anchor (bow) shackle</td></tr>
+          <tr><td>Material</td><td>Alloy steel, quenched &amp; tempered</td></tr>
+          <tr><td>Finish</td><td>Orange pin (alloy identifier); body yellow chromate</td></tr>
+          <tr><td>Design factor</td><td>5:1 (ASME B30.26)</td></tr>
+          <tr><td>Standards</td><td>ASME B30.26, Federal Spec RR-C-271</td></tr>
+          <tr><td>Pin type</td><td>Threaded screw pin — for positive locking, use G-2130</td></tr>
+          <tr><td>Orange pin significance</td><td>Identifies alloy steel construction; not interchangeable with S-series pins</td></tr>
+        </tbody>
+      </table>
+
+      <h2>G-209 vs G-2130: Screw Pin vs Bolt Type</h2>
+      <table>
+        <thead><tr><th>Feature</th><th>G-209 (Screw Pin)</th><th>G-2130 (Bolt Type)</th></tr></thead>
+        <tbody>
+          <tr><td>Pin locking</td><td>Threaded pin — can unscrew</td><td>Bolt + nut + cotter — positive lock</td></tr>
+          <tr><td>Rig speed</td><td>Fast to rig / un-rig</td><td>Slower — nut and cotter required</td></tr>
+          <tr><td>Vibration resistance</td><td>Requires mousing in vibration</td><td>Preferred for vibrating environments</td></tr>
+          <tr><td>Overhead crane service</td><td>Requires mousing or not recommended</td><td>Required by ASME B30.26</td></tr>
+          <tr><td>WLL range</td><td>0.5 – 120 metric tonnes</td><td>0.5 – 120 metric tonnes</td></tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <div class="cta-box my-8">
+      <p class="text-white font-bold text-base mb-2">Verify your Crosby G-209 selection with our calculator</p>
+      <p class="text-gray-400 text-sm mb-4">Enter your load weight, sling angle, and number of legs to get the minimum required shackle WLL — then cross-reference the G-209 size chart above.</p>
+      <div class="flex flex-wrap gap-3">
+        <a href="/shackle-size-calculator" class="accent-btn">Shackle Size Calculator</a>
+        <a href="/sling-angle-calculator" style="background:#1e2030; color:#f1f5f9; font-weight:600; padding:0.5rem 1.25rem; border-radius:0.5rem; text-decoration:none; border:1px solid #2a2d3e; display:inline-block;">Sling Angle Calculator</a>
+      </div>
+    </div>
+
+    <div class="prose-rc">
+      <h2>Frequently Asked Questions</h2>
+      {faqItems.map(({ q, a }) => (
+        <details style="border:1px solid #1e2030; border-radius:0.5rem; padding:0.75rem 1rem; margin-bottom:0.75rem; cursor:pointer;">
+          <summary style="font-weight:600; color:#f1f5f9; list-style:none;">{q}</summary>
+          <p style="margin-top:0.5rem; font-size:0.9rem;">{a}</p>
+        </details>
+      ))}
+    </div>
+
+    <div class="mt-10 pt-8" style="border-top:1px solid #1e2030;">
+      <p class="text-gray-500 text-sm font-semibold mb-3">Other brand references</p>
+      <div class="grid sm:grid-cols-3 gap-3 text-sm">
+        <a href="/brands/crosby-g-2130/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Crosby G-2130</p>
+          <p class="text-gray-500 text-xs mt-0.5">Alloy bolt-type anchor shackle</p>
+        </a>
+        <a href="/brands/crosby-g-2150/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Crosby G-2150</p>
+          <p class="text-gray-500 text-xs mt-0.5">Alloy screw-pin chain shackle</p>
+        </a>
+        <a href="/brands/crosby-s-209/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Crosby S-209</p>
+          <p class="text-gray-500 text-xs mt-0.5">Carbon steel screw-pin anchor</p>
+        </a>
+      </div>
+    </div>
+
+    <p class="mt-8 text-xs text-gray-600">Disclaimer: This page is an independent engineering reference. RiggingCalculators.com is not affiliated with The Crosby Group. Always verify specifications against the manufacturer's current catalog before use.</p>
+  </div>
+</BlogBase>
