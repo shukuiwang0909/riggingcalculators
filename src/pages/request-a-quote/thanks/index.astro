@@ -1,0 +1,64 @@
+---
+import BlogBase from '../../../layouts/BlogBase.astro';
+
+const breadcrumbItems = [
+  { name: "Home", url: "/" },
+  { name: "Request a Quote", url: "/request-a-quote/" },
+  { name: "Inquiry Received", url: "/request-a-quote/thanks/" },
+];
+---
+
+<BlogBase
+  title="Inquiry Received — RiggingCalculators.com"
+  description="Your rigging hardware inquiry has been submitted. We will contact you within 24 hours with quotes from vetted industrial suppliers."
+  canonical="/request-a-quote/thanks/"
+  robots="noindex,nofollow"
+  breadcrumbItems={breadcrumbItems}
+>
+
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+
+  <div class="text-6xl mb-6">✅</div>
+
+  <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4">Inquiry Received</h1>
+  <p class="text-xl text-gray-400 mb-8 leading-relaxed">
+    Thank you. We have received your inquiry and will get back to you within <strong class="text-white">24 hours</strong> with quotes from vetted industrial suppliers.
+  </p>
+
+  <div class="glass-card border border-white/5 rounded-xl p-6 mb-10 text-left space-y-3">
+    <p class="text-sm text-gray-400">While you wait, you can use our free tools to verify your specifications:</p>
+    <ul class="space-y-2 mt-2">
+      <li>
+        <a href="/shackle-size-calculator" class="flex items-center gap-2 text-amber-400 hover:text-amber-300 transition text-sm">
+          <span>⚓</span> Shackle Size Calculator — check WLL for your load
+        </a>
+      </li>
+      <li>
+        <a href="/sling-angle-calculator" class="flex items-center gap-2 text-amber-400 hover:text-amber-300 transition text-sm">
+          <span>📐</span> Sling Angle Calculator — de-rating at non-vertical angles
+        </a>
+      </li>
+      <li>
+        <a href="/wire-rope-capacity-calculator" class="flex items-center gap-2 text-amber-400 hover:text-amber-300 transition text-sm">
+          <span>🪢</span> Wire Rope Capacity Calculator
+        </a>
+      </li>
+      <li>
+        <a href="/blog/" class="flex items-center gap-2 text-amber-400 hover:text-amber-300 transition text-sm">
+          <span>📖</span> Rigging Blog — guides and spec references
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <a href="/" class="accent-btn text-base px-8 py-3">Back to Home</a>
+
+</div>
+
+<style>
+  .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); }
+  .accent-btn { background: #f59e0b; color: #000; font-weight: 600; padding: 0.5rem 1.25rem; border-radius: 0.5rem; text-decoration: none; transition: opacity 0.15s; display: inline-block; }
+  .accent-btn:hover { opacity: 0.9; }
+</style>
+
+</BlogBase>

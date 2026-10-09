@@ -1,0 +1,283 @@
+---
+import BlogBase from '../../layouts/BlogBase.astro';
+
+const siteUrl = 'https://riggingcalculators.com';
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "name": "Request a Quote — Rigging Hardware",
+  "url": `${siteUrl}/request-a-quote/`,
+  "description": "Request pricing on shackles, wire rope, slings, chain, and lifting hardware from vetted industrial suppliers.",
+  "provider": {
+    "@type": "Organization",
+    "name": "Rigging Calculators",
+    "url": siteUrl,
+  },
+};
+
+const breadcrumbItems = [
+  { name: "Home", url: "/" },
+  { name: "Request a Quote", url: "/request-a-quote/" },
+];
+---
+
+<BlogBase
+  title="Request a Quote — Rigging Hardware & Lifting Equipment | RiggingCalculators.com"
+  description="Request pricing on shackles, wire rope, slings, chain, and rigging hardware. Specify WLL, quantity, and certification requirements. Response within 24 hours."
+  canonical="/request-a-quote/"
+  jsonLd={jsonLd}
+  breadcrumbItems={breadcrumbItems}
+>
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+  <!-- Hero -->
+  <div class="text-center mb-12">
+    <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-full px-4 py-1.5 mb-6">
+      <span class="w-2 h-2 bg-amber-400 rounded-full"></span>
+      <span class="text-amber-400 text-sm font-medium">Response within 24 hours</span>
+    </div>
+    <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4">Request a Quote</h1>
+    <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+      Get pricing on shackles, wire rope, slings, chain, and lifting hardware.
+      Specify your WLL, quantity, and certification requirements — we connect you with vetted industrial suppliers.
+    </p>
+  </div>
+
+  <div class="grid lg:grid-cols-3 gap-8">
+
+    <!-- Form -->
+    <div class="lg:col-span-2">
+      <div class="glass-card border border-white/5 rounded-xl p-6 sm:p-8">
+        <h2 class="text-xl font-bold text-white mb-6">Inquiry Details</h2>
+
+        <form id="rfq-form" class="space-y-5" action="https://formspree.io/f/xaenyjzq" method="POST" novalidate>
+          <input type="hidden" name="_subject" value="New RFQ — riggingcalculators.com" />
+          <input type="hidden" name="_page" value="request-a-quote" />
+          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+
+          <!-- Name + Company -->
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-400 mb-1.5">Name <span class="text-amber-400">*</span></label>
+              <input type="text" name="name" class="rfq-field" required placeholder="John Smith" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-400 mb-1.5">Company <span class="text-amber-400">*</span></label>
+              <input type="text" name="company" class="rfq-field" required placeholder="ABC Rigging Co." />
+            </div>
+          </div>
+
+          <!-- Email + Phone -->
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-400 mb-1.5">Email <span class="text-amber-400">*</span></label>
+              <input type="email" name="email" class="rfq-field" required placeholder="john@abc.com" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-400 mb-1.5">Phone <span class="text-gray-600 text-xs">(optional)</span></label>
+              <input type="tel" name="phone" class="rfq-field" placeholder="+1 555 000 0000" />
+            </div>
+          </div>
+
+          <!-- Country -->
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-1.5">Country / Region <span class="text-amber-400">*</span></label>
+            <input type="text" name="country" class="rfq-field" required placeholder="e.g. United States, Australia, UK" />
+          </div>
+
+          <!-- Product Type -->
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-1.5">Product Type <span class="text-amber-400">*</span></label>
+            <select name="product" class="rfq-field" required>
+              <option value="">Select product category…</option>
+              <option value="shackles-anchor">Shackles — Anchor / Bow (G-209, G-2130)</option>
+              <option value="shackles-chain">Shackles — Chain / Dee (G-2150)</option>
+              <option value="wire-rope">Wire Rope</option>
+              <option value="synthetic-slings">Synthetic Slings (web / round)</option>
+              <option value="wire-rope-slings">Wire Rope Slings</option>
+              <option value="chain-slings">Chain Slings</option>
+              <option value="chain">Alloy Chain (G80 / G100 / G120)</option>
+              <option value="lifting-points">Lifting Points / Eye Bolts</option>
+              <option value="hooks">Hooks & Swivels</option>
+              <option value="crane-hardware">Crane Hardware / Blocks</option>
+              <option value="other">Other — describe below</option>
+            </select>
+          </div>
+
+          <!-- WLL + Quantity -->
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-400 mb-1.5">Required WLL</label>
+              <input type="text" name="wll" class="rfq-field" placeholder="e.g. 4.75 t, 10 t, 55 t" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-400 mb-1.5">Quantity <span class="text-amber-400">*</span></label>
+              <input type="text" name="quantity" class="rfq-field" required placeholder="e.g. 200 pcs, 500 m" />
+            </div>
+          </div>
+
+          <!-- Certification -->
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-1.5">Certification / Standard</label>
+            <input type="text" name="certification" class="rfq-field" placeholder="e.g. ASME B30.26, EN 13889, CE, OSHA, DNV" />
+          </div>
+
+          <!-- Message -->
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-1.5">Specification / Notes</label>
+            <textarea name="requirements" class="rfq-field" rows="4" placeholder="Size, material, finish, application details, delivery requirements, or any other spec…"></textarea>
+          </div>
+
+          <!-- Error message -->
+          <div id="rfq-error" class="hidden text-red-400 text-sm bg-red-900/20 border border-red-800 rounded-lg px-4 py-3">
+            Something went wrong. Please try again or email us directly.
+          </div>
+
+          <button type="submit" id="rfq-submit" class="accent-btn w-full text-base py-3">
+            Submit Inquiry
+          </button>
+
+          <p class="text-xs text-gray-600 text-center">No spam. No obligation. We forward your inquiry to vetted suppliers only.</p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="space-y-5">
+
+      <!-- What to expect -->
+      <div class="glass-card border border-white/5 rounded-xl p-5">
+        <h3 class="text-white font-semibold mb-4">What happens next</h3>
+        <ol class="space-y-4">
+          <li class="flex gap-3">
+            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold flex items-center justify-center">1</span>
+            <div>
+              <p class="text-sm text-white font-medium">Review</p>
+              <p class="text-xs text-gray-500 mt-0.5">We review your spec and match with suitable suppliers.</p>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold flex items-center justify-center">2</span>
+            <div>
+              <p class="text-sm text-white font-medium">Quotes within 24 h</p>
+              <p class="text-xs text-gray-500 mt-0.5">Competitive pricing from vetted industrial suppliers.</p>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold flex items-center justify-center">3</span>
+            <div>
+              <p class="text-sm text-white font-medium">You decide</p>
+              <p class="text-xs text-gray-500 mt-0.5">No obligation. Accept the offer that fits your project.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Not sure what you need? -->
+      <div class="glass-card border border-white/5 rounded-xl p-5">
+        <h3 class="text-white font-semibold mb-3">Not sure what you need?</h3>
+        <p class="text-sm text-gray-400 mb-4">Use our free calculators to find the right spec before quoting.</p>
+        <ul class="space-y-2">
+          <li>
+            <a href="/shackle-size-calculator" class="flex items-center gap-2 text-sm text-amber-400 hover:text-amber-300 transition">
+              <span>⚓</span> Shackle Size Calculator
+            </a>
+          </li>
+          <li>
+            <a href="/sling-angle-calculator" class="flex items-center gap-2 text-sm text-amber-400 hover:text-amber-300 transition">
+              <span>📐</span> Sling Angle Calculator
+            </a>
+          </li>
+          <li>
+            <a href="/wire-rope-capacity-calculator" class="flex items-center gap-2 text-sm text-amber-400 hover:text-amber-300 transition">
+              <span>🪢</span> Wire Rope Capacity Calculator
+            </a>
+          </li>
+          <li>
+            <a href="/crane-load-calculator" class="flex items-center gap-2 text-sm text-amber-400 hover:text-amber-300 transition">
+              <span>🏗</span> Crane Load Calculator
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Brands -->
+      <div class="glass-card border border-white/5 rounded-xl p-5">
+        <h3 class="text-white font-semibold mb-3">Popular brands</h3>
+        <ul class="space-y-2">
+          <li><a href="/brands/crosby-g-209/" class="text-sm text-gray-400 hover:text-amber-400 transition">Crosby G-209 (anchor screw-pin)</a></li>
+          <li><a href="/brands/crosby-g-2130/" class="text-sm text-gray-400 hover:text-amber-400 transition">Crosby G-2130 (anchor bolt-type)</a></li>
+          <li><a href="/brands/crosby-g-2150/" class="text-sm text-gray-400 hover:text-amber-400 transition">Crosby G-2150 (chain dee)</a></li>
+          <li><a href="/brands/cm-shackles/" class="text-sm text-gray-400 hover:text-amber-400 transition">CM / Columbus McKinnon</a></li>
+          <li><a href="/brands/gunnebo/" class="text-sm text-gray-400 hover:text-amber-400 transition">Gunnebo Industries</a></li>
+          <li><a href="/brands/yoke-lifting-points/" class="text-sm text-gray-400 hover:text-amber-400 transition">YOKE Lifting Points</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<style>
+  .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); }
+  .rfq-field {
+    width: 100%;
+    background: #161821;
+    border: 1px solid #2a2d3e;
+    border-radius: 0.5rem;
+    padding: 0.625rem 0.875rem;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    transition: border-color 0.15s;
+    outline: none;
+  }
+  .rfq-field:focus { border-color: #f59e0b; }
+  .rfq-field::placeholder { color: #4b5563; }
+  select.rfq-field option { background: #161821; }
+  textarea.rfq-field { resize: vertical; }
+  .accent-btn { background: #f59e0b; color: #000; font-weight: 600; padding: 0.5rem 1.25rem; border-radius: 0.5rem; text-decoration: none; transition: opacity 0.15s; display: inline-block; cursor: pointer; border: none; }
+  .accent-btn:hover { opacity: 0.9; }
+  .accent-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+</style>
+
+<script>
+  var form = document.getElementById('rfq-form');
+  var btn = document.getElementById('rfq-submit');
+  var errEl = document.getElementById('rfq-error');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+    errEl.classList.add('hidden');
+
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'rfq_submit', { page: 'request-a-quote' });
+    }
+
+    fetch('https://formspree.io/f/xaenyjzq', {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' },
+    })
+    .then(function(res) {
+      if (res.ok) {
+        window.location.href = '/request-a-quote/thanks/';
+      } else {
+        btn.textContent = 'Submit Inquiry';
+        btn.disabled = false;
+        errEl.classList.remove('hidden');
+      }
+    })
+    .catch(function() {
+      btn.textContent = 'Submit Inquiry';
+      btn.disabled = false;
+      errEl.classList.remove('hidden');
+    });
+  });
+</script>
+
+</BlogBase>
