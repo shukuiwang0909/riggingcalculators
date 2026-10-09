@@ -2,6 +2,8 @@
 import BlogBase from "../../../layouts/BlogBase.astro";
 import { CROSBY_SHACKLES } from "../../../data/shackles.ts";
 
+const pubDate = "2026-09-16";
+
 const FRACTIONS: Record<string, string> = {
   "0.25":   '1/4"',
   "0.3125": '5/16"',
@@ -89,6 +91,8 @@ const jsonLd = [
   title="Crosby G-209 Shackle: WLL Chart, Specs & Selection Guide"
   description="Complete Crosby G-209 alloy screw-pin anchor shackle reference: WLL from 0.5 to 120 metric tonnes, size chart, ASME B30.26 compliance, and comparison with G-2130 bolt-type."
   canonical="/brands/crosby-g-209/"
+  ogType="article"
+  pubDate={pubDate}
   jsonLd={jsonLd}
   breadcrumbItems={[
     { name: "Home", url: "/" },
@@ -106,6 +110,10 @@ const jsonLd = [
 
     <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">Crosby G-209 Shackle: WLL Chart, Specs & Selection Guide</h1>
     <p class="text-gray-400 text-lg mb-8 leading-relaxed">The G-209 is The Crosby Group's alloy steel screw-pin anchor (bow) shackle — the most widely used anchor shackle in general industrial rigging, identifiable by its distinctive orange pin.</p>
+
+    <div class="answer-box mb-8">
+      <p><strong>Quick reference:</strong> The G-209 is Crosby's alloy screw-pin anchor (bow) shackle, rated 5:1 per ASME B30.26. Use it for general field rigging where fast rig/de-rig matters. For overhead crane service or vibrating environments, use the bolt-type G-2130 instead — it cannot back out under vibration. For straight in-line chain connections, use the G-2150 chain (dee) shackle.</p>
+    </div>
 
     <div class="prose-rc">
 
@@ -196,9 +204,9 @@ const jsonLd = [
           <p class="text-white font-semibold">Crosby G-2150</p>
           <p class="text-gray-500 text-xs mt-0.5">Alloy screw-pin chain shackle</p>
         </a>
-        <a href="/brands/crosby-s-209/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
-          <p class="text-white font-semibold">Crosby S-209</p>
-          <p class="text-gray-500 text-xs mt-0.5">Carbon steel screw-pin anchor</p>
+        <a href="/blog/rigging-inspection-checklist/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Rigging Inspection Guide</p>
+          <p class="text-gray-500 text-xs mt-0.5">ASME B30.9 rejection criteria</p>
         </a>
       </div>
     </div>

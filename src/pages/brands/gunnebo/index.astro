@@ -1,6 +1,8 @@
 ---
 import BlogBase from "../../../layouts/BlogBase.astro";
 
+const pubDate = "2026-09-26";
+
 const faqItems = [
   {
     q: "What shackle range does Gunnebo offer?",
@@ -66,6 +68,8 @@ const jsonLd = [
   title="Gunnebo Shackles: Viking & Titan WLL Chart, Specs & Comparison"
   description="Gunnebo Viking and Titan shackle specifications: WLL from 0.5 t to 50 t, EN 13889 / ASME B30.26 compliance, design factor, and selection guide for industrial lifting."
   canonical="/brands/gunnebo/"
+  ogType="article"
+  pubDate={pubDate}
   jsonLd={jsonLd}
   breadcrumbItems={[
     { name: "Home", url: "/" },
@@ -83,6 +87,10 @@ const jsonLd = [
 
     <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">Gunnebo Shackles: Viking & Titan WLL Chart, Specs & Comparison</h1>
     <p class="text-gray-400 text-lg mb-8 leading-relaxed">Gunnebo Industries (Sweden) produces the Viking and Titan shackle lines — widely used in European and global industrial lifting, offshore rigging, and load securing applications. Both series meet EN 13889 and ASME B30.26.</p>
+
+    <div class="answer-box mb-8">
+      <p><strong>Quick reference:</strong> Gunnebo Viking (carbon steel) and Titan (alloy) bow shackles carry the same WLL as Crosby and CM equivalents at identical pin diameter — all meet the same EN 13889 / ASME B30.26 minimum. Choose Titan when weight matters: it is 30–40% lighter than Viking at the same WLL. Choose Viking for standard industrial and European supply chains. Both are 5:1 design factor.</p>
+    </div>
 
     <div class="prose-rc">
 

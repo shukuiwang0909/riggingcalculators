@@ -2,6 +2,8 @@
 import BlogBase from "../../../layouts/BlogBase.astro";
 import { CROSBY_SHACKLES } from "../../../data/shackles.ts";
 
+const pubDate = "2026-09-18";
+
 const FRACTIONS: Record<string, string> = {
   "0.25":   '1/4"',
   "0.3125": '5/16"',
@@ -89,6 +91,8 @@ const jsonLd = [
   title="Crosby G-2130 Bolt Type Shackle: WLL Chart & ASME B30.26 Specs"
   description="Crosby G-2130 alloy bolt-type anchor shackle reference: WLL from 0.5 to 120 metric tonnes, overhead crane service requirements, and comparison with screw-pin G-209."
   canonical="/brands/crosby-g-2130/"
+  ogType="article"
+  pubDate={pubDate}
   jsonLd={jsonLd}
   breadcrumbItems={[
     { name: "Home", url: "/" },
@@ -106,6 +110,10 @@ const jsonLd = [
 
     <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">Crosby G-2130 Bolt Type Shackle: WLL Chart & ASME B30.26 Specs</h1>
     <p class="text-gray-400 text-lg mb-8 leading-relaxed">The G-2130 is The Crosby Group's alloy steel bolt-type anchor (bow) shackle. Its bolt, nut, and cotter pin provide positive pin retention — required by ASME B30.26 for overhead crane service and recommended wherever vibration or rotation is present.</p>
+
+    <div class="answer-box mb-8">
+      <p><strong>Quick reference:</strong> The G-2130 is the positively-locked version of Crosby's alloy anchor shackle. Use it instead of the G-209 wherever ASME B30.26 requires a bolt-type pin: overhead crane service, vibrating equipment, sustained rigging configurations, and any application where the pin may rotate. WLL and size range are the same as the G-209.</p>
+    </div>
 
     <div class="prose-rc">
 
@@ -204,9 +212,9 @@ const jsonLd = [
           <p class="text-white font-semibold">Crosby G-2150</p>
           <p class="text-gray-500 text-xs mt-0.5">Alloy screw-pin chain shackle</p>
         </a>
-        <a href="/brands/crosby-s-209/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
-          <p class="text-white font-semibold">Crosby S-209</p>
-          <p class="text-gray-500 text-xs mt-0.5">Carbon steel screw-pin anchor</p>
+        <a href="/blog/rigging-inspection-checklist/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Rigging Inspection Guide</p>
+          <p class="text-gray-500 text-xs mt-0.5">ASME B30.9 rejection criteria</p>
         </a>
       </div>
     </div>

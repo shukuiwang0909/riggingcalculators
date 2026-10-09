@@ -1,6 +1,8 @@
 ---
 import BlogBase from "../../../layouts/BlogBase.astro";
 
+const pubDate = "2026-09-28";
+
 const faqItems = [
   {
     q: "What is a YOKE lifting point?",
@@ -74,6 +76,8 @@ const jsonLd = [
   title="YOKE Lifting Points: Swivel Eye Bolt WLL Chart, Specs & Thread Guide"
   description="YOKE swivel lifting point WLL from M8 to M64, 360°/±90° rotation at full WLL, EN 1677-5 / ASME B30.26. Includes thread engagement requirements and comparison with DIN 580 eye bolts."
   canonical="/brands/yoke-lifting-points/"
+  ogType="article"
+  pubDate={pubDate}
   jsonLd={jsonLd}
   breadcrumbItems={[
     { name: "Home", url: "/" },

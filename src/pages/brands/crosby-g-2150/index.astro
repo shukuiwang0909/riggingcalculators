@@ -1,6 +1,8 @@
 ---
 import BlogBase from "../../../layouts/BlogBase.astro";
 
+const pubDate = "2026-09-20";
+
 const faqItems = [
   {
     q: "What is the Crosby G-2150 shackle?",
@@ -16,7 +18,7 @@ const faqItems = [
   },
   {
     q: "Can the Crosby G-2150 be used in side-loaded applications?",
-    a: "As a bow (anchor) shackle, the G-2150 is rated for in-line and angular loads through the bow. Crosby publishes angular loading capacity charts — at 90° from in-line (full side load on the bow), the WLL is typically reduced by 50%. Do not apply side loads to the pin.",
+    a: "No. The G-2150 is a chain (dee) shackle with a narrow D-shaped body — it is designed for straight in-line pulls only. Side loading on a chain shackle can cause the dee to spread and the pin to cross-load, reducing strength below the marked WLL. For angular or multi-direction loading, use an anchor (bow) shackle such as the Crosby G-209 or G-2130, which are rated for angular loads through the bow.",
   },
   {
     q: "Should I mouse a Crosby G-2150 screw-pin shackle?",
@@ -48,8 +50,8 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: "Crosby G-2150 Screw Pin Anchor Shackle",
-    description: "Forged carbon steel ASME B30.26 bow shackle, WLL 1/3 to 400 tons, 5:1 design factor. The G-2150 is the industry standard screw-pin anchor shackle from The Crosby Group.",
+    name: "Crosby G-2150 Screw Pin Chain Shackle",
+    description: "Alloy steel ASME B30.26 chain (dee) shackle, WLL 1/3 to 35 tons, 5:1 design factor. The G-2150 is Crosby's screw-pin chain shackle for straight in-line pulls — use G-209 or G-2130 for angular or multi-leg applications.",
     brand: { "@type": "Brand", name: "Crosby" },
     manufacturer: { "@type": "Organization", name: "The Crosby Group" },
   },
@@ -68,6 +70,8 @@ const jsonLd = [
   title="Crosby G-2150 Shackle: WLL Chart, Specs & Selection Guide"
   description="Complete Crosby G-2150 screw-pin anchor shackle reference: WLL from 1/3 to 35 tons, size chart, ASME B30.26 compliance, and comparison with G-2130 bolt-type."
   canonical="/brands/crosby-g-2150/"
+  ogType="article"
+  pubDate={pubDate}
   jsonLd={jsonLd}
   breadcrumbItems={[
     { name: "Home", url: "/" },
@@ -84,7 +88,11 @@ const jsonLd = [
     </div>
 
     <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">Crosby G-2150 Shackle: WLL Chart, Specs & Selection Guide</h1>
-    <p class="text-gray-400 text-lg mb-8 leading-relaxed">The G-2150 is The Crosby Group's forged carbon steel screw-pin anchor (bow) shackle — the most widely distributed ASME B30.26 shackle in industrial lifting and rigging worldwide.</p>
+    <p class="text-gray-400 text-lg mb-8 leading-relaxed">The G-2150 is The Crosby Group's alloy steel screw-pin chain (dee) shackle. Its narrow D-shaped body is optimized for straight in-line connections — chain coupling, rod end attachments, and single-leg slings. For multi-leg bridle lifts or angular loading, use the anchor (bow) shackles G-209 or G-2130.</p>
+
+    <div class="answer-box mb-8">
+      <p><strong>Quick reference:</strong> The G-2150 is a chain (dee) shackle — narrow D-shaped body for straight in-line pulls only. Do not use it for multi-leg slings or angular loading; the dee body is not rated for side loads. For angular applications, select the anchor (bow) G-209 (screw pin) or G-2130 (bolt type). The G-2150 is the go-to choice for chain coupling and rod-end connections where a narrow profile is needed.</p>
+    </div>
 
     <div class="prose-rc">
 
@@ -121,9 +129,9 @@ const jsonLd = [
       <table>
         <thead><tr><th>Property</th><th>Value</th></tr></thead>
         <tbody>
-          <tr><td>Type</td><td>Screw-pin anchor (bow) shackle</td></tr>
-          <tr><td>Material</td><td>Forged carbon steel, quenched &amp; tempered</td></tr>
-          <tr><td>Finish</td><td>Yellow chromate / galvanized (G-2150); stainless = S-2150</td></tr>
+          <tr><td>Type</td><td>Screw-pin chain (dee) shackle</td></tr>
+          <tr><td>Material</td><td>Alloy steel, quenched &amp; tempered</td></tr>
+          <tr><td>Finish</td><td>Yellow chromate or galvanized</td></tr>
           <tr><td>Design factor</td><td>5:1 (ASME B30.26)</td></tr>
           <tr><td>Traceability</td><td>Heat code on body, WLL embossed</td></tr>
           <tr><td>Standards</td><td>ASME B30.26, Federal Spec RR-C-271</td></tr>
@@ -132,15 +140,17 @@ const jsonLd = [
         </tbody>
       </table>
 
-      <h2>G-2150 vs G-2130: Which to Use?</h2>
+      <h2>Chain Shackle (G-2150) vs Anchor Shackle (G-209 / G-2130)</h2>
+      <p>The G-2150 is a chain (dee) shackle — the narrow D-shaped body suits straight in-line connections. The G-209 and G-2130 are anchor (bow) shackles with a round body for multi-leg slings and angular loading. Choose based on load direction, not just pin type.</p>
       <table>
-        <thead><tr><th>Feature</th><th>G-2150 (Screw Pin)</th><th>G-2130 (Bolt Type)</th></tr></thead>
+        <thead><tr><th>Feature</th><th>G-2150 Chain (Dee)</th><th>G-209 / G-2130 Anchor (Bow)</th></tr></thead>
         <tbody>
-          <tr><td>Pin locking</td><td>Threaded pin — can unscrew</td><td>Bolt + nut + cotter — positive lock</td></tr>
-          <tr><td>Rig speed</td><td>Fast to rig / un-rig</td><td>Slower — nut and cotter required</td></tr>
-          <tr><td>Vibration resistance</td><td>Requires mousing in vibration</td><td>Preferred for vibrating environments</td></tr>
-          <tr><td>Overhead crane service</td><td>Requires mousing or not recommended</td><td>Required by ASME B30.26</td></tr>
-          <tr><td>WLL range</td><td>Same (1/3 – 400 tons)</td><td>Same (1/3 – 400 tons)</td></tr>
+          <tr><td>Body shape</td><td>Narrow D — straight in-line only</td><td>Round bow (omega) — angular loads OK</td></tr>
+          <tr><td>Side loading</td><td>Not permitted — dee may spread</td><td>Rated for angular loads through bow</td></tr>
+          <tr><td>Multi-leg bridle slings</td><td>Not recommended</td><td>Preferred — bow distributes load evenly</td></tr>
+          <tr><td>Rig profile</td><td>Narrow — fits tight spaces, chain links</td><td>Wider — more clearance required</td></tr>
+          <tr><td>Pin locking</td><td>Screw pin (G-2150) — mouse for vibration</td><td>Screw pin (G-209) or bolt type (G-2130)</td></tr>
+          <tr><td>WLL range</td><td>1/3 – 35 tons (common sizes)</td><td>1/3 – 120 t (up to 400 t catalog)</td></tr>
         </tbody>
       </table>
 
@@ -176,13 +186,13 @@ const jsonLd = [
           <p class="text-white font-semibold">Crosby G-2130</p>
           <p class="text-gray-500 text-xs mt-0.5">Alloy bolt-type anchor shackle</p>
         </a>
-        <a href="/brands/gunnebo/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
-          <p class="text-white font-semibold">Gunnebo Shackles</p>
-          <p class="text-gray-500 text-xs mt-0.5">Viking &amp; Titan series specs</p>
+        <a href="/blog/lifting-chain-grades-explained/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Chain Grades Guide</p>
+          <p class="text-gray-500 text-xs mt-0.5">G80 vs G100 WLL chart</p>
         </a>
-        <a href="/brands/cm-shackles/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
-          <p class="text-white font-semibold">CM / Columbus McKinnon</p>
-          <p class="text-gray-500 text-xs mt-0.5">Shackle WLL chart</p>
+        <a href="/blog/rigging-inspection-checklist/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Rigging Inspection Guide</p>
+          <p class="text-gray-500 text-xs mt-0.5">ASME B30.9 rejection criteria</p>
         </a>
       </div>
     </div>

@@ -1,6 +1,8 @@
 ---
 import BlogBase from "../../../layouts/BlogBase.astro";
 
+const pubDate = "2026-09-24";
+
 const faqItems = [
   {
     q: "What shackle lines does Columbus McKinnon (CM) make?",
@@ -67,6 +69,8 @@ const jsonLd = [
   title="CM Shackles (Columbus McKinnon) — WLL Chart, #488 Specs & Selection"
   description="CM Columbus McKinnon shackle specs: WLL 1/2 to 35 tons for #488 screw-pin and #489 bolt-type anchor shackles, ASME B30.26, 5:1 design factor."
   canonical="/brands/cm-shackles/"
+  ogType="article"
+  pubDate={pubDate}
   jsonLd={jsonLd}
   breadcrumbItems={[
     { name: "Home", url: "/" },
@@ -84,6 +88,10 @@ const jsonLd = [
 
     <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">CM Shackles (Columbus McKinnon) — WLL Chart, #488 Specs & Selection</h1>
     <p class="text-gray-400 text-lg mb-8 leading-relaxed">Columbus McKinnon's CM-brand shackles are a standard reference in North American industrial lifting. The #488 (screw-pin) and #489 (bolt-type) anchor shackles cover WLL from 1/2 to 35 US tons at the ASME B30.26 5:1 design factor.</p>
+
+    <div class="answer-box mb-8">
+      <p><strong>Quick reference:</strong> CM #488 (screw pin) and #489 (bolt type) are forged carbon steel ASME B30.26 anchor shackles. Because the standard specifies minimum performance, a CM 1" shackle carries the same WLL (8-1/2 tons) as a Crosby G-2150 or Gunnebo Viking of the same pin diameter — brand choice comes down to site approval, supply chain, and price. Use #489 (bolt type) for overhead crane service.</p>
+    </div>
 
     <div class="prose-rc">
 

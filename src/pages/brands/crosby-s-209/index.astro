@@ -2,6 +2,8 @@
 import BlogBase from "../../../layouts/BlogBase.astro";
 import { CROSBY_SHACKLES } from "../../../data/shackles.ts";
 
+const pubDate = "2026-09-22";
+
 const FRACTIONS: Record<string, string> = {
   "0.25":   '1/4"',
   "0.3125": '5/16"',
@@ -85,6 +87,8 @@ const jsonLd = [
   title="Crosby S-209 Shackle: WLL Chart & Carbon Steel Specs"
   description="Crosby S-209 carbon steel screw-pin anchor shackle reference: WLL chart, comparison with alloy G-209, and when to choose carbon steel for your rigging application."
   canonical="/brands/crosby-s-209/"
+  ogType="article"
+  pubDate={pubDate}
   jsonLd={jsonLd}
   breadcrumbItems={[
     { name: "Home", url: "/" },
@@ -102,6 +106,10 @@ const jsonLd = [
 
     <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">Crosby S-209 Shackle: WLL Chart & Carbon Steel Specs</h1>
     <p class="text-gray-400 text-lg mb-8 leading-relaxed">The S-209 is The Crosby Group's carbon steel screw-pin anchor (bow) shackle. The S-series complements the alloy G-series with a carbon steel option conforming to ASME B30.26.</p>
+
+    <div class="answer-box mb-8">
+      <p><strong>Quick reference:</strong> The S-209 is Crosby's carbon steel screw-pin anchor shackle — the lower-cost complement to the alloy G-209. Both conform to ASME B30.26 at 5:1 design factor. Choose S-209 when the application is non-demanding and budget matters; choose G-209 when strength-to-weight or corrosion resistance is a concern. The S-209 is only available in smaller sizes (up to ~1-1/2").</p>
+    </div>
 
     <div class="prose-rc">
 
