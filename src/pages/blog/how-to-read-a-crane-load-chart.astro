@@ -1,0 +1,210 @@
+---
+import BlogBase from "../../layouts/BlogBase.astro";
+
+const pubDate = "2026-10-01";
+
+const faqItems = [
+  {
+    q: "What is 'working radius' on a crane load chart?",
+    a: "Working radius is the horizontal distance from the center of the crane's rotation to the center of the hook. It is measured at the hook, not along the boom. As the boom extends or lowers, the working radius increases and the rated capacity drops — sometimes dramatically.",
+  },
+  {
+    q: "Does rated capacity include the weight of the hook block and rigging?",
+    a: "No. The load chart capacity is the gross capacity at the hook. You must subtract all rigging hardware weights — hook block, headache ball, below-hook devices, spreader bars, slings, and shackles — before you know the net payload the crane can lift. This subtraction is called 'deducting hook and rigging.'",
+  },
+  {
+    q: "What is the 80% rule for crane lifts?",
+    a: "Many lift plans limit picks to 80% of the crane's rated capacity at the working radius. This 20% margin accounts for dynamic loads, ground settlement, load swing, and uncertainty in the load weight. ASME B30.5 does not mandate 80%, but many company lift procedures and permit systems do.",
+  },
+  {
+    q: "What is the difference between on-outriggers and on-rubber capacity?",
+    a: "On-outriggers capacity assumes the outriggers are fully extended and the crane is level on solid ground. On-rubber (on-tires) capacity is typically 50–70% less because the tires and suspension flex, reducing stability. Always confirm your outrigger configuration before reading capacity from the correct section of the load chart.",
+  },
+  {
+    q: "Why does increasing boom length reduce crane capacity?",
+    a: "A longer boom shifts the crane's center of gravity further forward, increasing the overturning moment. The structural strength of the boom itself also limits the load it can carry in bending. Both factors reduce rated capacity as boom length grows.",
+  },
+  {
+    q: "How do I find the right page in a multi-section load chart?",
+    a: "Most mobile crane load charts are organized first by crane configuration (main boom only, main boom + jib, fly jib), then by counterweight setting, then by outrigger/on-rubber. Select the section that exactly matches your setup. Using the wrong section is a critical error — capacities can differ by 40% or more.",
+  },
+  {
+    q: "What is a 'pick-and-carry' capacity?",
+    a: "Pick-and-carry is when the crane lifts a load and travels with it on tires. This requires a specific section of the load chart (usually much lower capacity) because dynamic forces from traveling — bumps, turns, acceleration — multiply the load moment. Always use the pick-and-carry table, not the stationary on-rubber table.",
+  },
+  {
+    q: "Can I interpolate between values on a load chart?",
+    a: "Interpolation is acceptable only if the load chart explicitly permits it. Some manufacturers state 'do not interpolate — use the next lower capacity.' If interpolating is allowed, use linear interpolation between the two nearest radius values. Never extrapolate beyond the table's range.",
+  },
+];
+
+const chartRows = [
+  ["10 ft (3.0 m)", "60.0", "46.0", "35.0"],
+  ["15 ft (4.6 m)", "44.0", "36.0", "28.0"],
+  ["20 ft (6.1 m)", "33.0", "27.5", "21.5"],
+  ["25 ft (7.6 m)", "26.0", "21.5", "16.5"],
+  ["30 ft (9.1 m)", "20.5", "17.0", "13.0"],
+  ["40 ft (12.2 m)", "13.0", "10.5", "8.0"],
+  ["50 ft (15.2 m)", "8.5", "7.0", "5.5"],
+  ["60 ft (18.3 m)", "—", "4.5", "3.5"],
+  ["70 ft (21.3 m)", "—", "—", "2.5"],
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: "How to Read a Crane Load Chart: Radius, Boom Length & Capacity Explained",
+    description: "Step-by-step guide to reading a crane load chart — working radius, boom length, on-outriggers vs on-rubber, hook deductions, and the 80% lift rule.",
+    datePublished: pubDate,
+    publisher: { "@type": "Organization", name: "RiggingCalculators.com", url: "https://riggingcalculators.com" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  },
+];
+---
+<BlogBase
+  title="How to Read a Crane Load Chart: Radius, Boom Length & Capacity Explained"
+  description="Step-by-step guide to reading a crane load chart — working radius, boom length, on-outriggers vs on-rubber, hook deductions, and the 80% lift rule."
+  canonical="/blog/how-to-read-a-crane-load-chart/"
+  ogType="article"
+  pubDate={pubDate}
+  jsonLd={jsonLd}
+  breadcrumbItems={[
+    { name: "Home", url: "/" },
+    { name: "Blog", url: "/blog/" },
+    { name: "How to Read a Crane Load Chart", url: "/blog/how-to-read-a-crane-load-chart/" },
+  ]}
+>
+  <div class="max-w-3xl mx-auto px-4 py-10">
+    <div class="flex flex-wrap gap-2 mb-4">
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Crane</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Load Chart</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">ASME B30.5</span>
+    </div>
+
+    <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">How to Read a Crane Load Chart</h1>
+    <p class="text-gray-500 text-sm mb-8">{new Date(pubDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} · 9 min read</p>
+
+    <div class="answer-box mb-8">
+      <p><strong>Short answer:</strong> A crane load chart gives the maximum gross capacity (including hook block and rigging) at a specific working radius and boom configuration. To use it: (1) confirm your crane configuration matches the chart section, (2) measure the working radius at the hook, (3) read the capacity at that radius, (4) subtract hook and rigging weight, (5) confirm the net payload is within rated capacity — typically leaving a 20% margin.</p>
+    </div>
+
+    <div class="prose-rc">
+
+      <h2>The Four Variables Every Crane Load Chart Controls</h2>
+      <p>Before you look up a single number, you need to identify four things about your lift setup:</p>
+
+      <ol>
+        <li><strong>Crane configuration</strong> — main boom only, main boom with fly jib, or luffing jib? Each has its own chart section.</li>
+        <li><strong>Counterweight setting</strong> — counterweight directly affects tip-over stability; removing counterweight slashes capacity.</li>
+        <li><strong>Outrigger position</strong> — fully extended, partially extended, or on-rubber (tires)? Each is a different table.</li>
+        <li><strong>Boom length and working radius</strong> — these are the row and column axes of the main capacity matrix.</li>
+      </ol>
+
+      <p>Using the wrong section of the chart — even by one configuration variable — is one of the most common crane incident causes. Always confirm configuration before reading a number.</p>
+
+      <h2>Understanding Working Radius</h2>
+      <p>Working radius is the <em>horizontal</em> distance from the center of the crane's rotation to the center of the suspended load — measured at the hook, not along the boom. The crane's center of rotation is usually the center of the slewing ring, marked by a pin or reference line on the crane.</p>
+
+      <p>Why does radius matter so much? Because a crane is essentially a lever. The overturning moment equals the load multiplied by the radius arm. Double the radius and you double the tipping moment — so capacity must drop steeply to stay within the structural and stability limits.</p>
+
+      <h2>Sample Load Chart: 50-Ton Mobile Crane on Outriggers (Illustrative)</h2>
+      <p>The table below represents a generic 50-ton class hydraulic mobile crane on fully-extended outriggers. <strong>Always use the actual manufacturer load chart for your specific crane and serial number.</strong> Never use generic tables for real lift planning.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Working Radius</th>
+            <th>40 ft Boom (tons)</th>
+            <th>60 ft Boom (tons)</th>
+            <th>80 ft Boom (tons)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {chartRows.map(([radius, b40, b60, b80]) => (
+            <tr>
+              <td style="font-family:'JetBrains Mono',monospace; color:#f59e0b;">{radius}</td>
+              <td>{b40}</td>
+              <td>{b60}</td>
+              <td>{b80}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p style="font-size:0.75rem; color:#475569;">Illustrative values only. All figures in US short tons at 5° from level. Always use the manufacturer-issued load chart for your crane model, serial number, and configuration. Values for on-rubber (tires) will be significantly lower.</p>
+
+      <h2>Step-by-Step: Using the Load Chart on a Lift Plan</h2>
+
+      <h3>Step 1 — Confirm crane configuration</h3>
+      <p>Locate the correct section of the load chart booklet. Mobile crane charts typically have separate sections for: main boom (on outriggers, fully extended), main boom (on outriggers, 75% extended), on-rubber, and main boom + jib combinations. Your section must match the actual setup.</p>
+
+      <h3>Step 2 — Measure the working radius</h3>
+      <p>Use a tape measure from the center of rotation pin to directly below the suspended hook. Never estimate — a 2-foot error at long radius can mean a 10–15% capacity error. If the load must travel during the lift, use the maximum radius reached during the entire arc of travel.</p>
+
+      <h3>Step 3 — Determine boom length</h3>
+      <p>On telescoping cranes, boom length is read from the boom extension indicators or the LMI (Load Moment Indicator) display. Select the row in the load chart that corresponds to your actual boom length. If your boom length falls between two tabulated values, use the next longer boom row (which gives lower capacity) — do not interpolate unless the chart explicitly permits it.</p>
+
+      <h3>Step 4 — Read the gross capacity</h3>
+      <p>The intersection of working radius and boom length gives the gross rated capacity. This number <em>includes</em> the weight of the hook block, headache ball, spreader bar, slings, and all other below-hook devices — they are all "load" from the crane's perspective.</p>
+
+      <h3>Step 5 — Subtract hook and rigging weight</h3>
+      <p>Net payload = Gross capacity − (hook block + headache ball + spreader + slings + shackles). Rigging weight is often underestimated. A large hook block on a 50-ton crane can weigh 800–1,200 lbs. A spreader beam for a 20-ton lift might weigh 400–600 lbs. Weigh or verify the weight of all below-hook hardware before the lift.</p>
+
+      <h3>Step 6 — Apply the lift plan margin</h3>
+      <p>Most lift procedures require the actual lift weight to be ≤ 80% of the net capacity (after deductions). This 20% margin absorbs dynamic loads from crane motions, wind, and uncertainty in the load weight. For "critical lifts" (over 75% of rated capacity, or over open work areas), a formal engineered lift plan with a third-party review is often required under ASME B30.5 and OSHA 1926.1433.</p>
+
+      <h3>Step 7 — Check slewing zone restrictions</h3>
+      <p>Many load charts show capacity reductions over the front or rear of the crane (machine over-front vs. over-side). Mobile cranes typically have higher over-side capacity. Check whether your planned slewing arc crosses a restricted zone where lower limits apply.</p>
+
+      <h2>Common Mistakes When Reading Load Charts</h2>
+      <ul>
+        <li><strong>Using the wrong counterweight section</strong> — counterweight affects stability; reduced counterweight dramatically reduces capacity at mid-to-long radius.</li>
+        <li><strong>Forgetting to deduct rigging weight</strong> — reading the chart number as "net payload" is one of the most frequent overload incidents.</li>
+        <li><strong>Using the minimum radius capacity for a max-radius lift</strong> — always use the radius at which the load is <em>furthest</em> from the crane.</li>
+        <li><strong>Ignoring ground conditions</strong> — load charts assume solid, level, compacted ground. Soft or sloped ground requires mats and a geotechnical assessment.</li>
+        <li><strong>Not checking the crane's LMI (anti-two-block device)</strong> — even if the chart says the lift is safe, a malfunctioning LMI can allow the load to exceed capacity without warning.</li>
+      </ul>
+
+      <h2>Frequently Asked Questions</h2>
+      {faqItems.map(({ q, a }) => (
+        <details style="border:1px solid #1e2030; border-radius:0.5rem; padding:0.75rem 1rem; margin-bottom:0.75rem; cursor:pointer;">
+          <summary style="font-weight:600; color:#f1f5f9; list-style:none;">{q}</summary>
+          <p style="margin-top:0.5rem; font-size:0.9rem;">{a}</p>
+        </details>
+      ))}
+
+    </div>
+
+    <div class="cta-box my-8">
+      <p class="text-white font-bold text-base mb-1">⚡ Crane Load Calculator</p>
+      <p class="text-gray-400 text-sm mb-3">Enter boom length, working radius, and rigging weight — see if your lift is within rated capacity instantly.</p>
+      <a href="/crane-load-calculator" class="accent-btn">Open Calculator</a>
+    </div>
+
+    <div class="mt-10 pt-8" style="border-top:1px solid #1e2030;">
+      <p class="text-gray-500 text-sm font-semibold mb-3">Related calculators</p>
+      <div class="grid sm:grid-cols-3 gap-3 text-sm">
+        <a href="/crane-load-calculator" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Crane Load Calculator</p>
+          <p class="text-gray-500 text-xs mt-0.5">Radius, boom, and payload</p>
+        </a>
+        <a href="/shackle-size-calculator" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Shackle Size Calculator</p>
+          <p class="text-gray-500 text-xs mt-0.5">WLL by load & sling angle</p>
+        </a>
+        <a href="/sling-angle-calculator" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Sling Angle Calculator</p>
+          <p class="text-gray-500 text-xs mt-0.5">Leg tension at any angle</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</BlogBase>

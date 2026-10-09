@@ -1,0 +1,253 @@
+---
+import BlogBase from "../../layouts/BlogBase.astro";
+
+const pubDate = "2026-10-05";
+
+const faqItems = [
+  {
+    q: "How often should rigging equipment be inspected?",
+    a: "ASME B30.9 and B30.26 require two inspection frequencies: (1) a frequent inspection before each use — a visual check by the operator or rigger; and (2) a periodic inspection at intervals not exceeding one year, or more frequently in severe service, conducted by a designated person who records the findings. Some jurisdictions require documented periodic inspections every 3 or 6 months for critical applications.",
+  },
+  {
+    q: "What is the difference between a frequent and periodic rigging inspection?",
+    a: "A frequent inspection is a pre-use visual and tactile check by the operator — looking for obvious damage, missing markings, deformation, and gross wear. A periodic inspection is a thorough documented review by a qualified person, often using magnification for surface cracks, measuring wear, and comparing findings against the manufacturer's rejection criteria. Periodic inspections may include NDT (dye penetrant or magnetic particle testing) for critical components.",
+  },
+  {
+    q: "When should wire rope be taken out of service?",
+    a: "ASME B30.9 requires wire rope retirement if any of the following are found: 6 or more randomly distributed broken wires in one rope lay; 3 or more broken wires in one strand in one lay; wear of 1/3 of the original wire diameter on outside wires; kinking, crushing, birdcaging, or other structural deformation; heat damage (annealing or arc strike); corrosion that pits the surface of individual wires; or a reduction in rope diameter of more than 3% from nominal.",
+  },
+  {
+    q: "What makes a synthetic sling unfit for service?",
+    a: "ASME B30.9 requires removing a synthetic sling from service for: missing or illegible identification tag; cuts or tears that penetrate the load-bearing yarns; heat damage, melting, or charring; chemical attack that causes surface deterioration; weld spatter burns; knotting; and any distortion from overloading. Even a small surface cut on a flat-web sling can reduce its WLL significantly — when in doubt, retire it.",
+  },
+  {
+    q: "Who is qualified to inspect rigging equipment?",
+    a: "ASME B30.9 and B30.26 use the term 'designated person' — someone who has training, experience, and knowledge relevant to the specific equipment. This does not require a professional engineer but does require demonstrated competency. For frequent inspections, the rigger performing the lift is typically the designated person. Periodic inspections should be performed by someone with specific manufacturer training or equivalent field experience.",
+  },
+  {
+    q: "What records should be kept for rigging inspections?",
+    a: "At minimum, document: date of inspection; equipment identity (serial number, size, WLL, manufacturer); condition found; findings; action taken (retained in service, removed, repaired, destroyed); and name of inspecting person. ASME B30.9 periodic inspections require written records. Many sites use a tag system — green for in-service, red for out-of-service — combined with a written logbook.",
+  },
+  {
+    q: "Does a chain sling need to be proof-tested after repair?",
+    a: "Yes. ASME B30.9 requires that any repair to a chain sling — including link replacement — be proof-tested to 200% of WLL before returning to service. Only components from the original manufacturer or an approved equivalent may be used in repairs. Repair by welding is not permitted. Repaired slings must be re-identified and re-marked.",
+  },
+];
+
+const wireRopeRows = [
+  ["Broken wires — distributed", "≥ 6 broken wires in one rope lay", "Any lay"],
+  ["Broken wires — single strand", "≥ 3 broken wires in one strand, one lay", "Any lay"],
+  ["Wire wear", "Outside wire worn > 1/3 original diameter", "Entire length"],
+  ["Rope diameter reduction", "> 3% below nominal diameter", "Any section"],
+  ["Kinking / birdcaging", "Any visible kink, bird cage, or structural distortion", "Entire length"],
+  ["Heat damage", "Discoloration, arc strike, annealing — any", "Any section"],
+  ["Corrosion pitting", "Surface pitting visible on individual wires", "Any section"],
+  ["End fitting", "Cracked, deformed, or loose swage; broken socket", "End fittings"],
+];
+
+const syntheticRows = [
+  ["Identification tag", "Missing or illegible — retire immediately", "Flat web, round sling"],
+  ["Cuts / abrasion", "Any cut penetrating load-bearing yarns; wear through to core yarns", "Flat web, round sling"],
+  ["Heat / UV damage", "Melting, charring, or excessive brittleness", "All types"],
+  ["Chemical attack", "Acid or alkali contact with unknown concentration or duration", "All types"],
+  ["Weld spatter / arc burns", "Any burn holes or melted fibers", "All types"],
+  ["Knotting / overloading", "Permanent distortion, stretched eyes, flattened core", "All types"],
+  ["End fittings / eyes", "Cracked or deformed metal components; frayed at eye tuck", "All types"],
+];
+
+const chainRows = [
+  ["Wear", "Chain link worn > 10% of original link diameter", "Entire chain"],
+  ["Cracks", "Cracks in any link — retire immediately", "All links"],
+  ["Deformation", "Bent, twisted, or stretched links; elongated chain (> 3% of original 10-link length)", "All links"],
+  ["Corrosion / pitting", "Surface pitting on links; rust reducing cross-section", "All links"],
+  ["Heat damage", "Blue discoloration or evidence of heat exposure above 400°F (200°C)", "All links"],
+  ["Identification tag", "Missing or illegible master tag with WLL, grade, and size", "Master link / tag"],
+  ["Master link / hook", "Cracked, deformed, or opening at throat > 15% above nominal", "End fittings"],
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: "Rigging Inspection Checklist: Wire Rope, Slings & Hardware (ASME B30)",
+    description: "Pre-lift rigging inspection checklist covering ASME B30.9 rejection criteria for wire rope, synthetic slings, chain slings, shackles, and hooks — with inspection frequency guidance.",
+    datePublished: pubDate,
+    publisher: { "@type": "Organization", name: "RiggingCalculators.com", url: "https://riggingcalculators.com" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  },
+];
+---
+<BlogBase
+  title="Rigging Inspection Checklist: Wire Rope, Slings & Hardware (ASME B30)"
+  description="Pre-lift rigging inspection checklist covering ASME B30.9 rejection criteria for wire rope, synthetic slings, chain slings, shackles, and hooks — with inspection frequency guidance."
+  canonical="/blog/rigging-inspection-checklist/"
+  ogType="article"
+  pubDate={pubDate}
+  jsonLd={jsonLd}
+  breadcrumbItems={[
+    { name: "Home", url: "/" },
+    { name: "Blog", url: "/blog/" },
+    { name: "Rigging Inspection Checklist", url: "/blog/rigging-inspection-checklist/" },
+  ]}
+>
+  <div class="max-w-3xl mx-auto px-4 py-10">
+    <div class="flex flex-wrap gap-2 mb-4">
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Safety</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">ASME B30.9</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Inspection</span>
+    </div>
+
+    <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">Rigging Inspection Checklist: Wire Rope, Slings & Hardware</h1>
+    <p class="text-gray-500 text-sm mb-8">{new Date(pubDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} · 7 min read</p>
+
+    <div class="answer-box mb-8">
+      <p><strong>Short answer:</strong> ASME B30.9 requires a visual inspection of all rigging — wire rope, slings, chain, hooks, and shackles — before each use. Remove any component from service immediately if it shows broken wires, cuts to load-bearing yarns, cracks, deformation, heat damage, or a missing/illegible WLL marking. When in doubt, retire it.</p>
+    </div>
+
+    <div class="prose-rc">
+
+      <h2>Inspection Frequency Requirements (ASME B30.9 / B30.26)</h2>
+      <p>ASME standards recognize two inspection levels:</p>
+      <ul>
+        <li><strong>Frequent inspection</strong> — before each use, by the operator or designated rigger. Visual and tactile check; no written record required, but defects must be acted on immediately.</li>
+        <li><strong>Periodic inspection</strong> — at intervals not exceeding one year (more frequently for severe or critical service). Must be conducted by a designated person and documented in writing.</li>
+      </ul>
+      <p>In practice, many sites perform documented monthly or quarterly periodic inspections in addition to the before-each-use check, especially on equipment that sees daily use.</p>
+
+      <h2>Wire Rope: Rejection Criteria (ASME B30.9)</h2>
+      <p>Wire rope degradation is progressive but can accelerate rapidly. Any single criterion below is sufficient for immediate removal from service.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Defect</th>
+            <th>Rejection Criterion</th>
+            <th>Where to Check</th>
+          </tr>
+        </thead>
+        <tbody>
+          {wireRopeRows.map(([defect, criterion, location]) => (
+            <tr>
+              <td style="color:#f59e0b; font-weight:600;">{defect}</td>
+              <td>{criterion}</td>
+              <td style="color:#64748b;">{location}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p style="font-size:0.75rem; color:#475569;">Source: ASME B30.9 Chapter 9-7. Wire rope at end terminations requires particular attention — most wire rope failures occur within one lay of the fitting.</p>
+
+      <h3>How to count broken wires</h3>
+      <p>Lay the rope straight and bend it slightly to open the strands. Count all broken wire ends in any 12-inch (one rope lay) section. A wire with two visible broken ends counts as one broken wire. For rotation-resistant ropes (19×7, 35W×7), the rejection criterion is lower — check the manufacturer data sheet.</p>
+
+      <h2>Synthetic Slings: Rejection Criteria (ASME B30.9)</h2>
+      <p>Synthetic flat-web and round slings cannot be repaired. Once a sling fails inspection, it must be destroyed (cut) and discarded — not placed back in storage.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Defect</th>
+            <th>Rejection Criterion</th>
+            <th>Sling Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          {syntheticRows.map(([defect, criterion, type]) => (
+            <tr>
+              <td style="color:#f59e0b; font-weight:600;">{defect}</td>
+              <td>{criterion}</td>
+              <td style="color:#64748b;">{type}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h2>Chain Slings: Rejection Criteria (ASME B30.9)</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Defect</th>
+            <th>Rejection Criterion</th>
+            <th>Where to Check</th>
+          </tr>
+        </thead>
+        <tbody>
+          {chainRows.map(([defect, criterion, location]) => (
+            <tr>
+              <td style="color:#f59e0b; font-weight:600;">{defect}</td>
+              <td>{criterion}</td>
+              <td style="color:#64748b;">{location}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p style="font-size:0.75rem; color:#475569;">Chain link wear measurement: use a go/no-go gauge or caliper at the point of highest wear (usually the inside of the link where it contacts another link or the master ring). Retire when measured diameter is &lt; 90% of nominal.</p>
+
+      <h2>Hooks: Pre-Use Inspection Points</h2>
+      <p>Inspect lifting hooks per ASME B30.10 before each use:</p>
+      <ul>
+        <li>Throat opening — retire if throat opening has increased more than 15% above the nominal dimension, or any visible crack at the throat</li>
+        <li>Latch — must snap closed and latch securely; a hook with a bent or broken latch is out of service</li>
+        <li>Twist — retire if the hook shank shows more than 10° of twist from the plane of the hook</li>
+        <li>Markings — WLL or identification must be legible</li>
+        <li>Surface cracks — any crack at bend or weld area is cause for immediate retirement</li>
+      </ul>
+
+      <h2>Shackles: Pre-Use Inspection Points</h2>
+      <p>Per ASME B30.26, retire a shackle if:</p>
+      <ul>
+        <li>WLL marking is missing or illegible</li>
+        <li>Body or pin is cracked, fractured, or shows corrosion pitting deeper than 1 mm</li>
+        <li>Pin is bent, body is deformed, or cross-section has worn more than 10% below nominal</li>
+        <li>Evidence of heat damage (discoloration, brittle or soft spots)</li>
+        <li>Screw pin will not thread fully, or nut and cotter pin are missing on bolt-type</li>
+      </ul>
+
+      <h2>Inspection Tags and Documentation</h2>
+      <p>At minimum, each piece of rigging hardware should carry a durable tag or heat stamp showing: WLL, size, material/grade, manufacturer, and a date-code or inspection status marker. Many sites use a color-coded annual inspection tag system — the tag color changes each year so supervisors can see at a glance whether equipment has passed its annual review.</p>
+      <p>For periodic inspections, record: equipment ID, date, inspector name, condition found, and action taken. If equipment is removed from service, document that the item was destroyed to prevent it re-entering the yard.</p>
+
+      <h2>Frequently Asked Questions</h2>
+      {faqItems.map(({ q, a }) => (
+        <details style="border:1px solid #1e2030; border-radius:0.5rem; padding:0.75rem 1rem; margin-bottom:0.75rem; cursor:pointer;">
+          <summary style="font-weight:600; color:#f1f5f9; list-style:none;">{q}</summary>
+          <p style="margin-top:0.5rem; font-size:0.9rem;">{a}</p>
+        </details>
+      ))}
+
+    </div>
+
+    <div class="cta-box my-8">
+      <p class="text-white font-bold text-base mb-1">⚡ Shackle Size Calculator</p>
+      <p class="text-gray-400 text-sm mb-3">After inspection, make sure your shackle WLL is correct for the load — enter load weight, sling angle, and number of legs.</p>
+      <a href="/shackle-size-calculator" class="accent-btn">Check Shackle Size</a>
+    </div>
+
+    <div class="mt-10 pt-8" style="border-top:1px solid #1e2030;">
+      <p class="text-gray-500 text-sm font-semibold mb-3">Related calculators</p>
+      <div class="grid sm:grid-cols-3 gap-3 text-sm">
+        <a href="/shackle-size-calculator" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Shackle Size Calculator</p>
+          <p class="text-gray-500 text-xs mt-0.5">WLL by load & sling angle</p>
+        </a>
+        <a href="/wire-rope-capacity-calculator" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Wire Rope Calculator</p>
+          <p class="text-gray-500 text-xs mt-0.5">Capacity by diameter & grade</p>
+        </a>
+        <a href="/blog/shackle-size-selection-guide/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Shackle Selection Guide</p>
+          <p class="text-gray-500 text-xs mt-0.5">WLL chart & pin types</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</BlogBase>

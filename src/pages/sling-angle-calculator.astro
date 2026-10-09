@@ -103,7 +103,7 @@ const tensionFactors = [
   canonical="/sling-angle-calculator"
   jsonLd={jsonLd}
   breadcrumbItems={breadcrumbItems}
-  gaId="G-XXXXXXX"
+  gaId="G-D5MHRLH0JL"
 >
 
 <!-- Header -->
@@ -584,26 +584,28 @@ const tensionFactors = [
       <button onclick="document.getElementById('rfq-modal').classList.add('hidden')" class="text-gray-500 hover:text-white text-2xl">×</button>
     </div>
     
-    <form id="rfq-form" class="space-y-4">
+    <form id="rfq-form" class="space-y-4" action="https://formspree.io/f/xaenyjzq" method="POST">
+      <input type="hidden" name="_subject" value="New RFQ — riggingcalculators.com" />
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-gray-400 mb-2">Name</label>
-          <input type="text" class="field" required placeholder="John Smith" />
+          <input type="text" name="name" class="field" required placeholder="John Smith" />
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-400 mb-2">Company</label>
-          <input type="text" class="field" required placeholder="ABC Construction" />
+          <input type="text" name="company" class="field" required placeholder="ABC Construction" />
         </div>
       </div>
-      
+
       <div>
         <label class="block text-sm font-medium text-gray-400 mb-2">Email</label>
-        <input type="email" class="field" required placeholder="john@abc.com" />
+        <input type="email" name="email" class="field" required placeholder="john@abc.com" />
       </div>
-      
+
       <div>
         <label class="block text-sm font-medium text-gray-400 mb-2">Product Type</label>
-        <select class="field" required>
+        <select name="product" class="field" required>
           <option value="">Select...</option>
           <option value="slings">Slings</option>
           <option value="shackles">Shackles</option>
@@ -612,17 +614,17 @@ const tensionFactors = [
           <option value="other">Other</option>
         </select>
       </div>
-      
+
       <div>
         <label class="block text-sm font-medium text-gray-400 mb-2">Quantity</label>
-        <input type="number" class="field" min="1" placeholder="e.g. 100" />
+        <input type="number" name="quantity" class="field" min="1" placeholder="e.g. 100" />
       </div>
-      
+
       <div>
         <label class="block text-sm font-medium text-gray-400 mb-2">Requirements</label>
-        <textarea class="field" rows="3" placeholder="Load capacity, leg count, sling angle, material, certification requirements..."></textarea>
+        <textarea name="requirements" class="field" rows="3" placeholder="Load capacity, leg count, sling angle, material, certification requirements..."></textarea>
       </div>
-      
+
       <button type="submit" class="accent-btn w-full">Submit RFQ</button>
     </form>
     
@@ -723,14 +725,29 @@ const tensionFactors = [
   // RFQ form
   document.getElementById('rfq-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    
+    var form = this;
+    var btn = form.querySelector('button[type="submit"]');
+    if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
     if (typeof gtag !== 'undefined') {
-      gtag('event', 'rfq_submit', {
-        tool_name: 'sling_angle_calculator'
-      });
+      gtag('event', 'rfq_submit', { tool_name: 'sling_angle_calculator' });
     }
-    
-    this.innerHTML = '<div class="text-center py-8"><div class="text-4xl mb-4">✅</div><h4 class="text-xl font-bold text-white mb-2">RFQ Submitted</h4><p class="text-gray-400">We will contact you within 24 hours with quotes from vetted suppliers.</p></div>';
+    fetch('https://formspree.io/f/xaenyjzq', {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' },
+    })
+    .then(function(res) {
+      if (res.ok) {
+        form.innerHTML = '<div class="text-center py-8"><div class="text-4xl mb-4">✅</div><h4 class="text-xl font-bold text-white mb-2">RFQ Submitted</h4><p class="text-gray-400">We will contact you within 24 hours with quotes from vetted suppliers.</p></div>';
+      } else {
+        if (btn) { btn.textContent = 'Submit RFQ'; btn.disabled = false; }
+        alert('Something went wrong. Please try again.');
+      }
+    })
+    .catch(function() {
+      if (btn) { btn.textContent = 'Submit RFQ'; btn.disabled = false; }
+      alert('Network error. Please try again.');
+    });
   });
 </script>
 

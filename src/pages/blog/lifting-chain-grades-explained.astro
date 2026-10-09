@@ -1,0 +1,264 @@
+---
+import BlogBase from "../../layouts/BlogBase.astro";
+
+const pubDate = "2026-10-08";
+
+const faqItems = [
+  {
+    q: "Can I use Grade 70 or Grade 43 chain for overhead lifting?",
+    a: "No. Grade 43 (proof coil) and Grade 70 (transport/load binder) chains are NOT approved for overhead lifting under ASME B30.9. They are made from carbon steel, not alloy steel, and cannot reliably sustain the repeated cyclic loading of lifting operations. Their minimum elongation at break is also lower, meaning they can fracture with less visible warning. For overhead lifting, the minimum acceptable grade is Grade 80.",
+  },
+  {
+    q: "What does the grade number on a lifting chain actually mean?",
+    a: "The grade number approximates the minimum breaking force per unit of cross-sectional area, expressed in units of 10 N/mm² (roughly). Grade 80 has a minimum breaking strength of approximately 800 N/mm² of cross-section. Grade 100 is approximately 1,000 N/mm². This is why going from G80 to G100 in the same link diameter gives roughly 25% more WLL.",
+  },
+  {
+    q: "Is Grade 100 chain 25% stronger than Grade 80 for the same size?",
+    a: "Yes, approximately. For the same nominal link diameter, G100 has roughly 25% higher WLL than G80. This means you can use one size smaller G100 chain and still meet or exceed the WLL of a G80 chain, saving weight. However, G100 components (hooks, master links) must also be G100-rated — you cannot mix G80 and G100 components in the same assembly.",
+  },
+  {
+    q: "How do I identify the grade of a lifting chain by inspection?",
+    a: "Legitimate lifting chains are embossed or stamped every few links with the grade identifier — '8' or '80' for Grade 80, '10' or '100' for Grade 100. The chain tag or ID plate must also show the WLL, number of legs, and grade. Color-coded master links are common (yellow for G80, red or orange for G100, blue for G120) but color alone is not a reliable identifier — rely on the stamped markings.",
+  },
+  {
+    q: "What ASME standard covers lifting chain slings?",
+    a: "ASME B30.9 (Slings) governs the design, use, inspection, and testing of chain slings. Chain used in slings is also covered by ASME B30.9 Chapter 9-1. The chain itself may reference NACM (National Association of Chain Manufacturers) grades, which align with ASME B30.9 grade classifications.",
+  },
+  {
+    q: "Can I mix Grade 80 and Grade 100 links in a chain repair?",
+    a: "No. Mixing grades in a single chain assembly is not permitted. The design factor and WLL of the assembly would be undefined. Repairs must use links from the original manufacturer or a formally approved equivalent, and all replacement links must be the same grade as the original chain. After any repair, the chain must be proof-tested to 200% of WLL and re-tagged.",
+  },
+  {
+    q: "What safety factor do lifting chains use under ASME B30.9?",
+    a: "ASME B30.9 requires a minimum design factor of 4:1 for alloy steel chain slings (G80, G100, G120). This means the minimum breaking force is at least four times the rated WLL. Note that wire rope uses a 5:1 design factor — chain's 4:1 ratio reflects different material failure characteristics and the relative consistency of alloy steel chain manufacturing.",
+  },
+  {
+    q: "When should a Grade 80 or Grade 100 chain be taken out of service?",
+    a: "Retire a lifting chain if any of these are found: cracks in any link; wear reducing link diameter by more than 10% below nominal; stretch elongating any 10-link section by more than 3% above nominal; bent, twisted, or gouged links; heat damage (blue discoloration or exposure above 400°F / 200°C); chemical attack or corrosion pitting; or missing/illegible WLL identification tag.",
+  },
+];
+
+const gradeRows = [
+  ["Grade 30 (Proof Coil)", "Carbon steel", "Not for lifting", "~300", "Logging, tow, tie-down — lowest strength"],
+  ["Grade 43 (High Test)", "Carbon steel", "Not for lifting", "~430", "Load binding, transport — heavier than G70"],
+  ["Grade 70 (Transport)", "Carbon steel", "Not for lifting", "~700", "Load binders, vehicle recovery — higher than G43"],
+  ["Grade 80 (Alloy)", "Alloy steel", "✓ Overhead lifting", "~800", "Standard lifting grade — most common"],
+  ["Grade 100 (Alloy)", "Alloy steel", "✓ Overhead lifting", "~1,000", "+25% WLL vs G80 same diameter"],
+  ["Grade 120 (Alloy)", "Alloy steel", "✓ Overhead lifting", "~1,200", "Highest WLL, lightest weight — premium applications"],
+];
+
+const wllRows = [
+  ["7/32\" (5.5 mm)", "2,100", "~0.95", "2,700", "~1.22", "n/a"],
+  ["9/32\" (7 mm)", "3,500", "~1.59", "4,300", "~1.95", "n/a"],
+  ["5/16\" (8 mm)", "4,500", "~2.04", "5,700", "~2.59", "~6,900 / ~3.13"],
+  ["3/8\" (9.5 mm)", "6,600", "~3.0", "8,800", "~4.0", "~10,600 / ~4.8"],
+  ["1/2\" (13 mm)", "11,250", "~5.1", "14,300", "~6.5", "~17,000 / ~7.7"],
+  ["5/8\" (16 mm)", "16,500", "~7.5", "20,200", "~9.2", "~24,200 / ~11.0"],
+  ["3/4\" (20 mm)", "23,000", "~10.4", "28,600", "~13.0", "~34,300 / ~15.6"],
+  ["1\" (26 mm)", "38,500", "~17.5", "47,700", "~21.7", "~57,200 / ~26.0"],
+];
+
+const identRows = [
+  ["Grade 80", "8, 80, or G8", "Yellow (common)", "Alloy steel, must be marked every few links"],
+  ["Grade 100", "10, 100, or G10", "Red or orange (common)", "Higher tensile strength, same 4:1 design factor"],
+  ["Grade 120", "12, 120, or G12", "Blue (common)", "Highest grade; niche use in confined-space recovery, inspection"],
+  ["Grade 70", "7 or 70", "Gold/yellow (yellow band)", "Transport only — often confused with G80 due to similar color"],
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: "Lifting Chain Grades Explained: G80 vs G100 vs G120 WLL Chart",
+    description: "Complete guide to lifting chain grades — Grade 80, 100, and 120 WLL charts by link diameter, grade identification, and why Grade 43 and 70 are banned from overhead lifting.",
+    datePublished: pubDate,
+    publisher: { "@type": "Organization", name: "RiggingCalculators.com", url: "https://riggingcalculators.com" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  },
+];
+---
+<BlogBase
+  title="Lifting Chain Grades Explained: G80 vs G100 vs G120 WLL Chart"
+  description="Complete guide to lifting chain grades — Grade 80, 100, and 120 WLL charts by link diameter, grade identification, and why Grade 43 and 70 are banned from overhead lifting."
+  canonical="/blog/lifting-chain-grades-explained/"
+  ogType="article"
+  pubDate={pubDate}
+  jsonLd={jsonLd}
+  breadcrumbItems={[
+    { name: "Home", url: "/" },
+    { name: "Blog", url: "/blog/" },
+    { name: "Lifting Chain Grades Explained", url: "/blog/lifting-chain-grades-explained/" },
+  ]}
+>
+  <div class="max-w-3xl mx-auto px-4 py-10">
+    <div class="flex flex-wrap gap-2 mb-4">
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Chain</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Grade 80</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">ASME B30.9</span>
+    </div>
+
+    <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">Lifting Chain Grades Explained: G80 vs G100 vs G120</h1>
+    <p class="text-gray-500 text-sm mb-8">{new Date(pubDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} · 8 min read</p>
+
+    <div class="answer-box mb-8">
+      <p><strong>Short answer:</strong> Only alloy steel lifting chains — Grade 80, Grade 100, and Grade 120 — are approved for overhead lifting under ASME B30.9. Grade 43 and Grade 70 are transport chains and must never be used for overhead lifting. Grade 100 provides approximately 25% more WLL than Grade 80 for the same link diameter, letting you use a lighter, smaller chain for the same load.</p>
+    </div>
+
+    <div class="prose-rc">
+
+      <h2>Chain Grade Overview</h2>
+      <p>The grade number approximately represents the chain's minimum breaking strength per unit cross-sectional area (in units of 10 N/mm²). Higher grade = higher tensile strength = higher WLL for the same physical link size.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Grade</th>
+            <th>Material</th>
+            <th>Overhead Lifting?</th>
+            <th>Approx. Strength (N/mm²)</th>
+            <th>Primary Use</th>
+          </tr>
+        </thead>
+        <tbody>
+          {gradeRows.map(([grade, material, lifting, strength, use]) => (
+            <tr>
+              <td style="font-family:'JetBrains Mono',monospace; color:#f59e0b; font-weight:700;">{grade}</td>
+              <td>{material}</td>
+              <td style={lifting.includes("✓") ? "color:#4ade80; font-weight:700;" : "color:#f87171; font-weight:700;"}>{lifting}</td>
+              <td>{strength}</td>
+              <td style="color:#64748b;">{use}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p style="font-size:0.75rem; color:#475569;">Source: ASME B30.9, NACM Chain Grades. Strength values are approximate. Always verify with the manufacturer's load chart for the specific chain product you are using.</p>
+
+      <h2>Why Grade 43 and Grade 70 Cannot Be Used for Lifting</h2>
+      <p>This is one of the most critical misunderstandings in the field. Grade 70 chain is commonly seen in load binder and tie-down applications, where it is strong for its weight. Some workers assume "strong = safe for lifting" — but this is wrong for two reasons:</p>
+      <ol>
+        <li><strong>No WLL rating for lifting.</strong> G43 and G70 chains are not manufactured to any overhead lifting standard. They have no rated WLL under ASME B30.9. There is no safe working load to reference.</li>
+        <li><strong>Brittle failure mode.</strong> Carbon steel chains can fail with minimal elongation warning — they don't stretch and neck-down visibly before fracture the way alloy steel does. In a lifting application, this means the chain can fail suddenly, with little or no visible warning of impending overload.</li>
+      </ol>
+      <p>Alloy steel chains (G80+) are specifically formulated and heat-treated to provide ductile failure — they elongate visibly before fracturing, giving a warning. This ductility is why ASME B30.9 requires alloy steel for overhead lifting.</p>
+
+      <h2>Grade 80 vs Grade 100: WLL Comparison by Link Diameter</h2>
+      <p>The table below compares single-leg vertical WLL for G80 and G100 chain by link diameter. G120 is shown where data is commonly published.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Link Diameter</th>
+            <th>G80 WLL (lbs)</th>
+            <th>G80 WLL (t)</th>
+            <th>G100 WLL (lbs)</th>
+            <th>G100 WLL (t)</th>
+            <th>G120 WLL (lbs / t)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {wllRows.map(([dia, g80lb, g80t, g100lb, g100t, g120]) => (
+            <tr>
+              <td style="font-family:'JetBrains Mono',monospace; color:#f59e0b;">{dia}</td>
+              <td>{g80lb}</td>
+              <td>{g80t}</td>
+              <td>{g100lb}</td>
+              <td>{g100t}</td>
+              <td style="color:#64748b;">{g120}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p style="font-size:0.75rem; color:#475569;">All WLL values are for single-leg vertical lift, 4:1 design factor, per ASME B30.9 / NACM standards. Values are representative — always verify against the manufacturer's rated data for the specific chain product. Metric equivalents are approximate.</p>
+
+      <h2>Choosing Between Grade 80 and Grade 100</h2>
+
+      <h3>Use Grade 80 when:</h3>
+      <ul>
+        <li>You have an existing G80 inventory and the lift capacity is adequate</li>
+        <li>Weight of the chain itself is not a concern</li>
+        <li>G80 hooks, master links, and connecting links are already matched and on hand</li>
+        <li>Budget is a constraint — G80 components are less expensive</li>
+      </ul>
+
+      <h3>Use Grade 100 when:</h3>
+      <ul>
+        <li>You need higher WLL in the same envelope — replacing G80 with one size smaller G100 saves weight on the sling leg</li>
+        <li>Confined-space or overhead access where chain weight matters</li>
+        <li>High-cycle use where the higher elongation capacity of G100 provides longer service life</li>
+      </ul>
+
+      <p style="background:#1e2030; border:1px solid #f59e0b30; border-radius:0.5rem; padding:0.75rem 1rem;">
+        <strong style="color:#f59e0b;">Important:</strong> G100 chain must be used with G100-rated end components — hooks, master links, connecting links, and shorteners. Never attach G100 chain to G80 hardware. The weakest link governs the WLL of the assembly.
+      </p>
+
+      <h2>How to Identify Chain Grade by Inspection</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Grade</th>
+            <th>Stamped Marking on Links</th>
+            <th>Typical Master Link Color</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {identRows.map(([grade, stamp, color, notes]) => (
+            <tr>
+              <td style="color:#f59e0b; font-weight:700;">{grade}</td>
+              <td style="font-family:'JetBrains Mono',monospace;">{stamp}</td>
+              <td>{color}</td>
+              <td style="color:#64748b;">{notes}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p style="font-size:0.75rem; color:#475569;">Color coding is a manufacturer convention, not an ASME requirement. Do not rely on color alone to confirm grade — always check the stamped marking. If the stamp is worn or illegible, the chain must be retired from lifting service.</p>
+
+      <h2>Multi-Leg Sling Capacity: Angle Factor</h2>
+      <p>The WLL values above are for a single vertical leg. In a 2-leg or 4-leg bridle sling, each leg carries more load as the included angle increases. At a 60° included angle (30° from vertical), each leg carries 15% more than its proportional share. At 90° included angle, each leg carries 41% more (sling angle factor = 1/sin 45° = 1.41).</p>
+      <p>ASME B30.9 sets a maximum included angle of 120° (60° from vertical) for multi-leg slings. Beyond this point, the leg tension exceeds the single-leg WLL even for a load well within the rated capacity of the hook.</p>
+
+      <h2>Frequently Asked Questions</h2>
+      {faqItems.map(({ q, a }) => (
+        <details style="border:1px solid #1e2030; border-radius:0.5rem; padding:0.75rem 1rem; margin-bottom:0.75rem; cursor:pointer;">
+          <summary style="font-weight:600; color:#f1f5f9; list-style:none;">{q}</summary>
+          <p style="margin-top:0.5rem; font-size:0.9rem;">{a}</p>
+        </details>
+      ))}
+
+    </div>
+
+    <div class="cta-box my-8">
+      <p class="text-white font-bold text-base mb-1">⚡ Shackle Size Calculator</p>
+      <p class="text-gray-400 text-sm mb-3">Shackles must match your chain grade and load. Enter your lift weight and sling configuration to get the minimum required shackle WLL.</p>
+      <a href="/shackle-size-calculator" class="accent-btn">Size Your Shackle</a>
+    </div>
+
+    <div class="mt-10 pt-8" style="border-top:1px solid #1e2030;">
+      <p class="text-gray-500 text-sm font-semibold mb-3">Related calculators</p>
+      <div class="grid sm:grid-cols-3 gap-3 text-sm">
+        <a href="/shackle-size-calculator" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Shackle Size Calculator</p>
+          <p class="text-gray-500 text-xs mt-0.5">WLL by load & sling angle</p>
+        </a>
+        <a href="/sling-angle-calculator" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Sling Angle Calculator</p>
+          <p class="text-gray-500 text-xs mt-0.5">Leg tension at any angle</p>
+        </a>
+        <a href="/blog/rigging-inspection-checklist/" class="cta-box block hover:border-amber-500/40 transition-colors" style="padding:1rem; margin:0;">
+          <p class="text-white font-semibold">Rigging Inspection Guide</p>
+          <p class="text-gray-500 text-xs mt-0.5">ASME B30 rejection criteria</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</BlogBase>
